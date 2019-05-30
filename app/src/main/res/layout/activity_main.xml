@@ -12,34 +12,34 @@ tools:context=".MainActivity">
     <com.google.android.material.button.MaterialButton
         style="@style/LoginButton"
         android:backgroundTint="@color/com_facebook_blue"
-        android:id="@+id/login_button"
+        android:id="@+id/button_login_facebook"
         android:text="@string/sign_in_with_facebook"
         app:icon="@drawable/ic_facebook_app_logo"
         app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/button_login_google"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        />
 
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_login_email"
+        android:id="@+id/button_login_email"
         style="@style/LoginButton"
         android:text="@string/log_in_with_email"
         app:icon="@drawable/ic_baseline_email_24px"
-        app:backgroundTint="@color/orange1"
         app:iconTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/sign_in_button"
+        app:layout_constraintTop_toBottomOf="@id/button_login_google"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
         style="@style/LoginButton"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_button"
-        android:id="@+id/sign_in_button"
+        android:id="@+id/button_login_google"
         app:icon="@drawable/ic_icons8_google_filled"
         app:iconTint="@color/white"
         android:backgroundTint="@color/red"

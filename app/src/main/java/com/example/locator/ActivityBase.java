@@ -60,7 +60,7 @@ public abstract class ActivityBase extends AppCompatActivity
         boolean flag = true;
         for (int i = 0; i < editTexts.length; i++) {
             if (editTexts[i].getText().toString().isEmpty()) {
-                editTexts[i].setError("Polje ne sme biti prazno!");
+                editTexts[i].setError("This field can't be empty.");
                 flag = false;
             }
         }
@@ -73,13 +73,13 @@ public abstract class ActivityBase extends AppCompatActivity
 
     public boolean passCheck(EditText editPass,EditText editConfirmPass) {
         if (editPass.getText().toString().length() < 6) {
-            editPass.setError("Password mora biti minum 6 karaktera");
-            editConfirmPass.setError("Password mora biti minum 6 karaktera");
+            editPass.setError("Password must contain at least 6 characters.");
+            editConfirmPass.setError("Password must contain at least 6 characters.");
             return false;
         }
         if (!editPass.getText().toString().equals(editConfirmPass.getText().toString())) {
-            editPass.setError("Ne poklapaju se passwordi!");
-            editConfirmPass.setError("Ne poklapaju se passwordi!");
+            editPass.setError("Passwords do not match.");
+            editConfirmPass.setError("Passwords do not match.");
             return false;
         }
         return true;
@@ -88,7 +88,7 @@ public abstract class ActivityBase extends AppCompatActivity
     public boolean validateEmail(EditText editEmail) {
         String email = editEmail.getText().toString();
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editEmail.setError("Nevalidan email!");
+            editEmail.setError("Invalid email.");
             return false;
         }
         return  true;

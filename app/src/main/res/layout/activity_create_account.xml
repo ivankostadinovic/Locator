@@ -8,20 +8,18 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-
         android:id="@+id/edit_email_create_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="@string/hint_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.35"
         app:boxCornerRadiusBottomStart="5dp"
         app:boxCornerRadiusBottomEnd="5dp"
         app:boxCornerRadiusTopEnd="5dp"
         app:boxCornerRadiusTopStart="5dp"
-        android:layout_margin="20dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/CustomAccentEditText"
         >
         <com.google.android.material.textfield.TextInputEditText
 
@@ -44,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_email_create_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        style="@style/CustomAccentEditText"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_pass_create"
@@ -65,7 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_pass_create_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        style="@style/CustomAccentEditText"
          >
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_confirm_pass_create"
@@ -84,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_confirm_pass_create_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        style="@style/CustomAccentEditText"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_name_create"
@@ -95,13 +93,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
+        style="@style/CustomAccentButton"
         android:id="@+id/btn_create_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/btn_create_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_name_create_layout"/>
+        app:layout_constraintTop_toBottomOf="@id/edit_name_create_layout"
+        android:layout_marginTop="10dp"
+        app:icon="@drawable/ic_baseline_add_24px"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"/>
 
 
 

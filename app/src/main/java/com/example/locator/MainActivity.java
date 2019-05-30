@@ -19,10 +19,8 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.*;
 //import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +35,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private String a="urkeBog";
-    private Button loginEmailBtn, loginButton, signInButton;
+    private Button btnLoginEmail, btnLoginFacebook, btnLoginGoogle;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     final String EMAIL = "email";
@@ -52,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
-        loginButton=findViewById(R.id.login_button);
-        loginEmailBtn=findViewById(R.id.btn_login_email);
-        signInButton=findViewById(R.id.sign_in_button);
+        btnLoginFacebook =findViewById(R.id.button_login_facebook);
+        btnLoginEmail =findViewById(R.id.button_login_email);
+        btnLoginGoogle =findViewById(R.id.button_login_google);
         googleAuth();
         facebookAuth();
 
 
-        loginEmailBtn.setOnClickListener(new View.OnClickListener() {
+        btnLoginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,ActivityLoginEmail.class));
@@ -92,20 +90,20 @@ public class MainActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile", "user_friends"));
             }
         });
 
-        //loginButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        //btnLoginFacebook.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
 
-        // If you are using in a fragment, call loginButton.setFragment(this);
+        // If you are using in a fragment, call btnLoginFacebook.setFragment(this);
 
         // Callback registration
-       /* loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+       /* btnLoginFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
@@ -152,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();

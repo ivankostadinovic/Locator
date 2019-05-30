@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ActivityForgotPassword extends ActivityBase {
 
     private EditText editEmail;
-    private Button btnSend;
+    private Button btnSend, btnCancel;
     FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +27,21 @@ public class ActivityForgotPassword extends ActivityBase {
         setContentView(R.layout.activity_forgot_password);
         initializeComponents();
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityForgotPassword.this.finish();
+            }
+        });
+
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!validateEmail(editEmail))
                     return;
                 sendEmail(editEmail.getText().toString());
+
 
             }
         });
@@ -45,12 +55,12 @@ public class ActivityForgotPassword extends ActivityBase {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
 
-                            Toast.makeText(ActivityForgotPassword.this, "Email je poslat na vasu adresu.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityForgotPassword.this, "The recovery email was sent to your address.", Toast.LENGTH_LONG).show();
                             ActivityForgotPassword.this.finish();
                         }
                         else
                         {
-                            Toast.makeText(ActivityForgotPassword.this, "Nepostojeci Email!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityForgotPassword.this, "Invalid email.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -61,13 +71,18 @@ public class ActivityForgotPassword extends ActivityBase {
         DisplayMetrics dm=new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.dimAmount = 0.75f;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setAttributes(layoutParams);
         int width=dm.widthPixels;
         int height=dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.8),(int)(height*.3)) ;
+        getWindow().setLayout((int)(width*.8),(int)(height*0.2)) ;
 
         editEmail=(EditText) findViewById(R.id.edit_email_forgot);
         btnSend=(Button) findViewById(R.id.btn_forgot);
+        btnCancel=(Button)findViewById(R.id.btn_Cancel);
         auth=FirebaseAuth.getInstance();
 
 

@@ -3,11 +3,7 @@
     <item>
 
         <shape >
-
-            <solid android:color="@color/PopColor"></solid>
-            <corners android:radius="7dp"></corners>
-            <stroke android:width="1.5dp"
-                android:color="@color/BorderGray"></stroke>
+            <corners android:radius="50dp"></corners>
         </shape>
 
     </item>
