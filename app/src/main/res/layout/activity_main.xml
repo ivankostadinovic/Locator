@@ -26,7 +26,6 @@ tools:context=".MainActivity">
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login_email"
         style="@style/LoginButton"
-        android:layout_width="match_parent"
         android:text="@string/log_in_with_email"
         app:icon="@drawable/ic_baseline_email_24px"
         app:backgroundTint="@color/orange1"

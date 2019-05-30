@@ -5,18 +5,17 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/blueMain</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/blueMainDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@color/gray</item>
+        <item name="android:background">@color/background</item>
     </style>
 
     <style name="AppTheme.CustomTheme">
-
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
-
     </style>
+
 <style name="LoginButton" parent="@style/Widget.MaterialComponents.Button.Icon">
     <item name="android:layout_marginStart">26dp</item>
     <item name="android:layout_marginEnd">26dp</item>
@@ -27,4 +26,5 @@
     <item name="android:textAlignment">textStart</item>
 </style>
 >>>>>>> Stashed changes
+
 </resources>

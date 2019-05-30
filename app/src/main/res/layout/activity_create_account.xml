@@ -8,6 +8,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
+
         android:id="@+id/edit_email_create_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,9 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        android:layout_margin="20dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         >
         <com.google.android.material.textfield.TextInputEditText
+
             android:id="@+id/edit_email_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +32,8 @@
             />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_pass_create_layout"
