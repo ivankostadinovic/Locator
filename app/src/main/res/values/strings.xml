@@ -5,13 +5,15 @@
     <string name="fb_login_protocol_scheme">fb2044444992523630</string>
     <string name="sign_in_with_email">Sign in with email</string>
     <string name="hint_email">Email</string>
-    <string name="btn_login">Log in</string>
+    <string name="login_button">Log in</string>
     <string name="forgot_pass"><u>Forgot password?</u></string>
     <string name="create_acc"><u>Create account</u></string>
     <string name="hint_pass">Password</string>
     <string name="hint_confirm_pass">Confirm password</string>
     <string name="hint_name">Full name</string>
     <string name="btn_create_account">Create account</string>
-    <string name="btn_forgot">Send email</string>
+    <string name="log_in_with_email">Sign in with email</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 
 </resources>

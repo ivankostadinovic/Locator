@@ -37,12 +37,10 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private String a="urkeBog";
-    private LoginButton loginButton;
-    private SignInButton signInButton;
-    private Button loginEmailBtn;
+    private Button loginEmailBtn, loginButton, signInButton;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
-    final String EMAIL = "kdol";
+    final String EMAIL = "email";
     private String TAG="SAd";
     final int RC_SIGN_IN=1;
 
@@ -51,11 +49,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+        loginButton=findViewById(R.id.login_button);
+        loginEmailBtn=findViewById(R.id.btn_login_email);
+        signInButton=findViewById(R.id.sign_in_button);
         googleAuth();
         facebookAuth();
-        loginEmailBtn=(Button)findViewById(R.id.btn_login_email);
+
 
         loginEmailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,15 +92,20 @@ public class MainActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(EMAIL));
-        loginButton.setLoginText("                    Sign in with Faceboook");
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile", "user_friends"));
+            }
+        });
+
         //loginButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
 
         // If you are using in a fragment, call loginButton.setFragment(this);
 
         // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+       /* loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
@@ -113,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException exception) {
                 // App code
             }
-        });
+        });*/
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -144,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         final GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
