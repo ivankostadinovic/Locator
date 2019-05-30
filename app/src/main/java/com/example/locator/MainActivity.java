@@ -77,14 +77,17 @@ public class MainActivity extends AppCompatActivity {
         else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
             AccessToken token = AccessToken.getCurrentAccessToken();
-            handleFacebookAccessToken(token);
-            super.onActivityResult(requestCode, resultCode, data);
+
+            if(token!=null) {
+                handleFacebookAccessToken(token);
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
     public void facebookAuth()
     {
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        //FacebookSdk.sdkInitialize(getApplicationContext());
         // AppEventsLogger.activateApp(this);
 
 
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this,"OKKKKKKKKKK",Toast.LENGTH_LONG);
+                            Toast.makeText(MainActivity.this,"OK",Toast.LENGTH_LONG).show();
 
                         } else {
                             // If sign in fails, display a message to the user.
