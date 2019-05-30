@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginEmailBtn;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
-    final String EMAIL = "email";
+    final String EMAIL = "kdol";
     private String TAG="SAd";
     final int RC_SIGN_IN=1;
 
