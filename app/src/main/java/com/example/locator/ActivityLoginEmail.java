@@ -31,7 +31,6 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
 
         initializeComponents();
 
-
     }
 
     @Override
