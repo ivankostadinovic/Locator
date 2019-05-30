@@ -36,6 +36,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String a="asdf";
     private LoginButton loginButton;
     private SignInButton signInButton;
     private Button loginEmailBtn;
