@@ -11,6 +11,12 @@
         <item name="android:background">@color/gray</item>
     </style>
 
+    <style name="AppTheme.CustomTheme">
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+
+    </style>
 <style name="LoginButton" parent="@style/Widget.MaterialComponents.Button.Icon">
     <item name="android:layout_marginStart">26dp</item>
     <item name="android:layout_marginEnd">26dp</item>
@@ -20,4 +26,5 @@
     <item name="android:textAllCaps">false</item>
     <item name="android:textAlignment">textStart</item>
 </style>
+>>>>>>> Stashed changes
 </resources>

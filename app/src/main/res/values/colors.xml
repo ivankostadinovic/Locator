@@ -9,4 +9,6 @@
     <color name="blueMain">#3239ff</color>
     <color name="blueMainDark">#000000</color>
     <color name="red">#db3236</color>
+    <color name="PopColor">#444444</color>
+    <color name="BorderGrey">#bbbbbb</color>
 </resources>
