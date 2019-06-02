@@ -78,7 +78,7 @@ public class ActivityForgotPassword extends ActivityBase {
         int width=dm.widthPixels;
         int height=dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.8),(int)(height*0.2)) ;
+        getWindow().setLayout((int)(width*.8),(int)(height*0.25)) ;
 
         editEmail=(EditText) findViewById(R.id.edit_email_forgot);
         btnSend=(Button) findViewById(R.id.btn_forgot);

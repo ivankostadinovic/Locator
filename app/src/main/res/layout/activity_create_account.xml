@@ -20,6 +20,7 @@
         app:boxCornerRadiusTopEnd="5dp"
         app:boxCornerRadiusTopStart="5dp"
         style="@style/CustomAccentEditText"
+
         >
         <com.google.android.material.textfield.TextInputEditText
 
