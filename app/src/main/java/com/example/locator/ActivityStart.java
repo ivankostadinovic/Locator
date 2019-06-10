@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -47,6 +48,9 @@ public class ActivityStart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_YES);
+
         setContentView(R.layout.activity_start);
         mAuth = FirebaseAuth.getInstance();
         btnLoginFacebook =findViewById(R.id.button_login_facebook);
@@ -62,6 +66,7 @@ public class ActivityStart extends AppCompatActivity {
                 startActivity(new Intent(ActivityStart.this,ActivityLoginEmail.class));
             }
         });
+
 
 
     }
