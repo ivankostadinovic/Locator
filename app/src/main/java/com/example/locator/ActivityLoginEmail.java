@@ -27,6 +27,7 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
     private EditText editEmail,editPass;
     private Button btnLogin,txtCreateAccount,txtForgotPassword;
     private FirebaseAuth auth;
+   private   User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,10 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
         if(!emptyCheck(new EditText[]{editPass,editEmail}))
             return;
 
-        loginUser(editEmail.getText().toString(),editPass.getText().toString());
+        Intent intent=new Intent(ActivityLoginEmail.this,ActivityMain.class);
+        intent.putExtra("User",user);
+        startActivity(intent);
+        //loginUser(editEmail.getText().toString(),editPass.getText().toString());
 
     }
 
@@ -73,6 +77,8 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
                    // FirebaseUser user=task.getResult().getUser();
                     //ucitajKorisnika(user.getUid());
                     Toast.makeText(ActivityLoginEmail.this, "Login successful.", Toast.LENGTH_LONG).show();
+
+
 
 
                 } else {

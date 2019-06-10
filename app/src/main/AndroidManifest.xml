@@ -12,12 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityForgotPassword"
-            android:theme="@style/AppTheme.CustomTheme"
-            ></activity>
+        <activity
+            android:name=".ActivityMain"
+            android:label="@string/title_activity_main"></activity>
+        <activity
+            android:name=".ActivityForgotPassword"
+            android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".ActivityCreateAccount" />
         <activity android:name=".ActivityLoginEmail" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ActivityStart">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ActivityStart">
+
+
+
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/LoginButton"
+        android:backgroundTint="@color/com_facebook_blue"
+        android:id="@+id/button_login_facebook"
+        android:text="@string/sign_in_with_facebook"
+        app:icon="@drawable/ic_facebook_app_logo"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/button_login_google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_login_email"
+        style="@style/LoginButton"
+        android:text="@string/log_in_with_email"
+        app:icon="@drawable/ic_baseline_email_24px"
+        app:iconTint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/button_login_google"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/LoginButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/button_login_google"
+        app:icon="@drawable/ic_icons8_google_filled"
+        app:iconTint="@color/white"
+        android:backgroundTint="@color/red"
+        android:text="@string/sign_in_with_google"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
