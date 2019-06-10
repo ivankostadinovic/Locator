@@ -1,10 +1,14 @@
 package com.example.locator;
 
+import android.Manifest;
 import android.content.Intent;
 //import android.support.annotation.NonNull;
 //import android.support.v7.app.AppCompatActivity;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -32,7 +38,24 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.opencv.android.Utils;
+import org.opencv.core.DMatch;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.FastFeatureDetector;
+import org.opencv.features2d.Feature2D;
+import org.opencv.features2d.FeatureDetector;
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.FeatureDetector;
+import org.opencv.features2d.Features2d;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +66,15 @@ public class MainActivity extends AppCompatActivity {
     final String EMAIL = "email";
     private String TAG="SAd";
     final int RC_SIGN_IN=1;
-
+    final int RC_CAMERA_PERMISSION=50;
+    final int CAMERA_REQUEST=100;
+    Features2d f2d=new Features2d();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
@@ -68,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+
     }
 
     @Override
@@ -77,16 +104,18 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
-        else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-            AccessToken token = AccessToken.getCurrentAccessToken();
 
-            if(token!=null) {
-                handleFacebookAccessToken(token);
-                super.onActivityResult(requestCode, resultCode, data);
+        else{
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+                AccessToken token = AccessToken.getCurrentAccessToken();
+
+                if(token!=null) {
+                    handleFacebookAccessToken(token);
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
             }
         }
-    }
+
 
     public void facebookAuth()
     {
