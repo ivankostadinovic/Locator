@@ -56,8 +56,8 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
 
     private void loginAction() {
 
-        if(!emptyCheck(new EditText[]{editPass,editEmail}))
-            return;
+        //if(!emptyCheck(new EditText[]{editPass,editEmail}))
+           // return;
 
         Intent intent=new Intent(ActivityLoginEmail.this,ActivityMain.class);
         intent.putExtra("User",user);

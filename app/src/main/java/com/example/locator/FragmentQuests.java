@@ -5,14 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
 
 
 public class FragmentQuests extends Fragment {
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private List<Quest> questList;
 
 
 
@@ -42,7 +47,11 @@ public class FragmentQuests extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_fragment_quests, container, false);
+        View view=inflater.inflate(R.layout.fragment_fragment_quests, container, false);
+        recyclerView=view.findViewById(R.id.recyclerView);
+        adapter=new QuestAdapter(questList,getActivity());
+        recyclerView.setAdapter(adapter);
+        return  view;
     }
 
 

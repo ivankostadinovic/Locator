@@ -1,12 +1,22 @@
 package com.example.locator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Quest {
+public class Quest implements Serializable {
 
     private ArrayList<Item> items;
     private String Name;
     private String Description;
+    private int itemsFound;
+
+    public void setItemsFound(int itemsFound) {
+        this.itemsFound = itemsFound;
+    }
+
+    public int getItemsFound() {
+        return itemsFound;
+    }
 
     public Quest(){
 

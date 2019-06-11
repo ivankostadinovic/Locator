@@ -68,7 +68,12 @@
         <item name="android:layout_height">48dp</item>
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
-</style>
+    </style>
+
+    <style name="ListImageView" >
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">50dp</item>
+    </style>
 
 
     >>>>>>> Stashed changes

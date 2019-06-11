@@ -43,7 +43,6 @@ public class FragmentAddQuest extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Mat m=new Mat();
         return inflater.inflate(R.layout.fragment_fragment_add_quest, container, false);
     }
 

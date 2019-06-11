@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.google.android.material.card.MaterialCardView
+
+        android:id="@+id/card1"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                style="@style/ListImageView"
+                android:id="@+id/thumbnail"
+                android:layout_below="@id/title"
+                android:hapticFeedbackEnabled="false"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/brat"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                />
+
+            <ImageView
+                style="@style/ListImageView"
+                android:id="@+id/thumbnail2"
+                android:layout_below="@id/title"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/brat"
+                android:layout_toEndOf="@id/thumbnail"
+                android:layout_marginStart="@dimen/margin_thumbnail"
+
+
+                />
+
+            <ImageView
+                style="@style/ListImageView"
+                android:id="@+id/thumbnail3"
+                android:layout_below="@id/title"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/brat"
+                android:layout_toEndOf="@id/thumbnail2"
+                android:layout_marginStart="@dimen/margin_thumbnail"
+
+                />
+
+
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/List_Title_Padding"
+                android:paddingRight="@dimen/List_Title_Padding"
+                android:paddingTop="@dimen/List_Title_Padding"
+                android:textColor="@color/white"
+                android:textSize="@dimen/List_quest_title"
+                android:text="Testing, attention please"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/thumbnail"
+                android:paddingBottom="@dimen/songs_count_padding_bottom"
+                android:paddingLeft="@dimen/List_Title_Padding"
+                android:paddingRight="@dimen/List_Title_Padding"
+                android:textSize="@dimen/List_quest_text"
+                android:text="Heres attentioon, soon as someone mentions me"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/IconOnlyButton"
+                android:id="@+id/deleteButton"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                icon="@drawable/ic_baseline_delete_outline_24px"
+                iconTint="@color/colorPrimary"
+                />
+
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

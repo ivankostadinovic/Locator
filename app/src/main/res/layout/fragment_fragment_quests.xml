@@ -6,24 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FragmentQuests">
 
-    <!-- TODO: Update blank fragment layout -->
 
-
-    <com.google.android.material.card.MaterialCardView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="wrap_content">
-</com.google.android.material.card.MaterialCardView>
-    <com.google.android.material.button.MaterialButton
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="1"
-        style="@style/IconOnlyButton"
-        app:icon="@drawable/ic_baseline_people_24px"
-        app:iconTint="@color/colorPrimary"
-        app:cornerRadius="24dp"
-        />
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
