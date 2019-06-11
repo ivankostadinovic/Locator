@@ -30,10 +30,16 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+
 import java.util.Arrays;
 
 public class ActivityStart extends AppCompatActivity {
 
+    static{ System.loadLibrary("opencv_java3"); }
     private String a="urkeBog";
     private Button btnLoginEmail, btnLoginFacebook, btnLoginGoogle;
     private CallbackManager callbackManager;
@@ -41,6 +47,7 @@ public class ActivityStart extends AppCompatActivity {
     final String EMAIL = "email";
     private String TAG="SAd";
     final int RC_SIGN_IN=1;
+
 
 
 
@@ -70,6 +77,7 @@ public class ActivityStart extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

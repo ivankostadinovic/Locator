@@ -27,5 +27,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Quests">Quests</string>
+    <string name="Add_new_quest">New quest</string>
+    <string name="Friends">Friends</string>
 
 </resources>
