@@ -45,7 +45,6 @@
     </style>
 
     <style name="CustomTextButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
-
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/white</item>
@@ -54,8 +53,8 @@
     </style>
 
     <style name="CustomOutlinedButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:layout_marginStart">150dp</item>
-        <item name="android:layout_marginEnd">150dp</item>
+        <item name="android:layout_marginStart">80dp</item>
+        <item name="android:layout_marginEnd">80dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textColor">@color/white</item>
@@ -68,13 +67,39 @@
         <item name="android:layout_height">48dp</item>
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
+</style>
+        <style name="StandardImageView" >
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">90dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+            <item name="android:scaleType">fitXY</item>
+            <item name="android:layout_marginStart">5dp</item>
     </style>
+    <style name="CustomPageButton" parent="@style/Widget.MaterialComponents.Button">
 
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+
+    </style>
+    <style name="CustomPageOutlineButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+
+
+
+    </style>
     <style name="ListImageView" >
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_width">50dp</item>
     </style>
-
 
     >>>>>>> Stashed changes
 

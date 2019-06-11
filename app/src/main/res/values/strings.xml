@@ -30,7 +30,12 @@
     <string name="Quests">Quests</string>
     <string name="Add_new_quest">New quest</string>
     <string name="Friends">Friends</string>
-    <string name="demo_card_text">asfasfasf</string>
-    <string name="details">Details</string>
+    <string name="txt_images">Images:</string>
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+    <string name="hint">Hint</string>
+    <string name="name">Name</string>
+    <string name="add_item">Add item</string>
+    <string name="add_quest">Add quest</string>
 
 </resources>

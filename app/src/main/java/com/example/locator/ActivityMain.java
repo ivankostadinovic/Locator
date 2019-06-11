@@ -64,5 +64,7 @@ public class ActivityMain extends ActivityBase {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentAddQuest=FragmentAddQuest.newInstance(null);
         fragmentQuests=FragmentQuests.newInstance(null);
+
+        openFragment(fragmentAddQuest);
     }
 }
