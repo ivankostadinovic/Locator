@@ -1,8 +1,10 @@
 package com.example.locator;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
@@ -10,11 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class ActivityMain extends ActivityBase {
     private TextView mTextMessage;
-    private FragmentAddQuest fragmentAddQuest;
     private FragmentQuests fragmentQuests;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -23,15 +25,14 @@ public class ActivityMain extends ActivityBase {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_add_quest:
-                    openFragment(fragmentAddQuest);
-                    return true;
                 case R.id.navigation_quests:
                     openFragment(fragmentQuests);
                     //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_friends:
                     //mTextMessage.setText(R.string.title_notifications);
+                    return true;
+                case R.id.navigation_map:
                     return true;
             }
             return false;
@@ -54,6 +55,15 @@ public class ActivityMain extends ActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
+
+        FloatingActionButton floatingActionButton=findViewById(R.id.floating_action_button);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(ActivityMain.this,ActivityAddQuest.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -62,9 +72,8 @@ public class ActivityMain extends ActivityBase {
         BottomNavigationView navView = findViewById(R.id.bottom_nav_bar);
         //mTextMessage = findViewById(R.id.message);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        fragmentAddQuest=FragmentAddQuest.newInstance(null);
         fragmentQuests=FragmentQuests.newInstance(null);
 
-        openFragment(fragmentAddQuest);
+        openFragment(fragmentQuests);
     }
 }

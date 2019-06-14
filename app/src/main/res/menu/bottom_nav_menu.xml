@@ -2,18 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_add_quest"
-        android:icon="@drawable/ic_baseline_add_box_24px"
-        android:title="@string/Add_new_quest" />
-
-    <item
         android:id="@+id/navigation_quests"
         android:icon="@drawable/ic_baseline_list_24px"
         android:title="@string/Quests" />
 
     <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/ic_baseline_map_24px"
+        android:title="@string/Map" />
+
+    <item
         android:id="@+id/navigation_friends"
         android:icon="@drawable/ic_baseline_people_24px"
         android:title="@string/Friends" />
+
+
 
 </menu>

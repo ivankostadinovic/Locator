@@ -37,5 +37,9 @@
     <string name="name">Name</string>
     <string name="add_item">Add item</string>
     <string name="add_quest">Add quest</string>
+    <string name="Map">Your map</string>
+    <string name="quests_active">Active quests</string>
+    <string name="quests_finished">Finished quests</string>
+    <string name="quests_feed">Feed</string>
 
 </resources>

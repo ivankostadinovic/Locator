@@ -1,6 +1,7 @@
 package com.example.locator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -48,9 +51,9 @@ public class FragmentQuests extends Fragment {
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_fragment_quests, container, false);
-        recyclerView=view.findViewById(R.id.recyclerView);
-        adapter=new QuestAdapter(questList,getActivity());
-        recyclerView.setAdapter(adapter);
+        //recyclerView=view.findViewById(R.id.recyclerView);
+        //adapter=new QuestAdapter(questList,getActivity());
+        //recyclerView.setAdapter(adapter);
         return  view;
     }
 

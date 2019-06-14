@@ -7,9 +7,39 @@
     tools:context=".FragmentQuests">
 
 
-    <android.support.v7.widget.RecyclerView
+    <com.google.android.material.tabs.TabLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+
+        >
+
+
+        <com.google.android.material.tabs.TabItem
+
+            android:text="@string/quests_feed"/>
+        <com.google.android.material.tabs.TabItem
+
+            android:text="@string/quests_active"
+
+            />
+
+        <com.google.android.material.tabs.TabItem
+
+            android:text="@string/quests_finished"/>
+
+
+
+    </com.google.android.material.tabs.TabLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
