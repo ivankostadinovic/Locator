@@ -1,17 +1,24 @@
 package com.example.locator;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
 
     private String Id;
     private String Name;
-    private String City;
+    private String Hint;
+    private String Description;
     private String Location;
-    private List<Bitmap> Images;
+    private List<String> Images;
     private Bitmap CapturedImage;
+
+    public String getDescription() {
+        return Description;
+    }
 
     public void setCapturedImage(Bitmap capturedImage) {
         CapturedImage = capturedImage;
@@ -25,11 +32,11 @@ public class Item {
         return Found;
     }
 
-    public void setImages(List<Bitmap> images) {
+    public void setImages(List<String > images) {
         Images = images;
     }
 
-    public List<Bitmap> getImages() {
+    public List<String> getImages() {
         return Images;
     }
 
@@ -42,10 +49,15 @@ public class Item {
 
     private boolean Found;
 
+    public void addImage(String image)
+    {
+        getImages().add(image);
+    }
+
 
     public Item()
     {
-
+        Images=new ArrayList<String >();
     }
     public String getId() {
         return Id;
@@ -63,16 +75,21 @@ public class Item {
         Name = name;
     }
 
-    public void setCity(String city) {
-        City = city;
-    }
 
     public void setLocation(String location) {
         Location = location;
     }
 
-    public String getCity() {
-        return City;
+    public void setHint(String hint) {
+        Hint = hint;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getHint() {
+        return Hint;
     }
 
     public String getLocation() {

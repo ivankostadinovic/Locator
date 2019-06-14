@@ -55,7 +55,7 @@
             android:id="@+id/item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,7 +78,7 @@
             android:id="@+id/item_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,7 +101,7 @@
             android:id="@+id/item_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,7 +136,7 @@
             android:id="@+id/item_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -182,6 +182,7 @@
         android:id="@+id/btn_page_1"
         android:text="1"
         style="@style/CustomPageButton"
+        android:visibility="invisible"
         android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_add_item"
