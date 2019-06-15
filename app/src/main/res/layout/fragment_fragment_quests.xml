@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".FragmentQuests">
+    tools:context=".FragmentMap">
 
 
     <com.google.android.material.tabs.TabLayout
@@ -13,9 +13,8 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white"
-
+        app:tabTextAppearance="@style/CustomTabText"
         >
 
 
@@ -31,6 +30,12 @@
         <com.google.android.material.tabs.TabItem
 
             android:text="@string/quests_finished"/>
+
+        <com.google.android.material.tabs.TabItem
+
+            android:text="@string/quests_added"/>
+
+
 
 
 
