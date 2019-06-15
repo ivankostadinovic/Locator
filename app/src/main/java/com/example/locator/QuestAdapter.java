@@ -45,7 +45,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         holder.txtName.setText(quest.getName());
         String status=quest.getItemsFound()+"/"+quest.getItems().size()+" items found";
         holder.txtStatus.setText(status);
-        ArrayList<Item> items=quest.getItems();
+        List<Item> items=quest.getItems();
         if(items.get(0).getCapturedImage()!=null)
             holder.img1.setImageBitmap(items.get(0).getCapturedImage());
         if(items.get(1).getCapturedImage()!=null)

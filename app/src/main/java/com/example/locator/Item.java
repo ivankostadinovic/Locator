@@ -3,10 +3,11 @@ package com.example.locator;
 import android.graphics.Bitmap;
 import android.media.Image;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item {
+public class Item implements Serializable {
 
     private String Id;
     private String Name;
@@ -15,6 +16,7 @@ public class Item {
     private String Location;
     private List<String> Images;
     private Bitmap CapturedImage;
+    private boolean Found;
 
     public String getDescription() {
         return Description;
@@ -28,9 +30,7 @@ public class Item {
         return CapturedImage;
     }
 
-    public boolean isFound() {
-        return Found;
-    }
+
 
     public void setImages(List<String > images) {
         Images = images;
@@ -47,7 +47,7 @@ public class Item {
         return Found;
     }
 
-    private boolean Found;
+
 
     public void addImage(String image)
     {

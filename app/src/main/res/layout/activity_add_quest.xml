@@ -202,6 +202,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_page_2"
         android:text="2"
+        android:enabled="false"
         style="@style/CustomPageButton"
         app:layout_constraintStart_toEndOf="@+id/btn_page_1"
         app:layout_constraintTop_toBottomOf="@+id/btn_add_item"
@@ -210,6 +211,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_page_3"
         android:text="3"
+        android:enabled="false"
         style="@style/CustomPageButton"
         app:layout_constraintStart_toEndOf="@+id/btn_page_2"
         app:layout_constraintTop_toBottomOf="@+id/btn_add_item"

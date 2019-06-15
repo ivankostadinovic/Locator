@@ -61,5 +61,11 @@
     <string name="creators">Vertical Wombats</string>
     <string name="title_activity_map">Map</string>
 
+    <string name="quest_description">Quest description</string>
+    <string name="quest_name">Quest name</string>
+    <string name="radio_istorijski">Istorijski</string>
+    <string name="radio_zabavni">Zabavni</string>
+    <string name="submit_quest">Submit</string>
+
 
 </resources>

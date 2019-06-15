@@ -20,7 +20,7 @@ public class ActivityCreateAccount extends ActivityBase {
     private EditText editEmail,editPass,editConfirmPass,editName;
     private Button btnCreateAccount;
     private FirebaseAuth auth;
-    DatabaseReference db;
+    private DatabaseReference db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,7 @@ public class ActivityCreateAccount extends ActivityBase {
                 u.setEmail(editEmail.getText().toString());
                 u.setPassword(editPass.getText().toString());
                 u.setName(editName.getText().toString());
+
                 registerUser(u);
             }
         });
@@ -65,13 +66,8 @@ public class ActivityCreateAccount extends ActivityBase {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser u = task.getResult().getUser();
-                    db.child("Klijenti").child(u.getUid()).setValue(user);
-                    db.child("Korisnici").child(u.getUid()).setValue(user);
-                    db.child("Korisnici").child(u.getUid()).child("IsServiser").setValue(false);
-                    db.child("Korisnici").child(u.getUid()).child("Id").setValue(u.getUid());
-
-
-
+                    db.child("Users").child(u.getUid()).setValue(user);
+                    db.child("Users").child(u.getUid()).child("Id").setValue(u.getUid());
                     Toast.makeText(ActivityCreateAccount.this   , "Registrovanje uspesno!.", Toast.LENGTH_LONG).show();
 
                 } else {

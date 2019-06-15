@@ -20,79 +20,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityAddQuest extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_quest);
-
-
-        outlineButtons=new ArrayList<Button>();
-        pageButtons=new ArrayList<Button>();
-        imageViews=new ArrayList<ImageView>();
-        items= new ArrayList<Item>();
-        currentItem=0;
-        editDescr=(EditText) findViewById(R.id.item_description);
-        editHint=(EditText) findViewById(R.id.item_hint);
-        editLocation=(EditText) findViewById(R.id.item_location);
-        editName=(EditText) findViewById(R.id.item_name);
-
-        btnCamera=(Button)findViewById(R.id.btn_camera);
-        btnAttach=(Button) findViewById(R.id.btn_attach);
-        for(int i=1;i<4;i++)
-        {
-            ImageView imgView=(ImageView) findViewById(getResources().getIdentifier("img_"+Integer.toString(i), "id", getPackageName()));
-            imageViews.add(imgView);
-        }
-        for(int i=1;i<7;i++)
-        {
-            items.add(new Item());
-            Button button=(Button) findViewById(getResources().getIdentifier("btn_page_"+Integer.toString(i)+"_outline", "id", getPackageName()));
-            outlineButtons.add(button);
-            Button button1=(Button) findViewById(getResources().getIdentifier("btn_page_"+Integer.toString(i), "id", getPackageName()));
-            button1.setOnClickListener(pageListener);
-            pageButtons.add(button1);
-
-        }
-
-
-
-
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (ContextCompat.checkSelfPermission(ActivityAddQuest.this, Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED)
-                    ActivityCompat.requestPermissions(ActivityAddQuest.this, new String[] {Manifest.permission.CAMERA}, 50);////////////////////////////////////////////////
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        });
-
-        btnAttach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
-
-            }
-        });
-
-
-    }
-
-
-
+public class ActivityAddQuest extends ActivityBase implements View.OnClickListener {
 
 
     private User user;
@@ -107,57 +43,20 @@ public class ActivityAddQuest extends AppCompatActivity {
     private Quest quest;
     private boolean ok=false;
 
-    private View.OnClickListener pageListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId())
-            {
-                case R.id.btn_page_1:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(0).setVisibility(View.INVISIBLE);
-                    currentItem=0;
-                    itemToControls(items.get(0));
-                    break;
-                case R.id.btn_page_2:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(1).setVisibility(View.INVISIBLE);
-                    currentItem=1;
-                    itemToControls(items.get(1));
-                    break;
-                case R.id.btn_page_3:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(2).setVisibility(View.INVISIBLE);
-                    currentItem=2;
-                    itemToControls(items.get(2));
-                    break;
-                case R.id.btn_page_4:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(3).setVisibility(View.INVISIBLE);
-                    currentItem=3;
-                    itemToControls(items.get(3));
-                    break;
-                case R.id.btn_page_5:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(4).setVisibility(View.INVISIBLE);
-                    currentItem=4;
-                    itemToControls(items.get(4));
-                    break;
-                case R.id.btn_page_6:
-                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
-                    controlsToItem();
-                    pageButtons.get(5).setVisibility(View.INVISIBLE);
-                    currentItem=5;
-                    itemToControls(items.get(5));
-                    break;
-            }
 
-        }
-    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_quest);
+
+        initializeComponents();
+
+
+
+    }
+
+
+
 
     public void controlsToItem()
     {
@@ -233,10 +132,158 @@ public class ActivityAddQuest extends AppCompatActivity {
             }
             else if (requestCode==50)
             {
-
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
 
 
+
+    }
+
+    @Override
+    public void initializeComponents() {
+
+
+        outlineButtons=new ArrayList<Button>();
+        pageButtons=new ArrayList<Button>();
+        imageViews=new ArrayList<ImageView>();
+        items= new ArrayList<Item>();
+        currentItem=0;
+        editDescr=(EditText) findViewById(R.id.item_description);
+        editHint=(EditText) findViewById(R.id.item_hint);
+        editLocation=(EditText) findViewById(R.id.item_location);
+        editName=(EditText) findViewById(R.id.item_name);
+
+        btnCamera=(Button)findViewById(R.id.btn_camera);
+        btnAttach=(Button) findViewById(R.id.btn_attach);
+        btnAddQuest=(Button) findViewById(R.id.btn_add_quest);
+        btnAddItem=(Button) findViewById(R.id.btn_add_item);
+
+        for(int i=1;i<4;i++)
+        {
+            ImageView imgView=(ImageView) findViewById(getResources().getIdentifier("img_"+Integer.toString(i), "id", getPackageName()));
+            imageViews.add(imgView);
+        }
+        for(int i=1;i<7;i++)
+        {
+            items.add(new Item());
+            Button button=(Button) findViewById(getResources().getIdentifier("btn_page_"+Integer.toString(i)+"_outline", "id", getPackageName()));
+            outlineButtons.add(button);
+            Button button1=(Button) findViewById(getResources().getIdentifier("btn_page_"+Integer.toString(i), "id", getPackageName()));
+            button1.setOnClickListener(this);
+            pageButtons.add(button1);
+
+        }
+
+        btnAddItem.setOnClickListener(this);
+        btnCamera.setOnClickListener(this);
+        btnAttach.setOnClickListener(this);
+        btnAddQuest.setOnClickListener(this);
+
+    }
+    public void clearTexts()
+    {
+        editDescr.setText("");
+        editHint.setText("");
+        editName.setText("");
+        editLocation.setText("");
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId())
+        {
+            case R.id.btn_page_1:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(0).setVisibility(View.INVISIBLE);
+                currentItem=0;
+                itemToControls(items.get(0));
+                break;
+            case R.id.btn_page_2:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(1).setVisibility(View.INVISIBLE);
+                currentItem=1;
+                itemToControls(items.get(1));
+                break;
+            case R.id.btn_page_3:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(2).setVisibility(View.INVISIBLE);
+                currentItem=2;
+                itemToControls(items.get(2));
+                break;
+            case R.id.btn_page_4:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(3).setVisibility(View.INVISIBLE);
+                currentItem=3;
+                itemToControls(items.get(3));
+                break;
+            case R.id.btn_page_5:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(4).setVisibility(View.INVISIBLE);
+                currentItem=4;
+                itemToControls(items.get(4));
+                break;
+            case R.id.btn_page_6:
+                pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                controlsToItem();
+                pageButtons.get(5).setVisibility(View.INVISIBLE);
+                currentItem=5;
+                itemToControls(items.get(5));
+                break;
+
+            case R.id.btn_attach:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+                break;
+            case R.id.btn_camera:
+                if (ContextCompat.checkSelfPermission(ActivityAddQuest.this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED)
+                    ActivityCompat.requestPermissions(ActivityAddQuest.this, new String[] {Manifest.permission.CAMERA}, 50);
+                else {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+                break;
+            case R.id.btn_add_item:
+                controlsToItem();
+                //items.get(currentItem).getImages().size()==3
+                if(true) {
+                    pageButtons.get(currentItem + 1).setEnabled(true);
+                    outlineButtons.get(currentItem + 1).setVisibility(View.VISIBLE);
+                    pageButtons.get(currentItem + 1).setVisibility(View.INVISIBLE);
+                    pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+                    currentItem++;
+                    clearTexts();
+                    Toast.makeText(ActivityAddQuest.this, "Item added", Toast.LENGTH_LONG).show();
+                }
+                else
+                    {
+                        Toast.makeText(ActivityAddQuest.this, "All 3 images required", Toast.LENGTH_LONG).show();
+
+                    }
+                break;
+            case R.id.btn_add_quest:
+                if(items.size()>3) {
+                    Intent i = new Intent(this, ActivitySubmitQuest.class);
+                    i.putExtra("Items", (Serializable) items);
+                    startActivity(i);
+
+                }
+                else
+                {
+                    Toast.makeText(ActivityAddQuest.this, "Atleast 3 items required", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.example.locator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +28,7 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
     private EditText editEmail,editPass;
     private Button btnLogin,txtCreateAccount,txtForgotPassword;
     private FirebaseAuth auth;
-   private   User user;
+    Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,13 +57,13 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
 
     private void loginAction() {
 
-        //if(!emptyCheck(new EditText[]{editPass,editEmail}))
-           // return;
+        if(!emptyCheck(new EditText[]{editPass,editEmail}))
+            return;
 
-        Intent intent=new Intent(ActivityLoginEmail.this,ActivityMain.class);
-        intent.putExtra("User",user);
-        startActivity(intent);
-        //loginUser(editEmail.getText().toString(),editPass.getText().toString());
+
+
+        loginUser(editEmail.getText().toString(),editPass.getText().toString());
+
 
     }
 
@@ -74,21 +75,19 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
-                   // FirebaseUser user=task.getResult().getUser();
-                    //ucitajKorisnika(user.getUid());
-                    Toast.makeText(ActivityLoginEmail.this, "Login successful.", Toast.LENGTH_LONG).show();
-
-
-
+                   FirebaseUser user=task.getResult().getUser();
+                    LocatorData.getInstance().loadUser(user.getUid(),activity);
 
                 } else {
                     Toast.makeText(ActivityLoginEmail.this, "Wrong email/password.", Toast.LENGTH_LONG).show();
-                   // ((BaseActivity)activity).hideProgress();
+
                 }
             }
         };
         auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(ActivityLoginEmail.this, loginListener);
     }
+
+
 
     @Override
     public void initializeComponents() {
@@ -100,7 +99,7 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
         txtCreateAccount.setOnClickListener(this);
         txtForgotPassword.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
-
+        activity=this;
         auth=FirebaseAuth.getInstance();
 
     }

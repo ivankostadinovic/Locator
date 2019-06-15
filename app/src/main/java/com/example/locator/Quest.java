@@ -2,13 +2,24 @@ package com.example.locator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Quest implements Serializable {
 
-    private ArrayList<Item> items;
+    private List<Item> items;
     private String Name;
     private String Description;
     private int itemsFound;
+    private String Id;
+
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public String getId() {
+        return Id;
+    }
 
     public void setItemsFound(int itemsFound) {
         this.itemsFound = itemsFound;
@@ -20,13 +31,13 @@ public class Quest implements Serializable {
 
     public Quest(){
 
-        items=new ArrayList<>();
+        items=new ArrayList<Item>();
     }
     public void addItem(Item item)
     {
         items.add(item);
     }
-    public void setItems(ArrayList<Item> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 
@@ -38,7 +49,7 @@ public class Quest implements Serializable {
         Description = description;
     }
 
-    public ArrayList<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
