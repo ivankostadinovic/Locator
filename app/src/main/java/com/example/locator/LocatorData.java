@@ -13,13 +13,14 @@ import com.google.firebase.database.ValueEventListener;
 import org.xml.sax.Locator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocatorData {
 
-    private ArrayList<Quest> doneQuests;
-    private ArrayList<Quest> activeQuests;
-    private User user;
-    private DatabaseReference db;
+    private  ArrayList<Quest> doneQuests;
+    private  ArrayList<Quest> activeQuests;
+    private  User user;
+    private   DatabaseReference db;
 
 
     private LocatorData()
@@ -29,6 +30,44 @@ public class LocatorData {
         user =new User();
         db= FirebaseDatabase.getInstance().getReference();
 
+    }
+    public void loadAddedQuests(final FragmentAddedList fragmentAddedList)
+    {
+        String ok=user.getId();
+        db.child("Quests").child("Аdded-quests").child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje feed questova
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Quest> list = new ArrayList<>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    list.add(ds.getValue(Quest.class));
+                }
+                fragmentAddedList.loadAddedQuests(list);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public  void loadFeedQuests(final FeedsListFragment feedsListFragment) {
+
+        db.child("Quests").child("Feed-quests").addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje feed questova
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Quest> list = new ArrayList<>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    list.add(ds.getValue(Quest.class));
+                }
+                feedsListFragment.loadFeedQuests(list);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -57,9 +96,10 @@ public class LocatorData {
     }
     public User getUser(){ return user;}
 
-    public void loadUser(String Uid, final Activity activity)
+    public void loadUser(final String Uid, final Activity activity)
     {
         db.child("Users").child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            String ok=Uid;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user=dataSnapshot.getValue(User.class);

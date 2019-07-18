@@ -36,6 +36,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationClient;
     private SupportMapFragment supportMapFragment;
     private CameraPosition googlePlex;
+    private LatLng nisLatLng;
 
 
     private User user;
@@ -58,6 +59,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         if (getArguments() != null) {
             user = (User) getArguments().getSerializable("User");
         }
+        nisLatLng=new LatLng(43.326233, 21.906442);
     }
 
     @Override
@@ -75,7 +77,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
                 mMap.clear(); //clear old markers
                     mMap.setMyLocationEnabled(true);
                     final GoogleMap mmMap=mMap;
@@ -90,6 +91,16 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                                     if (location != null) {
                                          googlePlex = CameraPosition.builder()
                                                 .target(new LatLng(location.getLatitude(),location.getLongitude()))
+                                                .zoom(10)
+                                                .bearing(0)
+                                                .tilt(45)
+                                                .build();
+                                        mmMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+                                    }
+                                    else
+                                    {
+                                        googlePlex = CameraPosition.builder()
+                                                .target(nisLatLng)
                                                 .zoom(10)
                                                 .bearing(0)
                                                 .tilt(45)

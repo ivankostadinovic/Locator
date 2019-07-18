@@ -5,9 +5,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
@@ -29,6 +38,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private TextView mTextMessage;
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
+    private GoogleSignInClient mGoogleSignInClient;
+    private int current;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -37,18 +48,24 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_quests:
+
                     openFragment(fragmentQuests);
+                    current=0;
                     //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_friends:
+                    current=2;
                     //mTextMessage.setText(R.string.title_notifications);
                     return true;
                 case R.id.navigation_map:
+
                     if (ContextCompat.checkSelfPermission(ActivityMain.this, Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_DENIED)
-                        ActivityCompat.requestPermissions(ActivityMain.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                    else
+                        ActivityCompat.requestPermissions(ActivityMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                    else {
                         openFragment(fragmentMap);
+                        current = 1;
+                    }
                     return true;
             }
             return false;
@@ -61,10 +78,25 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
 
         //    transaction.setCustomAnimations(R.animator.slide_in_left,
-                 //   R.animator.slide_out_right, 0, 0);
-        transaction.replace(R.id.fragment_containter, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        //   R.animator.slide_out_right, 0, 0);
+
+
+            switch (current) {
+                case 0:
+                    transaction.hide(fragmentQuests);
+                    break;
+                case 1:
+                    transaction.hide(fragmentMap);
+                case 2:
+                    //
+            }
+            transaction.show(fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+
+
+
     }
 
     @Override
@@ -72,11 +104,11 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
         initializeComponents();
 
-        FloatingActionButton floatingActionButton=findViewById(R.id.floating_action_button);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(ActivityMain.this,ActivityAddQuest.class);
+                Intent i = new Intent(ActivityMain.this, ActivityAddQuest.class);
                 startActivity(i);
             }
         });
@@ -90,8 +122,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     @Override
@@ -110,7 +140,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
         return true;
     }
-
 
 
     @Override
@@ -134,7 +163,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            Toast.makeText(ActivityMain.this,"Gallery",Toast.LENGTH_LONG).show();
+            Toast.makeText(ActivityMain.this, "Gallery", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -142,8 +171,16 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
 
+            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .build();
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            mGoogleSignInClient.signOut();
+            Intent i = new Intent(ActivityMain.this, ActivityStart.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -151,15 +188,32 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         return true;
     }
 
+
     @Override
     public void initializeComponents() {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.bottom_nav_bar);
         //mTextMessage = findViewById(R.id.message);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        fragmentQuests= FragmentQuests.newInstance(null);
-        fragmentMap=FragmentMap.newInstance(null);
+        fragmentQuests = FragmentQuests.newInstance(null);
+        fragmentMap = FragmentMap.newInstance(null);
+
+        current=0;
+        commitFragments();
         openFragment(fragmentQuests);
+
+    }
+
+    public void commitFragments()
+    {
+        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_containter,fragmentMap).add(R.id.fragment_containter,fragmentQuests).commit();
+
+        transaction.hide(fragmentMap);
+
+
+
+
     }
 
     @Override
@@ -174,7 +228,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
-                    Toast.makeText(this,"Please allow map permission.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Please allow map permission.", Toast.LENGTH_LONG).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }

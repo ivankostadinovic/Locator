@@ -66,6 +66,7 @@
     <string name="radio_istorijski">Istorijski</string>
     <string name="radio_zabavni">Zabavni</string>
     <string name="submit_quest">Submit</string>
+    <string name="log_out">Log out</string>
 
 
 </resources>

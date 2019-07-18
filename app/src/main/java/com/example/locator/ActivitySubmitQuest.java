@@ -66,6 +66,6 @@ public class ActivitySubmitQuest extends ActivityBase {
         quest.setItems(ok);
         String key= db.child("Feed-quests").push().getKey();
         db.child("Quests").child("Feed-quests").child(key).setValue(quest);
-        db.child("Quests").child("Added-quests").child(LocatorData.getInstance().getUser().getId()).setValue(key);
+        db.child("Quests").child("Added-quests").child(LocatorData.getInstance().getUser().getId()).child(key).setValue(quest);
     }
 }

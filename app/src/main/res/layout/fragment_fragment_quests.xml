@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FragmentMap">
 
-
     <com.google.android.material.tabs.TabLayout
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,33 +17,25 @@
         >
 
 
-        <com.google.android.material.tabs.TabItem
-
-            android:text="@string/quests_feed"/>
-        <com.google.android.material.tabs.TabItem
-
-            android:text="@string/quests_active"
-
-            />
-
-        <com.google.android.material.tabs.TabItem
-
-            android:text="@string/quests_finished"/>
-
-        <com.google.android.material.tabs.TabItem
-
-            android:text="@string/quests_added"/>
 
 
 
 
 
     </com.google.android.material.tabs.TabLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/recyclerView"
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/container_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tabs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </androidx.viewpager.widget.ViewPager>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
