@@ -68,16 +68,19 @@
             android:id="@+id/radio_istorijski"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_istorijski"/>
         <RadioButton
             android:id="@+id/radio_zabavni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_zabavni"/>
         <RadioButton
             android:id="@+id/radio_istrazivacki"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_zabavni"/>
     </RadioGroup>
 

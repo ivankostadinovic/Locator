@@ -11,7 +11,15 @@ public class Quest implements Serializable {
     private String Description;
     private int itemsFound;
     private String Id;
+    private String Type;
 
+    public String getType() {
+        return Type;
+    }
+
+    public void setType(String type) {
+        Type = type;
+    }
 
     public void setId(String id) {
         Id = id;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,8 +21,8 @@ public class ActivitySubmitQuest extends ActivityBase {
 
     private List<Item> items;
     private Button btnSubmit;
-    private EditText editName,editDesc;
-    private RadioButton radioIstorijski,radioZabavni,radioIstrazivacki;
+    private EditText editName, editDesc;
+    private RadioButton radioIstorijski, radioZabavni, radioIstrazivacki;
     private DatabaseReference db;
     Quest quest;
 
@@ -36,16 +37,14 @@ public class ActivitySubmitQuest extends ActivityBase {
     @Override
     public void initializeComponents() {
 
-        editName=(EditText) findViewById(R.id.quest_name);
-        editDesc=(EditText) findViewById(R.id.quest_description);
-        btnSubmit=(Button) findViewById(R.id.btn_submit_quest);
-        radioIstorijski=(RadioButton)  findViewById(R.id.radio_istorijski);
-        radioZabavni=(RadioButton)  findViewById(R.id.radio_zabavni);
-        radioIstrazivacki=(RadioButton)  findViewById(R.id.radio_istrazivacki);
-        items=new ArrayList<Item>();
-        quest=new Quest();
-        items=(List<Item>)getIntent().getExtras().getSerializable("Items");
-        db=FirebaseDatabase.getInstance().getReference();
+        editName = (EditText) findViewById(R.id.quest_name);
+        editDesc = (EditText) findViewById(R.id.quest_description);
+        btnSubmit = (Button) findViewById(R.id.btn_submit_quest);
+        radioIstorijski = (RadioButton) findViewById(R.id.radio_istorijski);
+        radioZabavni = (RadioButton) findViewById(R.id.radio_zabavni);
+        radioIstrazivacki = (RadioButton) findViewById(R.id.radio_istrazivacki);
+        quest = new Quest();
+        db = FirebaseDatabase.getInstance().getReference();
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,19 +52,30 @@ public class ActivitySubmitQuest extends ActivityBase {
                 addQuest();
             }
         });
-        
+
     }
 
-    private void addQuest()
-    {
-        List<Item> ok=new ArrayList<Item>();
-        for(int i=0;i<3;i++)
-            ok.add(items.get(i));
+    private void addQuest() {
+
+        if (!emptyCheck(new EditText[]{editName, editDesc, editName}))
+            return;
+        for (Item item : LocatorData.getInstance().itemsToAdd) {
+            quest.addItem(item);
+        }
+        if (radioIstorijski.isSelected()) {
+            quest.setType("Istorijski");
+        } else if (radioIstrazivacki.isSelected()) {
+            quest.setType("Istrazivacki");
+        } else {
+            quest.setType("Zabavni");
+        }
         quest.setDescription(editDesc.getText().toString());
         quest.setName(editName.getText().toString());
-        quest.setItems(ok);
-        String key= db.child("Feed-quests").push().getKey();
+        String key = db.child("Feed-quests").push().getKey();
         db.child("Quests").child("Feed-quests").child(key).setValue(quest);
         db.child("Quests").child("Added-quests").child(LocatorData.getInstance().getUser().getId()).child(key).setValue(quest);
+        Tools.showMsg(getApplicationContext(), "Quest added");
+        finish();
+
     }
 }

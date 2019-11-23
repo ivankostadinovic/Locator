@@ -31,8 +31,8 @@ public class FragmentQuests extends Fragment {
     private FragmentAddedList fragmentAddedList;
 
 
-
     private User user;
+
     public FragmentQuests() {
         // Required empty public constructor
     }
@@ -40,7 +40,7 @@ public class FragmentQuests extends Fragment {
     public static FragmentQuests newInstance(User user) {
         FragmentQuests fragment = new FragmentQuests();
         Bundle args = new Bundle();
-        args.putSerializable("User",user);
+        args.putSerializable("User", user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +49,7 @@ public class FragmentQuests extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user=(User)getArguments().getSerializable("User");
+            user = (User) getArguments().getSerializable("User");
         }
     }
 
@@ -57,9 +57,9 @@ public class FragmentQuests extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager=view.findViewById(R.id.container_view_pager);
+        viewPager = view.findViewById(R.id.container_view_pager);
 
-        tabLayout=view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -69,37 +69,32 @@ public class FragmentQuests extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.fragment_fragment_quests, container, false);
+        View view = inflater.inflate(R.layout.fragment_fragment_quests, container, false);
 
-        return  view;
+        return view;
     }
 
 
-    private void setupViewPager(ViewPager viewPager)
-    {
-        feedsListFragment=new FeedsListFragment();
-        fragmentActiveList=new FragmentActiveList();
-        fragmentFinishedList=new FragmentFinishedList();
-        fragmentAddedList=new FragmentAddedList();
-        SectionsPageAdapter adapter=new SectionsPageAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(feedsListFragment,"Feed");
-        adapter.addFragment(fragmentActiveList,"Active");
-        adapter.addFragment(fragmentFinishedList,"Finished");
-        adapter.addFragment(fragmentAddedList,"Added");
+    private void setupViewPager(ViewPager viewPager) {
+
+        feedsListFragment = new FeedsListFragment();
+        fragmentActiveList = new FragmentActiveList();
+        fragmentFinishedList = new FragmentFinishedList();
+        fragmentAddedList = new FragmentAddedList();
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(feedsListFragment, "Feed");
+        adapter.addFragment(fragmentActiveList, "Active");
+        adapter.addFragment(fragmentFinishedList, "Finished");
+        adapter.addFragment(fragmentAddedList, "Added");
         viewPager.setAdapter(adapter);
 
     }
-
-
-
-
 
 
 }

@@ -193,6 +193,8 @@
         app:layout_constraintHorizontal_bias="0.75"
         app:cornerRadius="24dp"
         />
+
+
     <com.google.android.material.button.MaterialButton
         style="@style/IconOnlyButton"
         android:id="@+id/btn_camera"

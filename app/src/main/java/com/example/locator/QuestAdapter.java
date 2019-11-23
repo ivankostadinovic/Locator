@@ -36,6 +36,10 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     }
 
+    public void addQuest(Quest quest){
+        questList.add(quest);
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {

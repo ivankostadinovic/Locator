@@ -21,6 +21,7 @@ public class ActivityForgotPassword extends ActivityBase {
     private EditText editEmail;
     private Button btnSend, btnCancel;
     FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,7 @@ public class ActivityForgotPassword extends ActivityBase {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validateEmail(editEmail))
+                if (!validateEmail(editEmail))
                     return;
                 sendEmail(editEmail.getText().toString());
 
@@ -50,40 +51,39 @@ public class ActivityForgotPassword extends ActivityBase {
 
     private void sendEmail(String email) {
         auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
 
-                            Toast.makeText(ActivityForgotPassword.this, "The recovery email was sent to your address.", Toast.LENGTH_LONG).show();
-                            ActivityForgotPassword.this.finish();
-                        }
-                        else
-                        {
-                            Toast.makeText(ActivityForgotPassword.this, "Invalid email.", Toast.LENGTH_LONG).show();
-                        }
+                        Tools.showMsg(getApplicationContext(), "The recovery email was sent to your address.");
+                        ActivityForgotPassword.this.finish();
+                    } else {
+                        Tools.showMsg(getApplicationContext(), "Invalid email.");
+
                     }
-                });
+                }
+            });
     }
 
     @Override
     public void initializeComponents() {
-        DisplayMetrics dm=new DisplayMetrics();
+        DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.dimAmount = 0.75f;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setAttributes(layoutParams);
-        int width=dm.widthPixels;
-        int height=dm.heightPixels;
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.8),(int)(height*0.25)) ;
+        getWindow().setLayout((int) (width * .8), (int) (height * 0.25));
 
-        editEmail=(EditText) findViewById(R.id.edit_email_forgot);
-        btnSend=(Button) findViewById(R.id.btn_forgot);
-        btnCancel=(Button)findViewById(R.id.btn_Cancel);
-        auth=FirebaseAuth.getInstance();
+        editEmail = (EditText) findViewById(R.id.edit_email_forgot);
+        btnSend = (Button) findViewById(R.id.btn_forgot);
+        btnCancel = (Button) findViewById(R.id.btn_Cancel);
+        auth = FirebaseAuth.getInstance();
 
 
     }

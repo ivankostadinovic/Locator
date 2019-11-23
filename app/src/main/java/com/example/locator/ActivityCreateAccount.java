@@ -17,10 +17,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ActivityCreateAccount extends ActivityBase {
-    private EditText editEmail,editPass,editConfirmPass,editName;
+    private EditText editEmail, editPass, editConfirmPass, editName;
     private Button btnCreateAccount;
     private FirebaseAuth auth;
     private DatabaseReference db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +29,12 @@ public class ActivityCreateAccount extends ActivityBase {
 
         initializeComponents();
 
-        btnCreateAccount=(Button)findViewById(R.id.btn_create_account);
+        btnCreateAccount = (Button) findViewById(R.id.btn_create_account);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User u=new User();
-                if(!validate())
+                User u = new User();
+                if (!validate())
                     return;
                 u.setEmail(editEmail.getText().toString());
                 u.setPassword(editPass.getText().toString());
@@ -47,13 +48,13 @@ public class ActivityCreateAccount extends ActivityBase {
 
     private boolean validate() {
 
-        boolean flag =true;
-        if(!validateEmail(editEmail))
-            flag=false;
-        if(!emptyCheck(new EditText[]{editName}))
-            flag=false;
-        if(!passCheck(editPass,editConfirmPass))
-            flag=false;
+        boolean flag = true;
+        if (!validateEmail(editEmail))
+            flag = false;
+        if (!emptyCheck(new EditText[]{editName}))
+            flag = false;
+        if (!passCheck(editPass, editConfirmPass))
+            flag = false;
         return flag;
     }
 
@@ -68,30 +69,29 @@ public class ActivityCreateAccount extends ActivityBase {
                     FirebaseUser u = task.getResult().getUser();
                     db.child("Users").child(u.getUid()).setValue(user);
                     db.child("Users").child(u.getUid()).child("Id").setValue(u.getUid());
-                    Toast.makeText(ActivityCreateAccount.this   , "Registrovanje uspesno!.", Toast.LENGTH_LONG).show();
+                    Tools.showMsg(getApplicationContext(), "Registration complete.");
 
                 } else {
-                    Toast.makeText(ActivityCreateAccount.this   , "Vec postoji korisnik sa tim Emailom", Toast.LENGTH_LONG).show();
+                    Tools.showMsg(getApplicationContext(), "User with email already exists.");
+
                 }
 
             }
         };
-        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(ActivityCreateAccount.this  , register);
-
-
+        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(ActivityCreateAccount.this, register);
 
 
     }
 
     @Override
     public void initializeComponents() {
-        editEmail=(EditText)findViewById(R.id.edit_email_create);
-        editPass=(EditText)findViewById(R.id.edit_pass_create);
-        editConfirmPass=(EditText)findViewById(R.id.edit_confirm_pass_create);
-        editName=(EditText)findViewById(R.id.edit_name_create);
+        editEmail = (EditText) findViewById(R.id.edit_email_create);
+        editPass = (EditText) findViewById(R.id.edit_pass_create);
+        editConfirmPass = (EditText) findViewById(R.id.edit_confirm_pass_create);
+        editName = (EditText) findViewById(R.id.edit_name_create);
 
         db = FirebaseDatabase.getInstance().getReference();
-        auth=FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
 
     }
 }

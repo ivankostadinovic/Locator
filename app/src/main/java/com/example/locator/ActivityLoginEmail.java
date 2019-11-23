@@ -79,7 +79,7 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
                     LocatorData.getInstance().loadUser(user.getUid(),activity);
 
                 } else {
-                    Toast.makeText(ActivityLoginEmail.this, "Wrong email/password.", Toast.LENGTH_LONG).show();
+                    Tools.showMsg(getApplicationContext(), "Wrong email/password.");
 
                 }
             }

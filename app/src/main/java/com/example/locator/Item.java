@@ -51,7 +51,8 @@ public class Item implements Serializable {
 
     public void addImage(String image)
     {
-        getImages().add(image);
+
+            getImages().add(image);
     }
 
 

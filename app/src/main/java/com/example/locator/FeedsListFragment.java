@@ -26,7 +26,7 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
     public static FragmentQuests newInstance(User user) {
         FragmentQuests fragment = new FragmentQuests();
         Bundle args = new Bundle();
-        args.putSerializable("User",user);
+        args.putSerializable("User", user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,16 +38,15 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
 
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_feeds_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_feeds_list, container, false);
 
 
-
-            return view;
+        return view;
     }
-
 
 
     @Override
@@ -56,7 +55,7 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 
-        recyclerView=view.findViewById(R.id.recyclerViewFeeds);
+        recyclerView = view.findViewById(R.id.recyclerViewFeeds);
 
     }
 
@@ -65,29 +64,34 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
         super.onActivityCreated(savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
+            android.R.color.holo_green_dark,
+            android.R.color.holo_orange_dark,
+            android.R.color.holo_blue_dark);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        if(questList==null)
+        if (questList == null)
             LocatorData.getInstance().loadFeedQuests(this);
         else
             loadFeedQuests(questList);
+        LocatorData.getInstance().feedQuestListener(this);
     }
 
-    public void loadFeedQuests(List<Quest> quests)
-    {
-        questList=quests;
-        adapter=new QuestAdapter(questList,getActivity());
+    public void loadFeedQuests(List<Quest> quests) {
+        questList = quests;
+        adapter = new QuestAdapter(questList, getActivity());
         recyclerView.setAdapter(adapter);
     }
+
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-
         swipeRefreshLayout.setRefreshing(false);
 
+    }
+
+    public void addQuest(Quest quest) {
+        questList.add(quest);
+        adapter.addQuest(quest);
     }
 }

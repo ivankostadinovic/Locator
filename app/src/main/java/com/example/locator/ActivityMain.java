@@ -42,7 +42,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private int current;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -50,17 +50,17 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                 case R.id.navigation_quests:
 
                     openFragment(fragmentQuests);
-                    current=0;
+                    current = 0;
                     //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_friends:
-                    current=2;
+                    current = 2;
                     //mTextMessage.setText(R.string.title_notifications);
                     return true;
                 case R.id.navigation_map:
 
                     if (ContextCompat.checkSelfPermission(ActivityMain.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_DENIED)
+                        == PackageManager.PERMISSION_DENIED)
                         ActivityCompat.requestPermissions(ActivityMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
                     else {
                         openFragment(fragmentMap);
@@ -81,20 +81,18 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         //   R.animator.slide_out_right, 0, 0);
 
 
-            switch (current) {
-                case 0:
-                    transaction.hide(fragmentQuests);
-                    break;
-                case 1:
-                    transaction.hide(fragmentMap);
-                case 2:
-                    //
-            }
-            transaction.show(fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-
+        switch (current) {
+            case 0:
+                transaction.hide(fragmentQuests);
+                break;
+            case 1:
+                transaction.hide(fragmentMap);
+            case 2:
+                //
+        }
+        transaction.show(fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
 
     }
@@ -118,7 +116,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -163,7 +161,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            Toast.makeText(ActivityMain.this, "Gallery", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -176,7 +173,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             FirebaseAuth.getInstance().signOut();
             LoginManager.getInstance().logOut();
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .build();
+                .build();
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             mGoogleSignInClient.signOut();
             Intent i = new Intent(ActivityMain.this, ActivityStart.class);
@@ -198,20 +195,17 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         fragmentQuests = FragmentQuests.newInstance(null);
         fragmentMap = FragmentMap.newInstance(null);
 
-        current=0;
+        current = 0;
         commitFragments();
         openFragment(fragmentQuests);
 
     }
 
-    public void commitFragments()
-    {
-        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_containter,fragmentMap).add(R.id.fragment_containter,fragmentQuests).commit();
+    public void commitFragments() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment_containter, fragmentMap).add(R.id.fragment_containter, fragmentQuests).commit();
 
         transaction.hide(fragmentMap);
-
-
 
 
     }
@@ -223,12 +217,12 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             case 200: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openFragment(fragmentMap);
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
-                    Toast.makeText(this, "Please allow map permission.", Toast.LENGTH_LONG).show();
+                    Tools.showMsg(this, "Please allow map permission.");
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
