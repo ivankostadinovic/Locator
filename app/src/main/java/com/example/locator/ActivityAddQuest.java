@@ -27,19 +27,17 @@ import java.util.List;
 
 public class ActivityAddQuest extends ActivityBase implements View.OnClickListener {
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int SELECT_IMAGE = 2;
 
-    private User user;
     private Button btnCamera, btnAttach, btnAddItem, btnAddQuest;
-    private List<Button> pageButtons, outlineButtons;
+    private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
     private EditText editName, editDescr, editLocation, editHint;
-    private List<ImageView> imageViews;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int SELECT_IMAGE = 2;
-    private List<Item> items;
-    private Item shownItem;
-    private int currentItemIndex;
+    private List<ImageView> imageViews = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
+    private Item shownItem = new Item();
+    private int currentItemIndex = 0;
     private int currentImage;
-    private Quest quest;
     private boolean removeItem = false;
 
 
@@ -47,18 +45,14 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_quest);
-
         initializeComponents();
-
-
     }
 
     public void addItem() {
-
-        shownItem.setName(editName.getText().toString());
-        shownItem.setHint(editHint.getText().toString());
-        shownItem.setDescription(editDescr.getText().toString());
-        shownItem.setLocation(editLocation.getText().toString());
+        shownItem.Name = editName.getText().toString();
+        shownItem.Hint = editHint.getText().toString();
+        shownItem.Description = editDescr.getText().toString();
+        shownItem.Location = editLocation.getText().toString();
         items.add(shownItem);
     }
 
@@ -66,31 +60,30 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         if (currentItemIndex > items.size() - 1) {
             return;
         }
-        shownItem.setName(editName.getText().toString());
-        shownItem.setHint(editHint.getText().toString());
-        shownItem.setDescription(editDescr.getText().toString());
-        shownItem.setLocation(editLocation.getText().toString());
+        shownItem.Name = editName.getText().toString();
+        shownItem.Hint = editHint.getText().toString();
+        shownItem.Description = editDescr.getText().toString();
+        shownItem.Location = editLocation.getText().toString();
         items.set(currentItemIndex, shownItem);
-
     }
 
     public void itemToControls(Item item) {
         shownItem = item;
-        editName.setText(item.getName());
-        editHint.setText(item.getHint());
-        editDescr.setText(item.getDescription());
-        editLocation.setText(item.getLocation());
+        editName.setText(item.Name);
+        editHint.setText(item.Hint);
+        editDescr.setText(item.Description);
+        editLocation.setText(item.Location);
         int i = 0;
         imageViews.get(0).setImageDrawable(getDrawable(R.drawable.ok2));
         imageViews.get(1).setImageDrawable(getDrawable(R.drawable.ok2));
         imageViews.get(2).setImageDrawable(getDrawable(R.drawable.ok2));
-        if (item.getImages().size() != 0)
-            for (String b : item.getImages()) {
+        if (item.Images.size() != 0)
+            for (String b : item.Images) {
                 imageViews.get(i).setImageBitmap(StringToBitMap(b));
                 i++;
             }
-        currentImage = item.getImages().size();
-        if (shownItem.getImages().size() == 3) {
+        currentImage = item.Images.size();
+        if (shownItem.Images.size() == 3) {
             btnAttach.setEnabled(false);
             btnCamera.setEnabled(false);
         } else {
@@ -104,15 +97,13 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
         byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
+        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     public Bitmap StringToBitMap(String encodedString) {
         try {
             byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
+            return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
         } catch (Exception e) {
             e.getMessage();
             return null;
@@ -122,42 +113,32 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK)
+        if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Bundle extras = data.getExtras();
                 final Bitmap imageBitmap = (Bitmap) extras.get("data");
-
                 imageViews.get(currentImage++).setImageBitmap(imageBitmap);
 
-                if (shownItem.getImages().size() == 2) {
+                if (shownItem.Images.size() == 2) {
                     btnAttach.setEnabled(false);
                     btnCamera.setEnabled(false);
                 }
-
-                new Thread(new Runnable() {
-                    public void run() {
-                        shownItem.addImage(BitMapToString(imageBitmap));
-
-                    }
-                }).start();
+                new Thread(() -> shownItem.Images.add(BitMapToString(imageBitmap))).start();
 
             } else if (requestCode == SELECT_IMAGE) {
                 if (data != null) {
                     try {
                         final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-
                         imageViews.get(currentImage++).setImageBitmap(bitmap);
-
-                        if (shownItem.getImages().size() == 2) {
+                        if (shownItem.Images.size() == 2) {
                             btnAttach.setEnabled(false);
                             btnCamera.setEnabled(false);
                         }
                         new Thread(new Runnable() {
                             public void run() {
-                                shownItem.addImage(BitMapToString(bitmap));
+                                shownItem.Images.add(BitMapToString(bitmap));
                             }
                         }).start();
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -166,25 +147,11 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
     }
-
-
-
-                   /* new Thread(new Runnable() {
-        public void run() {
-        };
-    }).start();*/
 
     @Override
     public void initializeComponents() {
-
-
-        outlineButtons = new ArrayList<>();
-        pageButtons = new ArrayList<>();
-        imageViews = new ArrayList<>();
-        items = new ArrayList<>();
-        shownItem = new Item();
-        currentItemIndex = 0;
         editDescr = findViewById(R.id.item_description);
         editHint = findViewById(R.id.item_hint);
         editLocation = findViewById(R.id.item_location);
@@ -195,9 +162,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         btnAddQuest = findViewById(R.id.btn_add_quest);
         btnAddItem = findViewById(R.id.btn_add_item);
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,20 +174,16 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
             imageViews.add(imgView);
         }
         for (int i = 1; i < 7; i++) {
-
-            Button button = (Button) findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i) + "_outline", "id", getPackageName()));
+            Button button = findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i) + "_outline", "id", getPackageName()));
             outlineButtons.add(button);
-            Button button1 = (Button) findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i), "id", getPackageName()));
+            Button button1 = findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i), "id", getPackageName()));
             button1.setOnClickListener(this);
             pageButtons.add(button1);
-
         }
-
         btnAddItem.setOnClickListener(this);
         btnCamera.setOnClickListener(this);
         btnAttach.setOnClickListener(this);
         btnAddQuest.setOnClickListener(this);
-
     }
 
     public void clearTexts() {
@@ -289,7 +250,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 break;
             case R.id.btn_camera:
                 if (ContextCompat.checkSelfPermission(ActivityAddQuest.this, Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_DENIED)
+                        == PackageManager.PERMISSION_DENIED)
                     ActivityCompat.requestPermissions(ActivityAddQuest.this, new String[]{Manifest.permission.CAMERA}, 50);
                 else {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

@@ -1,8 +1,10 @@
 *.iml
 .gradle
+openCVLibrary343
 /local.properties
 /.idea/caches
 /.idea/libraries
+.idea/libraries/*
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
@@ -11,3 +13,11 @@
 /build
 /captures
 .externalNativeBuild
+/.idea/*
+/.project
+local.properties
+/app/.project
+/app/.classpath
+.settings/org.eclipse.buildship.core.prefs
+/app/.settings/org.eclipse.buildship.core.prefs
+openCVLibrary343/build/intermediates/incremental/packageDebugResources/merger.xml

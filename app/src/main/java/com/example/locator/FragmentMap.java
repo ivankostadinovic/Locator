@@ -59,7 +59,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         if (getArguments() != null) {
             user = (User) getArguments().getSerializable("User");
         }
-        nisLatLng=new LatLng(43.326233, 21.906442);
+        nisLatLng = new LatLng(43.326233, 21.906442);
     }
 
     @Override
@@ -69,17 +69,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_fragment_map, container, false);
 
 
-
-
-
-        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                mMap.clear(); //clear old markers
+        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (supportMapFragment != null) {//use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
+            supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    mMap.clear(); //clear old markers
                     mMap.setMyLocationEnabled(true);
-                    final GoogleMap mmMap=mMap;
+                    final GoogleMap mmMap = mMap;
                     fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
@@ -89,16 +87,14 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                                 public void onSuccess(Location location) {
                                     // Got last known location. In some rare situations this can be null.
                                     if (location != null) {
-                                         googlePlex = CameraPosition.builder()
-                                                .target(new LatLng(location.getLatitude(),location.getLongitude()))
+                                        googlePlex = CameraPosition.builder()
+                                                .target(new LatLng(location.getLatitude(), location.getLongitude()))
                                                 .zoom(10)
                                                 .bearing(0)
                                                 .tilt(45)
                                                 .build();
                                         mmMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         googlePlex = CameraPosition.builder()
                                                 .target(nisLatLng)
                                                 .zoom(10)
@@ -111,18 +107,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                             });
 
 
-
-
-
                 }
 
-        });
-
+            });
+        }
         return view;
     }
 
     @Override
-    public void onMapReady (GoogleMap googleMap){
+    public void onMapReady(GoogleMap googleMap) {
 
     }
 }

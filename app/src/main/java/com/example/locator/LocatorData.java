@@ -2,8 +2,6 @@ package com.example.locator;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.xml.sax.Locator;
 
 import java.util.ArrayList;
 import java.util.List;
