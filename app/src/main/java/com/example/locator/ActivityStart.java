@@ -31,18 +31,16 @@ import java.util.Arrays;
 
 public class ActivityStart extends AppCompatActivity {
 
-    static{ System.loadLibrary("opencv_java3"); }
-    private String a="urkeBog";
+    static {
+        System.loadLibrary("opencv_java3");
+    }
     private Button btnLoginEmail, btnLoginFacebook, btnLoginGoogle;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
-    final String EMAIL = "email";
-    private String TAG="SAd";
-    final int RC_SIGN_IN_GOOGLE =1;
-    final int RC_SIGN_IN_FACEBOOK=64206;
-    private String googleId="746996686504-enujt0fgvg1alf1oorllrc927fpd2pck.apps.googleusercontent.com";
-
-
+    private String TAG = "SAd";
+    final int RC_SIGN_IN_GOOGLE = 1;
+    final int RC_SIGN_IN_FACEBOOK = 64206;
+    private String googleId = "746996686504-enujt0fgvg1alf1oorllrc927fpd2pck.apps.googleusercontent.com";
 
 
     @Override
@@ -53,8 +51,8 @@ public class ActivityStart extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user!=null)
-            LocatorData.getInstance().loadUser(user.getUid(),ActivityStart.this);
+        if (user != null)
+            LocatorData.getInstance().loadUser(user.getUid(), ActivityStart.this);
         else {
 
             btnLoginFacebook = findViewById(R.id.button_login_facebook);
@@ -73,22 +71,19 @@ public class ActivityStart extends AppCompatActivity {
         }
 
 
-
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==RC_SIGN_IN_GOOGLE)
-        {
+        if (requestCode == RC_SIGN_IN_GOOGLE) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-        }
-        else if (requestCode==RC_SIGN_IN_FACEBOOK){
+        } else if (requestCode == RC_SIGN_IN_FACEBOOK) {
             callbackManager.onActivityResult(requestCode, resultCode, data);
             AccessToken token = AccessToken.getCurrentAccessToken();
 
-            if(token!=null) {
+            if (token != null) {
                 handleFacebookAccessToken(token);
                 super.onActivityResult(requestCode, resultCode, data);
 
@@ -96,43 +91,12 @@ public class ActivityStart extends AppCompatActivity {
         }
     }
 
-    public void facebookAuth()
-    {
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        // AppEventsLogger.activateApp(this);
-
+    public void facebookAuth() {
 
         callbackManager = CallbackManager.Factory.create();
 
-        btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(ActivityStart.this, Arrays.asList("public_profile", "email"));
-            }
-        });
-
-        //btnLoginFacebook.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-
-        // If you are using in a fragment, call btnLoginFacebook.setFragment(this);
-
-        // Callback registration
-       /* btnLoginFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });*/
+        btnLoginFacebook.setOnClickListener(view ->
+                LoginManager.getInstance().logInWithReadPermissions(ActivityStart.this, Arrays.asList("public_profile", "email")));
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -158,8 +122,8 @@ public class ActivityStart extends AppCompatActivity {
                 });
 
     }
-    public void googleAuth()
-    {
+
+    public void googleAuth() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(googleId)
                 .requestEmail()
@@ -205,13 +169,10 @@ public class ActivityStart extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            LocatorData.getInstance().loadUser(user.getUid(),ActivityStart.this);
+                            LocatorData.getInstance().loadUser(user.getUid(), ActivityStart.this);
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
-
-                        // ...
                     }
                 });
     }
@@ -229,17 +190,13 @@ public class ActivityStart extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(ActivityStart.this,"OK",Toast.LENGTH_LONG).show();
-                            LocatorData.getInstance().loadUser(user.getUid(),ActivityStart.this);
+                            Toast.makeText(ActivityStart.this, "OK", Toast.LENGTH_LONG).show();
+                            LocatorData.getInstance().loadUser(user.getUid(), ActivityStart.this);
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-
                         }
-
-                        // ...
                     }
                 });
     }
