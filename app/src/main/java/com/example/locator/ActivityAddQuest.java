@@ -32,12 +32,12 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
 
     private Button btnCamera, btnAttach, btnAddItem, btnAddQuest;
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
-    private EditText editName, editDescr, editLocation, editHint;
-    private List<ImageView> imageViews = new ArrayList<>();
+    private EditText editName, editQeustion, editLocation, editHint;
+    private ImageView imageView;
     private List<Item> items = new ArrayList<>();
+    private List<EditText> answers = new ArrayList<>();
     private Item shownItem = new Item();
     private int currentItemIndex = 0;
-    private int currentImage;
     private boolean removeItem = false;
 
 
@@ -49,10 +49,13 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     }
 
     public void addItem() {
-        shownItem.Name = editName.getText().toString();
-        shownItem.Hint = editHint.getText().toString();
-        shownItem.Description = editDescr.getText().toString();
-        shownItem.Location = editLocation.getText().toString();
+        shownItem.name = editName.getText().toString();
+        shownItem.hint = editHint.getText().toString();
+        shownItem.question = editQeustion.getText().toString();
+        shownItem.location = editLocation.getText().toString();
+        for (int i = 0; i < 3; i++) {
+            shownItem.answers.add(answers.get(i).getText().toString());
+        }
         items.add(shownItem);
     }
 
@@ -60,55 +63,35 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         if (currentItemIndex > items.size() - 1) {
             return;
         }
-        shownItem.Name = editName.getText().toString();
-        shownItem.Hint = editHint.getText().toString();
-        shownItem.Description = editDescr.getText().toString();
-        shownItem.Location = editLocation.getText().toString();
+        shownItem.name = editName.getText().toString();
+        shownItem.hint = editHint.getText().toString();
+        shownItem.question = editQeustion.getText().toString();
+        shownItem.location = editLocation.getText().toString();
+        for (int i = 0; i < 3; i++) {
+            shownItem.answers.set(i, answers.get(i).getText().toString());
+        }
         items.set(currentItemIndex, shownItem);
     }
 
     public void itemToControls(Item item) {
         shownItem = item;
-        editName.setText(item.Name);
-        editHint.setText(item.Hint);
-        editDescr.setText(item.Description);
-        editLocation.setText(item.Location);
-        int i = 0;
-        imageViews.get(0).setImageDrawable(getDrawable(R.drawable.ok2));
-        imageViews.get(1).setImageDrawable(getDrawable(R.drawable.ok2));
-        imageViews.get(2).setImageDrawable(getDrawable(R.drawable.ok2));
-        if (item.Images.size() != 0)
-            for (String b : item.Images) {
-                imageViews.get(i).setImageBitmap(StringToBitMap(b));
-                i++;
+        editName.setText(item.name);
+        editHint.setText(item.hint);
+        editQeustion.setText(item.question);
+        if (item.answers != null && !item.answers.isEmpty()) {
+            for (int i = 0; i < 3; i++) {
+                answers.get(i).setText(item.answers.get(i));
             }
-        currentImage = item.Images.size();
-        if (shownItem.Images.size() == 3) {
-            btnAttach.setEnabled(false);
-            btnCamera.setEnabled(false);
-        } else {
-            btnAttach.setEnabled(true);
-            btnCamera.setEnabled(true);
+        }
+        editLocation.setText(item.location);
+        imageView.setImageDrawable(getDrawable(R.drawable.ok2));
+        if (item.image != null && !item.image.isEmpty()) {
+            imageView.setImageBitmap(StringToBitMap(item.image));
         }
     }
 
 
-    public String BitMapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
-    }
 
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -117,28 +100,16 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Bundle extras = data.getExtras();
                 final Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imageViews.get(currentImage++).setImageBitmap(imageBitmap);
+                imageView.setImageBitmap(imageBitmap);
 
-                if (shownItem.Images.size() == 2) {
-                    btnAttach.setEnabled(false);
-                    btnCamera.setEnabled(false);
-                }
-                new Thread(() -> shownItem.Images.add(BitMapToString(imageBitmap))).start();
+                new Thread(() -> shownItem.image = (BitMapToString(imageBitmap))).start();
 
             } else if (requestCode == SELECT_IMAGE) {
                 if (data != null) {
                     try {
                         final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                        imageViews.get(currentImage++).setImageBitmap(bitmap);
-                        if (shownItem.Images.size() == 2) {
-                            btnAttach.setEnabled(false);
-                            btnCamera.setEnabled(false);
-                        }
-                        new Thread(new Runnable() {
-                            public void run() {
-                                shownItem.Images.add(BitMapToString(bitmap));
-                            }
-                        }).start();
+                        imageView.setImageBitmap(bitmap);
+                        new Thread(() -> shownItem.image = BitMapToString(bitmap)).start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -152,7 +123,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
 
     @Override
     public void initializeComponents() {
-        editDescr = findViewById(R.id.item_description);
+        editQeustion = findViewById(R.id.item_question);
         editHint = findViewById(R.id.item_hint);
         editLocation = findViewById(R.id.item_location);
         editName = findViewById(R.id.item_name);
@@ -163,20 +134,17 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         btnAddItem = findViewById(R.id.btn_add_item);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityAddQuest.super.onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> ActivityAddQuest.super.onBackPressed());
+
         for (int i = 1; i < 4; i++) {
-            ImageView imgView = findViewById(getResources().getIdentifier("img_" + Integer.toString(i), "id", getPackageName()));
-            imageViews.add(imgView);
+            EditText editText = findViewById(getResources().getIdentifier("item_answer_" + i, "id", getPackageName()));
+            answers.add(editText);
         }
+        imageView = findViewById(R.id.img_1);
         for (int i = 1; i < 7; i++) {
-            Button button = findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i) + "_outline", "id", getPackageName()));
+            Button button = findViewById(getResources().getIdentifier("btn_page_" + i + "_outline", "id", getPackageName()));
             outlineButtons.add(button);
-            Button button1 = findViewById(getResources().getIdentifier("btn_page_" + Integer.toString(i), "id", getPackageName()));
+            Button button1 = findViewById(getResources().getIdentifier("btn_page_" + i, "id", getPackageName()));
             button1.setOnClickListener(this);
             pageButtons.add(button1);
         }
@@ -187,17 +155,18 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     }
 
     public void clearTexts() {
-        editDescr.setText("");
+        editQeustion.setText("");
         editHint.setText("");
         editName.setText("");
         editLocation.setText("");
-        imageViews.get(0).setImageDrawable(getDrawable(R.drawable.ok2));
-        imageViews.get(1).setImageDrawable(getDrawable(R.drawable.ok2));
-        imageViews.get(2).setImageDrawable(getDrawable(R.drawable.ok2));
+        imageView.setImageDrawable(getDrawable(R.drawable.ok2));
         btnAttach.setEnabled(true);
         btnCamera.setEnabled(true);
         shownItem = new Item();
-        currentImage = 0;
+        for (EditText answer : answers) {
+            answer.setText("");
+        }
+
     }
 
     public void setUpPages(int index) {
@@ -250,7 +219,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 break;
             case R.id.btn_camera:
                 if (ContextCompat.checkSelfPermission(ActivityAddQuest.this, Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED)
+                    == PackageManager.PERMISSION_DENIED)
                     ActivityCompat.requestPermissions(ActivityAddQuest.this, new String[]{Manifest.permission.CAMERA}, 50);
                 else {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -265,26 +234,21 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                     btnAddItem.setText("Add item");
                     return;
                 }
-                //items.get(currentItemIndex).getImages().size()==3
-                if (!emptyCheck(new EditText[]{editName, editDescr, editHint, editLocation}))
+                if (!emptyCheck(new EditText[]{editName, editQeustion, editHint, editLocation, answers.get(0), answers.get(1), answers.get(2)})) {
                     return;
-                else if (true) {// check for 3 images
-                    addItem();
-                    if (currentItemIndex == 5) {
-                        setUpPages(0);
-                    } else {
-                        pageButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
-                        currentItemIndex++;
-                        pageButtons.get(currentItemIndex).setEnabled(true);
-                        outlineButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
-                        pageButtons.get(currentItemIndex).setVisibility(View.INVISIBLE);
-                        currentImage = 0;
-                        clearTexts();
-                    }
-                    Tools.showMsg(getApplicationContext(), "Item added");
-                } else {
-                    Tools.showMsg(getApplicationContext(), "All 3 images required");
                 }
+                addItem();
+                if (currentItemIndex == 5) {
+                    setUpPages(0);
+                } else {
+                    pageButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
+                    currentItemIndex++;
+                    pageButtons.get(currentItemIndex).setEnabled(true);
+                    outlineButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
+                    pageButtons.get(currentItemIndex).setVisibility(View.INVISIBLE);
+                    clearTexts();
+                }
+                Tools.showMsg(getApplicationContext(), "Item added");
                 break;
             case R.id.btn_add_quest:
                 if (items.size() >= 3) {

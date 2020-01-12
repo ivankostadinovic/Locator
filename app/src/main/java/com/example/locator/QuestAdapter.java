@@ -21,22 +21,21 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     private Context context;
 
 
-    public QuestAdapter(List<Quest>questL, Context context)
-    {
-        questList =questL;
-        this.context=context;
+    public QuestAdapter(List<Quest> questL, Context context) {
+        questList = questL;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quest,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quest, parent, false);
 
         return new ViewHolder(view);
 
     }
 
-    public void addQuest(Quest quest){
+    public void addQuest(Quest quest) {
         questList.add(quest);
         notifyDataSetChanged();
     }
@@ -44,42 +43,43 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Quest quest= questList.get(position);
+        Quest quest = questList.get(position);
 
         holder.txtName.setText(quest.getName());
-        String status=quest.getItemsFound()+"/"+quest.getItems().size()+" items found";
+        String status = quest.getItemsFound() + "/" + quest.getItems().size() + " items found";
         holder.txtStatus.setText(status);
-       // List<Item> items=quest.getItems();
+        // List<Item> items=quest.getItems();
         //if(items!=null) {
-            //if (items.get(0).getCapturedImage() != null)
-              //  holder.img1.setImageBitmap(items.get(0).getCapturedImage());
-            //if (items.get(1).getCapturedImage() != null)
-             //   holder.img2.setImageBitmap(items.get(1).getCapturedImage());
-           // if (items.get(2).getCapturedImage() != null)
-               // holder.img2.setImageBitmap(items.get(2).getCapturedImage());
-       // }
+        //if (items.get(0).getCapturedImage() != null)
+        //  holder.img1.setImageBitmap(items.get(0).getCapturedImage());
+        //if (items.get(1).getCapturedImage() != null)
+        //   holder.img2.setImageBitmap(items.get(1).getCapturedImage());
+        // if (items.get(2).getCapturedImage() != null)
+        // holder.img2.setImageBitmap(items.get(2).getCapturedImage());
+        // }
     }
 
 
     @Override
     public int getItemCount() {
-        if(questList==null)
+        if (questList == null)
             return 0;
         return questList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView txtName,txtStatus;
+        public TextView txtName, txtStatus;
         public ImageView img1, img2, img3;
+
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            txtName=(TextView)itemView.findViewById(R.id.title);
-            txtStatus=(TextView)itemView.findViewById(R.id.count);
-            img1= itemView.findViewById(R.id.thumbnail);
-            img2= itemView.findViewById(R.id.thumbnail2);
-            img3= itemView.findViewById(R.id.thumbnail3);
+            txtName = (TextView) itemView.findViewById(R.id.title);
+            txtStatus = (TextView) itemView.findViewById(R.id.count);
+            img1 = itemView.findViewById(R.id.thumbnail);
+            img2 = itemView.findViewById(R.id.thumbnail2);
+            img3 = itemView.findViewById(R.id.thumbnail3);
 
 
         }
@@ -87,11 +87,10 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         @Override
         public void onClick(View v) {
 
-            int position=getAdapterPosition();
-            Quest q= questList.get(position);
-
-            Intent i=new Intent(context, PopUpFeedQuest.class);
-            i.putExtra("Quest",q);
+            int position = getAdapterPosition();
+            Quest q = questList.get(position);
+            Intent i = new Intent(context, PopUpFeedQuest.class);
+            i.putExtra("Quest", q);
             context.startActivity(i);
 
 

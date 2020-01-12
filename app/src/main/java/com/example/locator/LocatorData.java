@@ -40,7 +40,7 @@ public class LocatorData {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Quest quest = dataSnapshot.getValue(Quest.class);
-               // feedsListFragment.addQuest(quest);
+                feedsListFragment.addQuest(quest);
 
                 Tools.log("heeloo");
             }
@@ -96,9 +96,10 @@ public class LocatorData {
                     list.add(ds.getValue(Quest.class));
                 }
                 feedsListFragment.loadFeedQuests(list);
+                Tools.log("heeloo" +" why");
+
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

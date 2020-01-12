@@ -53,7 +53,7 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_container);
 
         recyclerView = view.findViewById(R.id.recyclerViewFeeds);
 
@@ -70,11 +70,9 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        if (questList == null)
-            LocatorData.getInstance().loadFeedQuests(this);
-        else
-            loadFeedQuests(questList);
-        LocatorData.getInstance().feedQuestListener(this);
+        questList = new ArrayList<>();
+        LocatorData.getInstance().loadFeedQuests(this);
+        //LocatorData.getInstance().feedQuestListener(this);
     }
 
     public void loadFeedQuests(List<Quest> quests) {

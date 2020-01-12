@@ -9,14 +9,19 @@ import java.util.List;
 
 public class Item implements Serializable {
 
-    public String Id;
-    public String Name;
-    public String Hint;
-    public String Description;
-    public String Location;
-    public List<String> Images;
-    public Bitmap CapturedImage;
-    public boolean Found;
+    public String id;
+    public String name;
+    public String hint;
+    public String location;
+    public String image;
+    public String question;
+    public List<String> answers;
+    public Bitmap capturedImage;
+    public boolean found;
+
+    public Item() {
+        answers = new ArrayList<>();
+    }
 
 
 }

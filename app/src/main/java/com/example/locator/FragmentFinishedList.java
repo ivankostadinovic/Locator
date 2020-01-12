@@ -63,10 +63,6 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-        Quest q=new Quest();
-        q.setName("Helllo");
-        q.setItemsFound(5);
-        questList.add(q);
         adapter=new QuestAdapter(questList,getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -68,7 +68,7 @@ public class ActivityCreateAccount extends ActivityBase {
                 if (task.isSuccessful()) {
                     FirebaseUser u = task.getResult().getUser();
                     db.child("Users").child(u.getUid()).setValue(user);
-                    db.child("Users").child(u.getUid()).child("Id").setValue(u.getUid());
+                    db.child("Users").child(u.getUid()).child("id").setValue(u.getUid());
                     Tools.showMsg(getApplicationContext(), "Registration complete.");
 
                 } else {

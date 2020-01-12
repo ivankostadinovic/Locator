@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityLoginEmail">
+    tools:context=".ActivityAddQuest">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -24,23 +24,9 @@
             style="@style/StandardImageView"
             android:layout_marginStart="25dp"
             android:src="@drawable/ok2"
-            app:layout_constraintEnd_toStartOf="@id/img_2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_images" />
 
-        <ImageView
-            android:id="@+id/img_3"
-            style="@style/StandardImageView"
-            android:src="@drawable/ok2"
-            app:layout_constraintStart_toEndOf="@+id/img_2"
-            app:layout_constraintTop_toBottomOf="@id/txt_images" />
-
-        <ImageView
-            android:id="@+id/img_2"
-            style="@style/StandardImageView"
-            android:src="@drawable/ok2"
-            app:layout_constraintStart_toEndOf="@+id/img_1"
-            app:layout_constraintTop_toBottomOf="@id/txt_images" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -66,25 +52,6 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/item_description_layout"
-            style="@style/CustomAccentEditText"
-            android:layout_marginEnd="50dp"
-            android:hint="@string/description"
-            app:boxCornerRadiusBottomEnd="5dp"
-            app:boxCornerRadiusBottomStart="5dp"
-            app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_name_layout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/item_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_location_layout"
             style="@style/CustomAccentEditText"
             android:layout_marginEnd="50dp"
@@ -94,12 +61,30 @@
             app:boxCornerRadiusTopEnd="5dp"
             app:boxCornerRadiusTopStart="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_description_layout">
+            app:layout_constraintTop_toBottomOf="@id/item_name_layout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/item_question_layout"
+            style="@style/CustomAccentEditText"
+            android:layout_marginEnd="50dp"
+            android:hint="@string/question"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:boxCornerRadiusTopStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_location_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/item_question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -127,13 +112,71 @@
             app:boxCornerRadiusTopStart="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_location_layout">
+            app:layout_constraintTop_toBottomOf="@id/item_question_layout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/item_answer_1_layout"
+            style="@style/CustomAccentEditText"
+            android:layout_marginEnd="50dp"
+            android:hint="@string/first_answer"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:boxCornerRadiusTopStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_hint_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/item_answer_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/item_answer_2_layout"
+            style="@style/CustomAccentEditText"
+            android:layout_marginEnd="50dp"
+            android:hint="@string/second_answer"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:boxCornerRadiusTopStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_answer_1_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/item_answer_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/item_answer_3_layout"
+            style="@style/CustomAccentEditText"
+            android:layout_marginEnd="50dp"
+            android:hint="@string/correct_answer"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:boxCornerRadiusTopStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_answer_2_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/item_answer_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
 
         <TextView
@@ -145,7 +188,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_hint_layout"
+            app:layout_constraintTop_toBottomOf="@+id/item_answer_3_layout"
             tools:layout_editor_absoluteX="26dp"
             tools:layout_editor_absoluteY="286dp" />
 
