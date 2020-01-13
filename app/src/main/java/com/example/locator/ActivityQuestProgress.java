@@ -1,42 +1,51 @@
 package com.example.locator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityQuestProgress extends ActivityBase {
+public class ActivityQuestProgress extends ActivityBase implements View.OnClickListener {
 
     private TextView txtDate, txtName, txtDescription, txtQuestion;
     private List<TextView> answers = new ArrayList<>();
+    private List<Button> pageButtons = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
     private ImageView imageView;
-    Quest quest;
+    private int currentItem = 0;
+    private Quest quest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_progress);
 
-        initializeComponents();
         quest = (Quest) getIntent().getSerializableExtra("quest");
-        txtName.setText(quest.getName());
-        txtDescription.setText(quest.getDescription());
-        imageView.setImageBitmap(StringToBitMap(quest.getItems().get(0).image));
-        txtQuestion.setText(quest.getItems().get(0).question);
-
-        answers.get(0).setText(quest.getItems().get(0).answers.get(0));
-        answers.get(1).setText(quest.getItems().get(0).answers.get(1));
-        answers.get(2).setText(quest.getItems().get(0).answers.get(2));
+        initializeComponents();
 
 
     }
+
+    public void setUpPages(int index) {
+        if (currentItem == index) {
+            return;
+        }
+        pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+        pageButtons.get(index).setVisibility(View.INVISIBLE);
+
+        imageView.setImageBitmap(StringToBitMap(quest.getItems().get(index).image));
+        txtQuestion.setText(items.get(index).question);
+        answers.get(0).setText(quest.getItems().get(index).answers.get(0));
+        answers.get(1).setText(quest.getItems().get(index).answers.get(1));
+        answers.get(2).setText(quest.getItems().get(index).answers.get(2));
+
+        currentItem = index;
+    }
+
 
     @Override
     public void initializeComponents() {
@@ -52,5 +61,43 @@ public class ActivityQuestProgress extends ActivityBase {
             answers.add(editText);
         }
 
+        for (int i = 1; i < 7; i++) {
+            Button button1 = findViewById(getResources().getIdentifier("btn_page_" + i, "id", getPackageName()));
+            button1.setOnClickListener(this);
+            if (items.size() > i) {
+                button1.setVisibility(View.VISIBLE);
+            }
+            pageButtons.add(button1);
+        }
+
+        txtName.setText(quest.getName());
+        txtDescription.setText(quest.getDescription());
+        items.addAll(quest.getItems());
+        setUpPages(0);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.btn_page_1:
+                setUpPages(0);
+                break;
+            case R.id.btn_page_2:
+                setUpPages(1);
+                break;
+            case R.id.btn_page_3:
+                setUpPages(2);
+                break;
+            case R.id.btn_page_4:
+                setUpPages(3);
+                break;
+            case R.id.btn_page_5:
+                setUpPages(4);
+                break;
+            case R.id.btn_page_6:
+                setUpPages(5);
+                break;
+        }
     }
 }

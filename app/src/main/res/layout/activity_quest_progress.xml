@@ -190,7 +190,6 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:text="1"
-            android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@id/third_layout"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -215,6 +214,7 @@
             style="@style/CustomPageButton"
             android:text="4"
             android:visibility="invisible"
+            android:enabled="false"
             app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
             app:layout_constraintStart_toEndOf="@+id/btn_page_3" />
 
@@ -222,6 +222,7 @@
             android:id="@+id/btn_page_5"
             style="@style/CustomPageButton"
             android:text="5"
+            android:enabled="false"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
             app:layout_constraintStart_toEndOf="@+id/btn_page_4" />
@@ -230,64 +231,10 @@
             android:id="@+id/btn_page_6"
             style="@style/CustomPageButton"
             android:text="6"
+            android:enabled="false"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
             app:layout_constraintStart_toEndOf="@+id/btn_page_5" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_1_outline"
-            style="@style/CustomPageOutlineButton"
-            android:layout_marginStart="15dp"
-            android:text="1"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:strokeColor="@color/colorPrimary" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_2_outline"
-            style="@style/CustomPageOutlineButton"
-            android:text="2"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toEndOf="@+id/btn_page_1_outline"
-            app:strokeColor="@color/colorPrimary" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_3_outline"
-            style="@style/CustomPageOutlineButton"
-            android:text="3"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toEndOf="@+id/btn_page_2_outline"
-            app:strokeColor="@color/colorPrimary" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_4_outline"
-            style="@style/CustomPageOutlineButton"
-            android:text="4"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toEndOf="@+id/btn_page_3_outline"
-            app:strokeColor="@color/colorPrimary" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_5_outline"
-            style="@style/CustomPageOutlineButton"
-            android:text="5"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toEndOf="@+id/btn_page_4_outline"
-            app:strokeColor="@color/colorPrimary" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_page_6_outline"
-            style="@style/CustomPageOutlineButton"
-            android:text="6"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/btn_page_1"
-            app:layout_constraintStart_toEndOf="@+id/btn_page_5_outline"
-            app:strokeColor="@color/colorPrimary" />
 
 
         <com.google.android.material.button.MaterialButton
