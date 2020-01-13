@@ -13,7 +13,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
     private TextView txtDate, txtName, txtDescription, txtQuestion;
     private List<TextView> answers = new ArrayList<>();
-    private List<Button> pageButtons = new ArrayList<>();
+    private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
     private ImageView imageView;
     private int currentItem = 0;
@@ -30,8 +30,8 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
     }
 
-    public void setUpPages(int index) {
-        if (currentItem == index) {
+    public void setUpPages(int index, boolean initial) {
+        if (currentItem == index && !initial) {
             return;
         }
         pageButtons.get(currentItem).setVisibility(View.VISIBLE);
@@ -42,7 +42,6 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         answers.get(0).setText(quest.getItems().get(index).answers.get(0));
         answers.get(1).setText(quest.getItems().get(index).answers.get(1));
         answers.get(2).setText(quest.getItems().get(index).answers.get(2));
-
         currentItem = index;
     }
 
@@ -62,18 +61,22 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
 
         for (int i = 1; i < 7; i++) {
+            Button button = findViewById(getResources().getIdentifier("btn_page_" + i + "_outline", "id", getPackageName()));
+            outlineButtons.add(button);
             Button button1 = findViewById(getResources().getIdentifier("btn_page_" + i, "id", getPackageName()));
             button1.setOnClickListener(this);
             if (items.size() > i) {
                 button1.setVisibility(View.VISIBLE);
+                button.setVisibility(View.VISIBLE);
             }
             pageButtons.add(button1);
+            outlineButtons.add(button);
         }
 
         txtName.setText(quest.getName());
         txtDescription.setText(quest.getDescription());
         items.addAll(quest.getItems());
-        setUpPages(0);
+        setUpPages(0, true);
     }
 
     @Override
@@ -81,22 +84,22 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
         switch (view.getId()) {
             case R.id.btn_page_1:
-                setUpPages(0);
+                setUpPages(0, false);
                 break;
             case R.id.btn_page_2:
-                setUpPages(1);
+                setUpPages(1, false);
                 break;
             case R.id.btn_page_3:
-                setUpPages(2);
+                setUpPages(2, false);
                 break;
             case R.id.btn_page_4:
-                setUpPages(3);
+                setUpPages(3, false);
                 break;
             case R.id.btn_page_5:
-                setUpPages(4);
+                setUpPages(4, false);
                 break;
             case R.id.btn_page_6:
-                setUpPages(5);
+                setUpPages(5, false);
                 break;
         }
     }
