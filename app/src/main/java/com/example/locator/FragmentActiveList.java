@@ -15,27 +15,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentActiveList extends Fragment implements  SwipeRefreshLayout.OnRefreshListener{
+public class FragmentActiveList extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private QuestAdapter adapter;
-    private List<Quest> questList=new ArrayList<>();
+    private List<Quest> questList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_active_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_active_list, container, false);
 
-       return view;
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_container);
 
-        recyclerView=view.findViewById(R.id.recyclerViewActive);
+        recyclerView = view.findViewById(R.id.recyclerViewActive);
 
 
     }
@@ -45,17 +46,20 @@ public class FragmentActiveList extends Fragment implements  SwipeRefreshLayout.
         super.onActivityCreated(savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
-        Quest q=new Quest();
-        q.setName("Helllo");
-        q.setItemsFound(5);
-        questList.add(q);
+            android.R.color.holo_green_dark,
+            android.R.color.holo_orange_dark,
+            android.R.color.holo_blue_dark);
 
-        adapter=new QuestAdapter(questList,getActivity());
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        questList = new ArrayList<>();
+        LocatorData.getInstance().loadActiveQuests(this);
+
+    }
+
+    public void loadActiveQuests(List<Quest> quests) {
+        questList = quests;
+        adapter = new QuestAdapter(questList, getActivity(),Constants.QuestType.ACTIVE);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -63,9 +67,7 @@ public class FragmentActiveList extends Fragment implements  SwipeRefreshLayout.
         swipeRefreshLayout.setRefreshing(true);
 
         swipeRefreshLayout.setRefreshing(false);
-
     }
-
 
 
 }

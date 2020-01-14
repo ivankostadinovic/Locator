@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ActivityCreateAccount extends ActivityBase {
     private EditText editEmail, editPass, editConfirmPass, editName;
     private Button btnCreateAccount;
-    private FirebaseAuth auth;
+
     private DatabaseReference db;
 
     @Override
@@ -40,7 +40,7 @@ public class ActivityCreateAccount extends ActivityBase {
                 u.setPassword(editPass.getText().toString());
                 u.setName(editName.getText().toString());
 
-                registerUser(u);
+                LocatorData.getInstance().registerUser(u,ActivityCreateAccount.this);
             }
         });
 
@@ -58,30 +58,7 @@ public class ActivityCreateAccount extends ActivityBase {
         return flag;
     }
 
-    public void registerUser(final User user) {
 
-
-        final OnCompleteListener<AuthResult> register = new OnCompleteListener<AuthResult>() {
-
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser u = task.getResult().getUser();
-                    db.child("Users").child(u.getUid()).setValue(user);
-                    db.child("Users").child(u.getUid()).child("id").setValue(u.getUid());
-                    Tools.showMsg(getApplicationContext(), "Registration complete.");
-
-                } else {
-                    Tools.showMsg(getApplicationContext(), "User with email already exists.");
-
-                }
-
-            }
-        };
-        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(ActivityCreateAccount.this, register);
-
-
-    }
 
     @Override
     public void initializeComponents() {
@@ -91,7 +68,7 @@ public class ActivityCreateAccount extends ActivityBase {
         editName = (EditText) findViewById(R.id.edit_name_create);
 
         db = FirebaseDatabase.getInstance().getReference();
-        auth = FirebaseAuth.getInstance();
+
 
     }
 }

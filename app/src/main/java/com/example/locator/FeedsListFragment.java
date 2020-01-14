@@ -43,8 +43,6 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feeds_list, container, false);
-
-
         return view;
     }
 
@@ -69,15 +67,13 @@ public class FeedsListFragment extends Fragment implements SwipeRefreshLayout.On
             android.R.color.holo_blue_dark);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         questList = new ArrayList<>();
         LocatorData.getInstance().loadFeedQuests(this);
-        //LocatorData.getInstance().feedQuestListener(this);
     }
 
     public void loadFeedQuests(List<Quest> quests) {
         questList = quests;
-        adapter = new QuestAdapter(questList, getActivity());
+        adapter = new QuestAdapter(questList, getActivity(),Constants.QuestType.FEED);
         recyclerView.setAdapter(adapter);
     }
 

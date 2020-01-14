@@ -17,7 +17,9 @@ public class Item implements Serializable {
     public String question;
     public List<String> answers;
     public Bitmap capturedImage;
-    public boolean found;
+    public boolean correctAnswer;
+    public boolean answered;
+    public int answeredQuestion;
 
     public Item() {
         answers = new ArrayList<>();

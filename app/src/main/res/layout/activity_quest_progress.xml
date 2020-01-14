@@ -63,7 +63,7 @@
             />
 
         <ImageView
-            android:id="@+id/img_1"
+            android:id="@+id/item_image"
             style="@style/StandardImageView"
             android:layout_marginStart="25dp"
             android:src="@drawable/ok2"
@@ -87,8 +87,8 @@
             android:layout_marginStart="10dp"
             android:text="@string/txt_images"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/img_1"
-            app:layout_constraintTop_toTopOf="@id/img_1"
+            app:layout_constraintStart_toEndOf="@id/item_image"
+            app:layout_constraintTop_toTopOf="@id/item_image"
             />
 
         <LinearLayout
@@ -99,7 +99,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:id="@+id/first_layout"
-            app:layout_constraintTop_toBottomOf="@id/img_1"
+            app:layout_constraintTop_toBottomOf="@id/item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -112,11 +112,12 @@
                 />
 
             <ImageView
+                android:id="@+id/img_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_check_black_24dp" />
+                />
         </LinearLayout>
         <LinearLayout
             android:clickable="true"
@@ -139,12 +140,12 @@
                 />
 
             <ImageView
+                android:id="@+id/img_2"
                 android:layout_marginEnd="5dp"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_check_black_24dp" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -167,11 +168,11 @@
                 android:layout_gravity="start"
                 />
             <ImageView
-
+                android:id="@+id/img_3"
                 android:layout_marginEnd="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_check_black_24dp"
+
                 />
         </LinearLayout>
 

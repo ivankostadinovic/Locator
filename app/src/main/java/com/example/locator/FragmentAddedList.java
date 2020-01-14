@@ -21,11 +21,12 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
     private RecyclerView recyclerView;
     private QuestAdapter adapter;
     private List<Quest> questList;
-    private  SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_added_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_added_list, container, false);
 
         return view;
     }
@@ -33,8 +34,8 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeRefreshLayout =  view.findViewById(R.id.swipe_container);
-        recyclerView=view.findViewById(R.id.recyclerViewAdded);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_container);
+        recyclerView = view.findViewById(R.id.recyclerViewAdded);
 
     }
 
@@ -43,17 +44,14 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
         super.onActivityCreated(savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
+            android.R.color.holo_green_dark,
+            android.R.color.holo_orange_dark,
+            android.R.color.holo_blue_dark);
 
-        if(questList==null)
-            LocatorData.getInstance().loadAddedQuests(this);
-        else
-            loadAddedQuests(questList);
-        adapter=new QuestAdapter(questList,getActivity());
-        recyclerView.setAdapter(adapter);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LocatorData.getInstance().loadAddedQuests(this);
+
     }
 
     @Override
@@ -65,8 +63,8 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
     }
 
     public void loadAddedQuests(List<Quest> list) {
-        questList=list;
-        adapter=new QuestAdapter(questList,getActivity());
+        questList = list;
+        adapter = new QuestAdapter(questList, getActivity(), Constants.QuestType.ADDED);
         recyclerView.setAdapter(adapter);
     }
 }

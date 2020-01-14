@@ -1,11 +1,16 @@
 package com.example.locator;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +29,7 @@ public class LocatorData {
     public List<Item> itemsToAdd;
     private User user;
     private DatabaseReference db;
+    private FirebaseAuth auth;
 
 
     private LocatorData() {
@@ -31,12 +37,12 @@ public class LocatorData {
         activeQuests = new ArrayList<>();
         user = new User();
         db = FirebaseDatabase.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
 
     }
 
     public void feedQuestListener(final FeedsListFragment feedsListFragment) {
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
-
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Quest quest = dataSnapshot.getValue(Quest.class);
@@ -49,6 +55,7 @@ public class LocatorData {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
+
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
@@ -68,7 +75,7 @@ public class LocatorData {
 
     public void loadAddedQuests(final FragmentAddedList fragmentAddedList) {
         String ok = user.getId();
-        db.child("Quests").child("Аdded-quests").child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje feed questova
+        db.child("Quests").child("Added-quests").child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje feed questova
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Quest> list = new ArrayList<>();
@@ -96,8 +103,51 @@ public class LocatorData {
                     list.add(ds.getValue(Quest.class));
                 }
                 feedsListFragment.loadFeedQuests(list);
-                Tools.log("heeloo" +" why");
+                Tools.log("heeloo" + " why");
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void takeQuest(Quest quest, Activity activity) {
+        db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+        Tools.showMsg(activity, "Quest added to active");
+    }
+
+    public void addQuest(Quest quest, Activity activity) {
+
+        String key = db.child("Feed-quests").push().getKey();
+        quest.setId(key);
+        db.child("Quests").child("Feed-quests").child(key).setValue(quest);
+        db.child("Quests").child("Added-quests").child(getUser().getId()).child(key).setValue(quest);
+        Tools.showMsg(activity, "Quest added");
+    }
+
+    public void updateQuestProgress(Quest quest) {
+        db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+    }
+
+    public void finishQuest(Quest quest) {
+
+        db.child("Quests").child("Finished-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+        db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).removeValue();
+    }
+
+    public void loadActiveQuests(FragmentActiveList fragmentActiveList) {
+
+        db.child("Quests").child("Active-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje active questova
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Quest> list = new ArrayList<>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    list.add(ds.getValue(Quest.class));
+                }
+                fragmentActiveList.loadActiveQuests(list);
 
             }
             @Override
@@ -105,7 +155,30 @@ public class LocatorData {
 
             }
         });
+
     }
+
+    public void loadFinishedQuests(FragmentFinishedList fragmentFinishedList) {
+
+        db.child("Quests").child("Finished-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {// za ucitvaanje active questova
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Quest> list = new ArrayList<>();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    list.add(ds.getValue(Quest.class));
+                }
+                fragmentFinishedList.loadFinishedQuests(list);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
 
 
     private static class SingletonHolder {
@@ -159,4 +232,20 @@ public class LocatorData {
             }
         });
     }
+
+    public void registerUser(final User user, Activity activity) {
+
+        final OnCompleteListener<AuthResult> register = task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser u = task.getResult().getUser();
+                db.child("Users").child(u.getUid()).setValue(user);
+                db.child("Users").child(u.getUid()).child("id").setValue(u.getUid());
+                Tools.showMsg(activity, "Registration complete.");
+            } else {
+                Tools.showMsg(activity, "User with email already exists.");
+            }
+        };
+        auth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(activity, register);
+    }
+
 }

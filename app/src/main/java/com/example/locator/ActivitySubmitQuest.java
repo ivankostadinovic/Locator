@@ -37,21 +37,16 @@ public class ActivitySubmitQuest extends ActivityBase {
     @Override
     public void initializeComponents() {
 
-        editName = (EditText) findViewById(R.id.quest_name);
-        editDesc = (EditText) findViewById(R.id.quest_description);
-        btnSubmit = (Button) findViewById(R.id.btn_submit_quest);
-        radioIstorijski = (RadioButton) findViewById(R.id.radio_istorijski);
-        radioZabavni = (RadioButton) findViewById(R.id.radio_zabavni);
-        radioIstrazivacki = (RadioButton) findViewById(R.id.radio_istrazivacki);
+        editName = findViewById(R.id.quest_name);
+        editDesc = findViewById(R.id.quest_description);
+        btnSubmit = findViewById(R.id.btn_submit_quest);
+        radioIstorijski = findViewById(R.id.radio_istorijski);
+        radioZabavni = findViewById(R.id.radio_zabavni);
+        radioIstrazivacki = findViewById(R.id.radio_istrazivacki);
         quest = new Quest();
         db = FirebaseDatabase.getInstance().getReference();
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addQuest();
-            }
-        });
+        btnSubmit.setOnClickListener(v -> addQuest());
 
     }
 
@@ -71,10 +66,7 @@ public class ActivitySubmitQuest extends ActivityBase {
         }
         quest.setDescription(editDesc.getText().toString());
         quest.setName(editName.getText().toString());
-        String key = db.child("Feed-quests").push().getKey();
-        db.child("Quests").child("Feed-quests").child(key).setValue(quest);
-        db.child("Quests").child("Added-quests").child(LocatorData.getInstance().getUser().getId()).child(key).setValue(quest);
-        Tools.showMsg(getApplicationContext(), "Quest added");
+        LocatorData.getInstance().addQuest(quest, this);
         finish();
 
     }

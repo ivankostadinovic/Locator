@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +15,13 @@ import java.util.List;
 public class ActivityQuestProgress extends ActivityBase implements View.OnClickListener {
 
     private TextView txtDate, txtName, txtDescription, txtQuestion;
+    private LinearLayout firstAnswer, secondAnswer, thirdAnswer;
     private List<TextView> answers = new ArrayList<>();
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
     private ImageView imageView;
-    private int currentItem = 0;
+    private List<ImageView> imageAnswers = new ArrayList<>();
+    private int currentItemIndex = 0;
     private Quest quest;
 
     @Override
@@ -31,18 +36,42 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
     }
 
     public void setUpPages(int index, boolean initial) {
-        if (currentItem == index && !initial) {
+        imageAnswers.get(0).setVisibility(View.INVISIBLE);
+        imageAnswers.get(1).setVisibility(View.INVISIBLE);
+        imageAnswers.get(2).setVisibility(View.INVISIBLE);
+
+        if (currentItemIndex == index && !initial) {
             return;
         }
-        pageButtons.get(currentItem).setVisibility(View.VISIBLE);
+        pageButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
         pageButtons.get(index).setVisibility(View.INVISIBLE);
-
+        Item selectedItem = items.get(index);
         imageView.setImageBitmap(StringToBitMap(quest.getItems().get(index).image));
         txtQuestion.setText(items.get(index).question);
-        answers.get(0).setText(quest.getItems().get(index).answers.get(0));
-        answers.get(1).setText(quest.getItems().get(index).answers.get(1));
-        answers.get(2).setText(quest.getItems().get(index).answers.get(2));
-        currentItem = index;
+        answers.get(0).setText(selectedItem.answers.get(0));
+        answers.get(1).setText(selectedItem.answers.get(1));
+        answers.get(2).setText(selectedItem.answers.get(2));
+        if (selectedItem.answered) {
+            if (!selectedItem.correctAnswer) {
+                imageAnswers.get(selectedItem.answeredQuestion).setImageDrawable(getDrawable(R.drawable.ic_close_black_24dp));
+                imageAnswers.get(2).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+                imageAnswers.get(2).setVisibility(View.VISIBLE);
+            } else {
+                imageAnswers.get(selectedItem.answeredQuestion).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+            }
+            imageAnswers.get(selectedItem.answeredQuestion).setVisibility(View.VISIBLE);
+            firstAnswer.setClickable(false);
+            secondAnswer.setClickable(false);
+            thirdAnswer.setClickable(false);
+        } else {
+            for (ImageView imageAnswer : imageAnswers) {
+                imageAnswer.setVisibility(View.INVISIBLE);
+            }
+            firstAnswer.setClickable(true);
+            secondAnswer.setClickable(true);
+            thirdAnswer.setClickable(true);
+        }
+        currentItemIndex = index;
     }
 
 
@@ -53,11 +82,25 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         txtName = findViewById(R.id.quest_name);
         txtDescription = findViewById(R.id.quest_description);
         txtQuestion = findViewById(R.id.item_question);
-        imageView = findViewById(R.id.img_1);
+        imageView = findViewById(R.id.item_image);
+        firstAnswer = findViewById(R.id.first_layout);
+        secondAnswer = findViewById(R.id.second_layout);
+        thirdAnswer = findViewById(R.id.third_layout);
+
+        firstAnswer.setOnClickListener(this);
+        secondAnswer.setOnClickListener(this);
+        thirdAnswer.setOnClickListener(this);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> ActivityQuestProgress.super.onBackPressed());
 
         for (int i = 1; i < 4; i++) {
-            TextView editText = findViewById(getResources().getIdentifier("item_answer_" + i, "id", getPackageName()));
-            answers.add(editText);
+            TextView textView = findViewById(getResources().getIdentifier("item_answer_" + i, "id", getPackageName()));
+            answers.add(textView);
+        }
+        for (int i = 1; i < 4; i++) {
+            ImageView imageView = findViewById(getResources().getIdentifier("img_" + i, "id", getPackageName()));
+            imageAnswers.add(imageView);
         }
 
         for (int i = 1; i < 7; i++) {
@@ -77,6 +120,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         txtDescription.setText(quest.getDescription());
         items.addAll(quest.getItems());
         setUpPages(0, true);
+
     }
 
     @Override
@@ -101,6 +145,62 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             case R.id.btn_page_6:
                 setUpPages(5, false);
                 break;
+            case R.id.first_layout:
+                checkAnswer(0);
+                break;
+            case R.id.second_layout:
+                checkAnswer(1);
+                break;
+            case R.id.third_layout:
+                checkAnswer(2);
+                break;
         }
+    }
+
+    private void checkAnswer(int i) {
+
+        if (i == 2) {
+            Tools.showMsg(this, "Answer correct");
+            items.get(currentItemIndex).answered = true;
+            items.get(currentItemIndex).correctAnswer = true;
+            quest.getItems().get(currentItemIndex).answered = true;
+            quest.getItems().get(currentItemIndex).correctAnswer = true;
+            imageAnswers.get(i).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+
+        } else {
+            Tools.showMsg(this, "Answer incorrect");
+            items.get(currentItemIndex).answered = true;
+            items.get(currentItemIndex).correctAnswer = false;
+            quest.getItems().get(currentItemIndex).answered = true;
+            quest.getItems().get(currentItemIndex).correctAnswer = false;
+            imageAnswers.get(i).setImageDrawable(getDrawable(R.drawable.ic_close_black_24dp));
+            imageAnswers.get(2).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+            imageAnswers.get(2).setVisibility(View.VISIBLE);
+        }
+        imageAnswers.get(i).setVisibility(View.VISIBLE);
+
+
+        items.get(currentItemIndex).answeredQuestion = i;
+        quest.getItems().get(currentItemIndex).answeredQuestion = i;
+
+        LocatorData.getInstance().updateQuestProgress(quest);
+
+        boolean allAnswered = true;
+        int correctAnswers = 0;
+        for (Item item : items) {
+            if (!item.answered) {
+                allAnswered = false;
+            } else {
+                if (item.correctAnswer)
+                    correctAnswers++;
+            }
+        }
+        if (allAnswered) {
+            Tools.showMsg(this, "Quest finished with" + correctAnswers + " / " + items.size());
+            LocatorData.getInstance().finishQuest(quest);
+        }
+        firstAnswer.setClickable(false);
+        secondAnswer.setClickable(false);
+        thirdAnswer.setClickable(false);
     }
 }

@@ -13,6 +13,7 @@ public class PopUpFeedQuest extends AppCompatActivity {
 
     private TextView txtName, txtDesc;
     private Button btnTake, btnCancel;
+    private Quest quest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +39,14 @@ public class PopUpFeedQuest extends AppCompatActivity {
         btnTake = findViewById(R.id.btn_take);
         btnCancel = findViewById(R.id.btn_Cancel);
 
-        Quest q = (Quest) getIntent().getSerializableExtra("Quest");
-        txtName.setText(q.getName());
-        txtDesc.setText(q.getDescription());
+        quest = (Quest) getIntent().getSerializableExtra("Quest");
+        txtName.setText(quest.getName());
+        txtDesc.setText(quest.getDescription());
 
         btnTake.setOnClickListener(view -> {
+            LocatorData.getInstance().takeQuest(quest, this);
             Intent intent = new Intent(this, ActivityQuestProgress.class);
-            intent.putExtra("quest", q);
+            intent.putExtra("quest", quest);
             startActivity(intent);
         });
 

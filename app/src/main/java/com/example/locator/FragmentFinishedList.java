@@ -20,12 +20,13 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
 
     private RecyclerView recyclerView;
     private QuestAdapter adapter;
-    private List<Quest> questList=new ArrayList<>();
-    private  SwipeRefreshLayout swipeRefreshLayout;
+    private List<Quest> questList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     public static FragmentQuests newInstance(User user) {
         FragmentQuests fragment = new FragmentQuests();
         Bundle args = new Bundle();
-        args.putSerializable("User",user);
+        args.putSerializable("User", user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,10 +38,11 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
 
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_finished_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_finished_list, container, false);
 
 
         return view;
@@ -49,8 +51,8 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        recyclerView=view.findViewById(R.id.recyclerViewFinished);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_container);
+        recyclerView = view.findViewById(R.id.recyclerViewFinished);
 
     }
 
@@ -60,20 +62,24 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
-        adapter=new QuestAdapter(questList,getActivity());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            android.R.color.holo_green_dark,
+            android.R.color.holo_orange_dark,
+            android.R.color.holo_blue_dark);
 
+        questList = new ArrayList<>();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LocatorData.getInstance().loadFinishedQuests(this);
     }
 
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-
         swipeRefreshLayout.setRefreshing(false);
+    }
 
+    public void loadFinishedQuests(List<Quest> list) {
+        questList = list;
+        adapter = new QuestAdapter(questList, getActivity(),Constants.QuestType.FINISHED);
+        recyclerView.setAdapter(adapter);
     }
 }

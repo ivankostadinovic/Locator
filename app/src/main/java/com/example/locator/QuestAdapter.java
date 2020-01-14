@@ -19,10 +19,12 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     private List<Quest> questList;
     private Context context;
+    private int questType;
 
 
-    public QuestAdapter(List<Quest> questL, Context context) {
+    public QuestAdapter(List<Quest> questL, Context context, int type) {
         questList = questL;
+        questType = type;
         this.context = context;
     }
 
@@ -86,14 +88,24 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
         @Override
         public void onClick(View v) {
-
             int position = getAdapterPosition();
             Quest q = questList.get(position);
-            Intent i = new Intent(context, PopUpFeedQuest.class);
-            i.putExtra("Quest", q);
-            context.startActivity(i);
-
-
+            switch (questType) {
+                case Constants.QuestType.FEED:
+                    Intent i = new Intent(context, PopUpFeedQuest.class);
+                    i.putExtra("Quest", q);
+                    context.startActivity(i);
+                    break;
+                case Constants.QuestType.ACTIVE:
+                    Intent intent = new Intent(context, ActivityQuestProgress.class);
+                    intent.putExtra("quest", q);
+                    context.startActivity(intent);
+                    break;
+                case Constants.QuestType.ADDED:
+                    break;
+                case Constants.QuestType.FINISHED:
+                    break;
+            }
         }
     }
 }
