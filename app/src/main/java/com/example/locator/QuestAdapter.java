@@ -77,12 +77,11 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            txtName = (TextView) itemView.findViewById(R.id.title);
-            txtStatus = (TextView) itemView.findViewById(R.id.count);
+            txtName = itemView.findViewById(R.id.title);
+            txtStatus = itemView.findViewById(R.id.count);
             img1 = itemView.findViewById(R.id.thumbnail);
             img2 = itemView.findViewById(R.id.thumbnail2);
             img3 = itemView.findViewById(R.id.thumbnail3);
-
 
         }
 
@@ -96,6 +95,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
                     i.putExtra("Quest", q);
                     context.startActivity(i);
                     break;
+                case Constants.QuestType.FINISHED:
                 case Constants.QuestType.ACTIVE:
                     Intent intent = new Intent(context, ActivityQuestProgress.class);
                     intent.putExtra("quest", q);
@@ -103,8 +103,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
                     break;
                 case Constants.QuestType.ADDED:
                     break;
-                case Constants.QuestType.FINISHED:
-                    break;
+
             }
         }
     }
