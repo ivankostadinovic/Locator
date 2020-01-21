@@ -93,8 +93,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         transaction.show(fragment);
         transaction.addToBackStack(null);
         transaction.commit();
-
-
     }
 
     @Override
@@ -160,13 +158,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_profile) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_logout) {
 
