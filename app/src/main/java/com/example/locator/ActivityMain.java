@@ -7,16 +7,12 @@ import android.os.Bundle;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
@@ -32,13 +28,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ActivityMain extends ActivityBase implements NavigationView.OnNavigationItemSelectedListener {
     private TextView mTextMessage;
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
-    private FriendsFragment fragmentFriends;
+    private FragmentFriends fragmentFriends;
     private GoogleSignInClient mGoogleSignInClient;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -171,7 +166,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentQuests = FragmentQuests.newInstance(null);
         fragmentMap = FragmentMap.newInstance(null);
-        fragmentFriends = new FriendsFragment();
+        fragmentFriends = new FragmentFriends();
         commitFragments();
         openFragment(fragmentQuests);
     }

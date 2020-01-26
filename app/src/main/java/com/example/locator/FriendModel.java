@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-public class Friend implements Parcelable {
+public class FriendModel implements Parcelable {
     public int type;
     public int active_quests;
     public int done_quests;
@@ -17,16 +17,16 @@ public class Friend implements Parcelable {
     public String id;
     public String location;
 
-    public Friend() {
+    public FriendModel() {
 
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        return (obj instanceof Friend) && TextUtils.equals(id, ((Friend) obj).id);
+        return (obj instanceof FriendModel) && TextUtils.equals(id, ((FriendModel) obj).id);
     }
 
-    protected Friend(Parcel in) {
+    protected FriendModel(Parcel in) {
         type = in.readInt();
         active_quests = in.readInt();
         done_quests = in.readInt();
@@ -56,15 +56,15 @@ public class Friend implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Friend> CREATOR = new Creator<Friend>() {
+    public static final Creator<FriendModel> CREATOR = new Creator<FriendModel>() {
         @Override
-        public Friend createFromParcel(Parcel in) {
-            return new Friend(in);
+        public FriendModel createFromParcel(Parcel in) {
+            return new FriendModel(in);
         }
 
         @Override
-        public Friend[] newArray(int size) {
-            return new Friend[size];
+        public FriendModel[] newArray(int size) {
+            return new FriendModel[size];
         }
     };
 }

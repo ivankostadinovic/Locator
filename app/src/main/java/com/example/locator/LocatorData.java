@@ -177,7 +177,7 @@ public class LocatorData {
 
     }
 
-    public void addFriend(Friend friend) {
+    public void addFriend(FriendModel friend) {
     }
 
 

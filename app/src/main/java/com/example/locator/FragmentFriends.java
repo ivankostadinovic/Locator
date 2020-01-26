@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsFragment extends Fragment {
+public class FragmentFriends extends Fragment {
     private FriendAdapter adapter;
     private RecyclerView recyclerView;
 
 
-    public FriendsFragment() {
+    public FragmentFriends() {
     }
 
 
@@ -39,9 +39,9 @@ public class FriendsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
-        List<Friend> lista = new ArrayList<>();
+        List<FriendModel> lista = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            Friend friend = new Friend();
+            FriendModel friend = new FriendModel();
             friend.id = String.valueOf(i);
             friend.name = "Pera" + i;
             friend.location = "Belgrade, Serbia";
@@ -49,7 +49,7 @@ public class FriendsFragment extends Fragment {
             lista.add(friend);
         }
         adapter.setData(lista);
-        Friend friend = new Friend();
+        FriendModel friend = new FriendModel();
         friend.id = "7";
         friend.name = "Djoka";
         friend.location = "Nis, Serbia";

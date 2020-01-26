@@ -1,6 +1,6 @@
 package com.example.locator;
 
-public class FriendSectionItem implements FriendsRvItem {
+public class FriendSectionItem implements FriendRvItem {
     public boolean found;
 
     public FriendSectionItem(boolean found) {

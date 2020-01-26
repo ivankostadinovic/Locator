@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
-    private List<FriendsRvItem> list = new ArrayList<>();
+    private List<FriendRvItem> list = new ArrayList<>();
     private Context context;
     private int type_section_friends = 0, type_friend = 1, type_section_found = 2;
 
@@ -45,7 +45,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FriendsRvItem item = list.get(position);
+        FriendRvItem item = list.get(position);
         if (item instanceof FriendItem) {
             holder.name.setText(((FriendItem) item).friend.name);
             holder.location.setText(((FriendItem) item).friend.location);
@@ -62,10 +62,10 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         this.context = context;
     }
 
-    public void setData(List<Friend> list) {
+    public void setData(List<FriendModel> list) {
         this.list.add(new FriendSectionItem(false));
         this.list.add(new FriendSectionItem(true));
-        for (Friend friend : list) {
+        for (FriendModel friend : list) {
             if (friend.type == Constants.FriendType.FOUND) {
                 this.list.add(this.list.size(), new FriendItem(friend));
             } else {
@@ -76,11 +76,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     }
 
     public void moveDiscoveredToAdded(String id) {
-        for (FriendsRvItem friendsRvItem : list) {
-            if (friendsRvItem instanceof FriendItem && ((FriendItem) friendsRvItem).friend.id.equals(id)) {
-                Friend friend = ((FriendItem) friendsRvItem).friend;
+        for (FriendRvItem friendRvItem : list) {
+            if (friendRvItem instanceof FriendItem && ((FriendItem) friendRvItem).friend.id.equals(id)) {
+                FriendModel friend = ((FriendItem) friendRvItem).friend;
                 friend.type = Constants.FriendType.ADDED;
-                list.remove(friendsRvItem);
+                list.remove(friendRvItem);
                 list.add(1, new FriendItem(friend));
                 notifyItemInserted(1);
 
@@ -88,7 +88,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         }
     }
 
-    public void addDiscovered(Friend friend) {
+    public void addDiscovered(FriendModel friend) {
         this.list.add(new FriendItem(friend));
         notifyItemInserted(list.size());
     }
@@ -111,7 +111,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (list.get(position) instanceof FriendItem) {
-                Friend friend = ((FriendItem) list.get(position)).friend;
+                FriendModel friend = ((FriendItem) list.get(position)).friend;
                 switch (friend.type) {
                     case Constants.FriendType.ADDED:
                         Intent i = new Intent(context, PopUpFriendActivity.class);

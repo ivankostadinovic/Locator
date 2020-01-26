@@ -1,6 +1,6 @@
 package com.example.locator;
 
-public interface FriendsRvItem {
+public interface FriendRvItem {
 
     int getLayout();
 
