@@ -49,7 +49,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         if (item instanceof FriendItem) {
             holder.name.setText(((FriendItem) item).friend.name);
             holder.location.setText(((FriendItem) item).friend.location);
-            holder.image.setImageBitmap(Tools.StringToBitMap(((FriendItem) item).friend.profile_picture));
+            new Thread(() -> holder.image.setImageBitmap(Tools.StringToBitMap(((FriendItem) item).friend.profile_picture))).start();
         }
     }
 
