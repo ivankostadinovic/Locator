@@ -76,24 +76,6 @@ public abstract class ActivityBase extends AppCompatActivity
 
     public abstract void initializeComponents();
 
-    public String BitMapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
-    }
-
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
-
     public boolean passCheck(EditText editPass,EditText editConfirmPass) {
         if (editPass.getText().toString().length() < 6) {
             editPass.setError("Password must contain at least 6 characters.");

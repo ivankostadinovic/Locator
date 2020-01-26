@@ -77,6 +77,9 @@
     <string name="create_group"><u>Create group</u></string>
     <string name="profile">Profile</string>
     <string name="name_dots">Name:</string>
+    <string name="discovered_friends">Discovered friends</string>
+    <string name="slash_discovered_friends">-Discovered friends</string>
+    <string name="slash_friends">-Friends</string>
 
 
 </resources>

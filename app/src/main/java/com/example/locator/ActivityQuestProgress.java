@@ -18,7 +18,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
     private LinearLayout firstAnswer, secondAnswer, thirdAnswer;
     private List<TextView> answers = new ArrayList<>();
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
-    private List<Item> items = new ArrayList<>();
+    private List<QuestItem> items = new ArrayList<>();
     private ImageView imageView;
     private List<ImageView> imageAnswers = new ArrayList<>();
     private int currentItemIndex = 0;
@@ -45,8 +45,8 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
         pageButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
         pageButtons.get(index).setVisibility(View.INVISIBLE);
-        Item selectedItem = items.get(index);
-        imageView.setImageBitmap(StringToBitMap(quest.getItems().get(index).image));
+        QuestItem selectedItem = items.get(index);
+        imageView.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(index).image));
         txtQuestion.setText(items.get(index).question);
         answers.get(0).setText(selectedItem.answers.get(0));
         answers.get(1).setText(selectedItem.answers.get(1));
@@ -187,7 +187,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
         boolean allAnswered = true;
         int correctAnswers = 0;
-        for (Item item : items) {
+        for (QuestItem item : items) {
             if (!item.answered) {
                 allAnswered = false;
             } else {

@@ -38,8 +38,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private TextView mTextMessage;
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
+    private FriendsFragment fragmentFriends;
     private GoogleSignInClient mGoogleSignInClient;
-    private int current;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
         = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,14 +48,11 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_quests:
-
                     openFragment(fragmentQuests);
-                    current = 0;
                     //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_friends:
-                    current = 2;
-                    //mTextMessage.setText(R.string.title_notifications);
+                    openFragment(fragmentFriends);
                     return true;
                 case R.id.navigation_map:
 
@@ -64,7 +61,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                         ActivityCompat.requestPermissions(ActivityMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
                     else {
                         openFragment(fragmentMap);
-                        current = 1;
                     }
                     return true;
             }
@@ -76,23 +72,13 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-
-        //    transaction.setCustomAnimations(R.animator.slide_in_left,
-        //   R.animator.slide_out_right, 0, 0);
-
-
-        switch (current) {
-            case 0:
-                transaction.hide(fragmentQuests);
-                break;
-            case 1:
-                transaction.hide(fragmentMap);
-            case 2:
-                //
-        }
-        transaction.show(fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        transaction
+            .hide(fragmentQuests)
+            .hide(fragmentMap)
+            .hide(fragmentFriends)
+            .show(fragment)
+            .addToBackStack(null)
+            .commit();
     }
 
     @Override
@@ -185,15 +171,19 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentQuests = FragmentQuests.newInstance(null);
         fragmentMap = FragmentMap.newInstance(null);
-        current = 0;
+        fragmentFriends = new FriendsFragment();
         commitFragments();
         openFragment(fragmentQuests);
     }
 
     public void commitFragments() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_containter, fragmentMap).add(R.id.fragment_containter, fragmentQuests).commit();
-        transaction.hide(fragmentMap);
+        transaction
+            .add(R.id.fragment_containter, fragmentMap)
+            .add(R.id.fragment_containter, fragmentQuests)
+            .add(R.id.fragment_containter, fragmentFriends)
+            .hide(fragmentMap)
+            .hide(fragmentFriends).commit();
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,9 +35,9 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
     private EditText editName, editQeustion, editLocation, editHint;
     private ImageView imageView;
-    private List<Item> items = new ArrayList<>();
+    private List<QuestItem> items = new ArrayList<>();
     private List<EditText> answers = new ArrayList<>();
-    private Item shownItem = new Item();
+    private QuestItem shownItem = new QuestItem();
     private int currentItemIndex = 0;
     private boolean removeItem = false;
 
@@ -73,7 +74,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         items.set(currentItemIndex, shownItem);
     }
 
-    public void itemToControls(Item item) {
+    public void itemToControls(QuestItem item) {
         shownItem = item;
         editName.setText(item.name);
         editHint.setText(item.hint);
@@ -86,12 +87,9 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         editLocation.setText(item.location);
         imageView.setImageDrawable(getDrawable(R.drawable.ok2));
         if (item.image != null && !item.image.isEmpty()) {
-            imageView.setImageBitmap(StringToBitMap(item.image));
+            imageView.setImageBitmap(Tools.StringToBitMap(item.image));
         }
     }
-
-
-
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -102,22 +100,28 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 final Bitmap imageBitmap = (Bitmap) extras.get("data");
                 imageView.setImageBitmap(imageBitmap);
 
-                new Thread(() -> shownItem.image = (BitMapToString(imageBitmap))).start();
+                new Thread(() -> shownItem.image = (Tools.BitMapToString(imageBitmap))).start();
 
             } else if (requestCode == SELECT_IMAGE) {
                 if (data != null) {
                     try {
                         final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                         imageView.setImageBitmap(bitmap);
-                        new Thread(() -> shownItem.image = BitMapToString(bitmap)).start();
+                        new Thread(() -> shownItem.image = Tools.BitMapToString(bitmap)).start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            } else if (requestCode == 50) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 50) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -162,7 +166,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         imageView.setImageDrawable(getDrawable(R.drawable.ok2));
         btnAttach.setEnabled(true);
         btnCamera.setEnabled(true);
-        shownItem = new Item();
+        shownItem = new QuestItem();
         for (EditText answer : answers) {
             answer.setText("");
         }
@@ -248,7 +252,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                     pageButtons.get(currentItemIndex).setVisibility(View.INVISIBLE);
                     clearTexts();
                 }
-                Tools.showMsg(getApplicationContext(), "Item added");
+                Tools.showMsg(getApplicationContext(), "QuestItem added");
                 break;
             case R.id.btn_add_quest:
                 if (items.size() >= 3) {

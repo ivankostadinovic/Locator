@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item implements Serializable {
+public class QuestItem implements Serializable {
 
     public String id;
     public String name;
@@ -21,7 +21,7 @@ public class Item implements Serializable {
     public boolean answered;
     public int answeredQuestion;
 
-    public Item() {
+    public QuestItem() {
         answers = new ArrayList<>();
     }
 

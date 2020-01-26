@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Quest implements Serializable {
 
-    private List<Item> items;
+    private List<QuestItem> items;
     private String Name;
     private String Description;
     private int itemsFound;
@@ -39,13 +39,13 @@ public class Quest implements Serializable {
 
     public Quest(){
 
-        items=new ArrayList<Item>();
+        items=new ArrayList<QuestItem>();
     }
-    public void addItem(Item item)
+    public void addItem(QuestItem item)
     {
         items.add(item);
     }
-    public void setItems(List<Item> items) {
+    public void setItems(List<QuestItem> items) {
         this.items = items;
     }
 
@@ -57,7 +57,7 @@ public class Quest implements Serializable {
         Description = description;
     }
 
-    public List<Item> getItems() {
+    public List<QuestItem> getItems() {
         return items;
     }
 

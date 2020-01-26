@@ -50,7 +50,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         holder.txtName.setText(quest.getName());
         String status = quest.getItemsFound() + "/" + quest.getItems().size() + " items found";
         holder.txtStatus.setText(status);
-        // List<Item> items=quest.getItems();
+        // List<QuestItem> items=quest.getItems();
         //if(items!=null) {
         //if (items.get(0).getCapturedImage() != null)
         //  holder.img1.setImageBitmap(items.get(0).getCapturedImage());
@@ -103,7 +103,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
                     break;
                 case Constants.QuestType.ADDED:
                     break;
-
             }
         }
     }

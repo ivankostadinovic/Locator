@@ -1,7 +1,6 @@
 package com.example.locator;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,7 @@ public class LocatorData {
 
     private ArrayList<Quest> doneQuests;
     private ArrayList<Quest> activeQuests;
-    public List<Item> itemsToAdd;
+    public List<QuestItem> itemsToAdd;
     private User user;
     private DatabaseReference db;
     private FirebaseAuth auth;
@@ -178,7 +177,8 @@ public class LocatorData {
 
     }
 
-
+    public void addFriend(Friend friend) {
+    }
 
 
     private static class SingletonHolder {

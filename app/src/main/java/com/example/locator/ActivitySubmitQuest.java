@@ -1,25 +1,18 @@
 package com.example.locator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitySubmitQuest extends ActivityBase {
 
-    private List<Item> items;
+    private List<QuestItem> items;
     private Button btnSubmit;
     private EditText editName, editDesc;
     private RadioButton radioIstorijski, radioZabavni, radioIstrazivacki;
@@ -54,7 +47,7 @@ public class ActivitySubmitQuest extends ActivityBase {
 
         if (!emptyCheck(new EditText[]{editName, editDesc, editName}))
             return;
-        for (Item item : LocatorData.getInstance().itemsToAdd) {
+        for (QuestItem item : LocatorData.getInstance().itemsToAdd) {
             quest.addItem(item);
         }
         if (radioIstorijski.isSelected()) {
