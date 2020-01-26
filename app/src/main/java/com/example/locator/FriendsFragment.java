@@ -48,5 +48,6 @@ public class FriendsFragment extends Fragment {
             lista.add(friend);
         }
         adapter.setData(lista);
+        adapter.addDiscovered(lista.get(1));
     }
 }
