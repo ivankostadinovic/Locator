@@ -27,10 +27,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 public class ActivityMain extends ActivityBase implements NavigationView.OnNavigationItemSelectedListener {
-    private TextView mTextMessage;
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
@@ -44,17 +42,19 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             switch (item.getItemId()) {
                 case R.id.navigation_quests:
                     openFragment(fragmentQuests);
-                    //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_friends:
                     openFragment(fragmentFriends);
                     return true;
                 case R.id.navigation_map:
-
-                    if (ContextCompat.checkSelfPermission(ActivityMain.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_DENIED)
+                    if (!Tools.locationPermissionGiven(ActivityMain.this)) {
                         ActivityCompat.requestPermissions(ActivityMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                    else {
+                        return false;
+                    } else {
+                        if (fragmentMap == null) {
+                            fragmentMap = FragmentMap.newInstance(null);
+                            getSupportFragmentManager().beginTransaction().add(R.id.fragment_containter, fragmentMap).commit();
+                        }
                         openFragment(fragmentMap);
                     }
                     return true;
@@ -66,13 +66,13 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private void openFragment(Fragment fragment) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+        if (fragmentMap != null) {
+            transaction.hide(fragmentMap);
+        }
         transaction
             .hide(fragmentQuests)
-            .hide(fragmentMap)
             .hide(fragmentFriends)
             .show(fragment)
-            .addToBackStack(null)
             .commit();
     }
 
@@ -113,7 +113,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
         return true;
     }
@@ -121,13 +120,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -135,8 +128,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_home:
-                break;
             case R.id.nav_profile: {
                 startActivity(new Intent(this, ProfileActivity.class));
                 break;
@@ -165,7 +156,9 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         BottomNavigationView navView = findViewById(R.id.bottom_nav_bar);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentQuests = FragmentQuests.newInstance(null);
-        fragmentMap = FragmentMap.newInstance(null);
+        if (Tools.locationPermissionGiven(ActivityMain.this)) {
+            fragmentMap = FragmentMap.newInstance(null);
+        }
         fragmentFriends = new FragmentFriends();
         commitFragments();
         openFragment(fragmentQuests);
@@ -174,11 +167,14 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     public void commitFragments() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction
-            .add(R.id.fragment_containter, fragmentMap)
             .add(R.id.fragment_containter, fragmentQuests)
             .add(R.id.fragment_containter, fragmentFriends)
-            .hide(fragmentMap)
-            .hide(fragmentFriends).commit();
+            .hide(fragmentFriends);
+        if (fragmentMap != null) {
+            transaction.add(R.id.fragment_containter, fragmentMap);
+            transaction.hide(fragmentMap);
+        }
+        transaction.commit();
     }
 
     @Override
@@ -186,22 +182,15 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                                            String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 200: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openFragment(fragmentMap);
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    ((BottomNavigationView) findViewById(R.id.bottom_nav_bar)).setSelectedItemId(R.id.navigation_map);
                 } else {
                     Tools.showMsg(this, "Please allow map permission.");
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    return;
                 }
-                return;
-            }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
+            }
         }
     }
 }

@@ -1,15 +1,20 @@
 package com.example.locator;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import java.io.ByteArrayOutputStream;
 
-public  class Tools {
+public class Tools {
 
     private static Toast toast;
 
@@ -42,5 +47,9 @@ public  class Tools {
         }
     }
 
+    public static boolean locationPermissionGiven(FragmentActivity context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED;
+    }
 
 }
