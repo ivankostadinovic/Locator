@@ -42,12 +42,19 @@ public class FriendsFragment extends Fragment {
         List<Friend> lista = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             Friend friend = new Friend();
-            friend.name = "Pera";
+            friend.id = String.valueOf(i);
+            friend.name = "Pera" + i;
             friend.location = "Belgrade, Serbia";
             friend.type = i % 2 == 0 ? Constants.FriendType.ADDED : Constants.FriendType.FOUND;
             lista.add(friend);
         }
         adapter.setData(lista);
-        adapter.addDiscovered(lista.get(1));
+        Friend friend = new Friend();
+        friend.id = "7";
+        friend.name = "Djoka";
+        friend.location = "Nis, Serbia";
+        friend.type = Constants.FriendType.FOUND;
+        adapter.addDiscovered(friend);
+        adapter.moveDiscoveredToAdded("7");
     }
 }
