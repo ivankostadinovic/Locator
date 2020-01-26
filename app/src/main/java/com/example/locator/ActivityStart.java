@@ -30,10 +30,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Arrays;
 
 public class ActivityStart extends AppCompatActivity {
-
-    static {
-        System.loadLibrary("opencv_java3");
-    }
     private Button btnLoginEmail, btnLoginFacebook, btnLoginGoogle;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;

@@ -153,26 +153,25 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_profile) {
-
-
-        } else if (id == R.id.nav_logout) {
-
-            FirebaseAuth.getInstance().signOut();
-            LoginManager.getInstance().logOut();
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .build();
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-            mGoogleSignInClient.signOut();
-            Intent i = new Intent(ActivityMain.this, ActivityStart.class);
-            startActivity(i);
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                break;
+            case R.id.nav_profile: {
+                startActivity(new Intent(this, ProfileActivity.class));
+                break;
+            }
+            case R.id.nav_logout: {
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .build();
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                mGoogleSignInClient.signOut();
+                Intent i = new Intent(ActivityMain.this, ActivityStart.class);
+                startActivity(i);
+                break;
+            }
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -183,24 +182,18 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     public void initializeComponents() {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.bottom_nav_bar);
-        //mTextMessage = findViewById(R.id.message);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentQuests = FragmentQuests.newInstance(null);
         fragmentMap = FragmentMap.newInstance(null);
-
         current = 0;
         commitFragments();
         openFragment(fragmentQuests);
-
     }
 
     public void commitFragments() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.fragment_containter, fragmentMap).add(R.id.fragment_containter, fragmentQuests).commit();
-
         transaction.hide(fragmentMap);
-
-
     }
 
     @Override

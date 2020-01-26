@@ -75,6 +75,8 @@
     <string name="show_map">Show map</string>
     <string name="added_on">Added on:</string>
     <string name="create_group"><u>Create group</u></string>
+    <string name="profile">Profile</string>
+    <string name="name_dots">Name:</string>
 
 
 </resources>
