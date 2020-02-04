@@ -51,5 +51,4 @@ public class Tools {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED;
     }
-
 }

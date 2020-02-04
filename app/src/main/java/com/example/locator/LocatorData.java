@@ -218,9 +218,54 @@ public class LocatorData {
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).removeValue();
     }
 
+    public void updateUserLocation(double longitude, double latitude) {
+        db.child("Users").child(getUser().getId()).child("location").child("longitude").setValue(longitude);
+        db.child("Users").child(getUser().getId()).child("location").child("latitude").setValue(latitude);
+    }
+
 
     public void addFriend(FriendModel friend) {
     }
+
+    public void getUsers(LocatorWorker worker) {
+        db.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<User> users = new ArrayList<>();
+                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    User user = childDataSnapshot.getValue(User.class);
+                    users.add(user);
+                }
+                worker.handleUsersResponse(users);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getQuests(LocatorWorker worker) {
+        db.child("Quests").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Quest> quests = new ArrayList<>();
+                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Quest quest = childDataSnapshot.getValue(Quest.class);
+                    quests.add(quest);
+                }
+                worker.handleQuestsResponse(quests);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
 
     private static class SingletonHolder {
@@ -250,6 +295,7 @@ public class LocatorData {
                 user = dataSnapshot.getValue(User.class);
                 Intent intent = new Intent(activity, ActivityMain.class);
                 activity.startActivity(intent);
+                activity.finish();
                 Tools.showMsg(activity, "Login successful.");
             }
 
