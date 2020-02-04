@@ -74,7 +74,6 @@ public class ActivitySettings extends ActivityBase {
             } else {
                 Tools.showMsg(this, "Please allow map permission.");
                 switchMaterial.setChecked(false);
-                return;
             }
         }
     }

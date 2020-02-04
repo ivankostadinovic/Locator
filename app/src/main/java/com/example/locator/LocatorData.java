@@ -17,11 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +27,7 @@ public class LocatorData {
     public List<Quest> finishedQuests;
     public List<Quest> addedQuests;
     public List<QuestItem> itemsToAdd;
+    public List<User> friends;
     private User user;
     private DatabaseReference db;
     private FirebaseAuth auth;
@@ -42,6 +38,7 @@ public class LocatorData {
         addedQuests = new ArrayList<>();
         finishedQuests = new ArrayList<>();
         activeQuests = new ArrayList<>();
+        friends = new ArrayList<>();
         user = new User();
         db = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
@@ -118,6 +115,55 @@ public class LocatorData {
 
             }
         });
+    }
+
+    public void loadFriends() {
+        db.child("Friends").child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    friends.add(childDataSnapshot.getValue(User.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void observeFriendLocations(FragmentMap fragmentMap) {
+        for (User friend : friends) {
+            db.child("Friends").child(user.getId()).child(friend.getId()).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    if (fragmentMap != null) {
+                        User updatedFriend = dataSnapshot.getValue(User.class);
+                        fragmentMap.updateFriendInfo(updatedFriend);
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     public void activeQuestListener(final FragmentActiveList fragmentActiveList) {
@@ -224,8 +270,12 @@ public class LocatorData {
     }
 
     public void updateUserLocation(double longitude, double latitude) {
-        db.child("Users").child(getUser().getId()).child("location").child("longitude").setValue(longitude);
-        db.child("Users").child(getUser().getId()).child("location").child("latitude").setValue(latitude);
+        db.child("Users").child(getUser().getId()).child("longitude").setValue(longitude);
+        db.child("Users").child(getUser().getId()).child("latitude").setValue(latitude);
+        for (User friend : friends) {
+            db.child("Friends").child(friend.getId()).child(user.getId()).child("longitude").setValue(longitude);
+            db.child("Friends").child(friend.getId()).child(user.getId()).child("latitude").setValue(latitude);
+        }
     }
 
 
@@ -259,7 +309,7 @@ public class LocatorData {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<User> users = new ArrayList<>();
-                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User user = childDataSnapshot.getValue(User.class);
                     users.add(user);
                 }
@@ -278,7 +328,7 @@ public class LocatorData {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Quest> quests = new ArrayList<>();
-                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Quest quest = childDataSnapshot.getValue(Quest.class);
                     quests.add(quest);
                 }
@@ -291,8 +341,6 @@ public class LocatorData {
             }
         });
     }
-
-
 
 
     private static class SingletonHolder {

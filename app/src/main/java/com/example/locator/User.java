@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String Name;
     private String Password;
     private String Email;
+    private String image;
     private double longitude;
     private double latitude;
 
@@ -63,5 +64,13 @@ public class User implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

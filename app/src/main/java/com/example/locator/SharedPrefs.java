@@ -22,7 +22,7 @@ public class SharedPrefs {
     }
 
     public boolean getServiceEnabled() {
-        return mSharedPrefs.getBoolean(Constants.LOCATION_SERVICE_ENABLED, true);
+        return mSharedPrefs.getBoolean(Constants.LOCATION_SERVICE_ENABLED, false);
     }
 
     public void putServiceEnabled(boolean serviceEnabled) {

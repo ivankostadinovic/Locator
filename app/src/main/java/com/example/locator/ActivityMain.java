@@ -33,36 +33,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
-
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-        = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_quests:
-                    openFragment(fragmentQuests);
-                    return true;
-                case R.id.navigation_friends:
-                    openFragment(fragmentFriends);
-                    return true;
-                case R.id.navigation_map:
-                    if (!Tools.locationPermissionGiven(ActivityMain.this)) {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-                        return false;
-                    } else {
-                        if (fragmentMap == null) {
-                            fragmentMap = FragmentMap.newInstance(null);
-                            getSupportFragmentManager().beginTransaction().add(R.id.fragment_containter, fragmentMap).commit();
-                        }
-                        openFragment(fragmentMap);
-                    }
-                    return true;
-            }
-            return false;
-        }
-    };
+    private final int REQUEST_CODE_SERVICE = 555;
 
     private void openFragment(Fragment fragment) {
 
@@ -88,7 +59,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             startActivity(i);
         });
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -104,6 +74,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         } else if (sharedPrefs.getServiceEnabled()) {
             setUpServiceAndWorker();
         }
+        LocatorData.getInstance().loadFriends();
     }
 
     private void showServiceDialog() {
@@ -111,30 +82,33 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             .setTitle("Location service")
             .setMessage("Do you want to send your location periodically?")
             .setPositiveButton("Yes", (dialog, which) -> {
-                sharedPrefs.putServiceEnabled(true);
                 setUpServiceAndWorker();
                 dialog.dismiss();
-            })
-            .setNegativeButton("No", (dialog, which) -> {
-                sharedPrefs.putServiceEnabled(false);
-                dialog.dismiss();
-            })
-            .show();
+            }).setNegativeButton("No", (dialog, which) -> {
+            sharedPrefs.putServiceEnabled(false);
+            dialog.dismiss();
+        }).show();
+
     }
 
     private void setUpServiceAndWorker() {
-        startService(new Intent(this, LocatorService.class));
-        Constraints constraints = new Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build();
-
-        PeriodicWorkRequest saveRequest =
-            new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
+        if (Tools.locationPermissionGiven(this)) {
+            sharedPrefs.putServiceEnabled(true);
+            startService(new Intent(this, LocatorService.class));
+            Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        WorkManager.getInstance(this)
-            .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+            PeriodicWorkRequest saveRequest =
+                new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+                    .setConstraints(constraints)
+                    .build();
+
+            WorkManager.getInstance(this)
+                .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_SERVICE);
+        }
     }
 
     private void stopServiceAndWorker() {
@@ -238,8 +212,45 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                     Tools.showMsg(this, "Please allow map permission.");
                     return;
                 }
-
+            }
+            case REQUEST_CODE_SERVICE: {
+                if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setUpServiceAndWorker();
+                } else {
+                    Tools.showInfoDialog(this, "Need location permission to start service.\nYou can enable this later in settings.");
+                }
             }
         }
     }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+        = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_quests:
+                    openFragment(fragmentQuests);
+                    return true;
+                case R.id.navigation_friends:
+                    openFragment(fragmentFriends);
+                    return true;
+                case R.id.navigation_map:
+                    if (!Tools.locationPermissionGiven(ActivityMain.this)) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                        return false;
+                    } else {
+                        if (fragmentMap == null) {
+                            fragmentMap = FragmentMap.newInstance(null);
+                            getSupportFragmentManager().beginTransaction().add(R.id.fragment_containter, fragmentMap).commit();
+                        }
+                        openFragment(fragmentMap);
+                    }
+                    return true;
+            }
+            return false;
+        }
+    };
 }

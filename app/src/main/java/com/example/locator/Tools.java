@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.io.ByteArrayOutputStream;
 
 public class Tools {
@@ -50,5 +52,16 @@ public class Tools {
     public static boolean locationPermissionGiven(FragmentActivity context) {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void showInfoDialog(Context ctx, String text) {
+        new MaterialAlertDialogBuilder(ctx)
+            .setTitle("Info")
+            .setMessage(text)
+            .setPositiveButton("ok", (dialog, which) -> {
+                dialog.dismiss();
+            })
+            .show();
+
     }
 }
