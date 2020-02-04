@@ -13,9 +13,7 @@ public class User implements Serializable {
     private double longitude;
     private double latitude;
 
-    private double longitude;
     private int points;
-    private double latitude;
 
 
 

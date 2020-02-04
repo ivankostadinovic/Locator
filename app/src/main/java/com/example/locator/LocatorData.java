@@ -126,7 +126,8 @@ public class LocatorData {
                 }
                 if (!exists) {
                     feedQuests.add(quest);
-                    listener.newFeedQuest(quest);
+                    if (listener != null)
+                        listener.newFeedQuest(quest);
                     feedsListFragment.addQuest(quest);
                 }
             }
@@ -371,45 +372,6 @@ public class LocatorData {
         });
 
     }
-
-    public void getUsers(LocatorWorker worker) {
-        db.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<User> users = new ArrayList<>();
-                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    User user = childDataSnapshot.getValue(User.class);
-                    users.add(user);
-                }
-                worker.handleUsersResponse(users);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void getQuests(LocatorWorker worker) {
-        db.child("Quests").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Quest> quests = new ArrayList<>();
-                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Quest quest = childDataSnapshot.getValue(Quest.class);
-                    quests.add(quest);
-                }
-                worker.handleQuestsResponse(quests);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
 
     public void getUsers(LocatorWorker worker) {
         db.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
