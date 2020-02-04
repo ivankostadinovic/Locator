@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,9 +21,16 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.concurrent.TimeUnit;
 
 public class ActivityMain extends ActivityBase implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentQuests fragmentQuests;
@@ -44,7 +53,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                     return true;
                 case R.id.navigation_map:
                     if (!Tools.locationPermissionGiven(ActivityMain.this)) {
-                        ActivityCompat.requestPermissions(ActivityMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
                         return false;
                     } else {
                         if (fragmentMap == null) {
@@ -93,12 +102,45 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        if (getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE).getBoolean(Constants.LOCATION_SERVICE_ENABLED, true)) {
-            serviceIntent = new Intent(this, LocatorService.class);
-            startService(serviceIntent);
+        if (!sharedPrefs.getServiceDialogShown()) {
+            showServiceDialog();
+            sharedPrefs.saveServiceDialogShown(true);
         }
     }
 
+    private void showServiceDialog() {
+        new MaterialAlertDialogBuilder(this)
+            .setTitle("Location service")
+            .setMessage("Do you want to send your location periodically?")
+            .setPositiveButton("Yes", (dialog, which) -> {
+                sharedPrefs.putServiceEnabled(true);
+                setUpServiceAndWorker();
+                dialog.dismiss();
+            })
+            .setNegativeButton("No", (dialog, which) -> {
+                sharedPrefs.putServiceEnabled(false);
+                dialog.dismiss();
+            })
+            .show();
+    }
+
+    private void setUpServiceAndWorker() {
+        serviceIntent = new Intent(this, LocatorService.class);
+        startService(serviceIntent);
+        Constraints constraints = new Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build();
+
+        PeriodicWorkRequest saveRequest =
+            new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+    }
+
+    //servis se gasi u pozadini posle najvise par minuta tako da pri izlasku iz aplikacije moze da se iskljuci, za rad u pozadini sluzi LocatorWorker
     @Override
     protected void onDestroy() {
         if (serviceIntent != null) {
@@ -140,8 +182,13 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             }
             case R.id.nav_logout: {
                 FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(ActivityMain.this, ActivityLoginEmail.class);
+                sharedPrefs.clear();
+                Intent i = new Intent(this, ActivityLoginEmail.class);
                 startActivity(i);
+                break;
+            }
+            case R.id.nav_settings: {
+                startActivity(new Intent(this, ActivitySettings.class));
                 break;
             }
         }

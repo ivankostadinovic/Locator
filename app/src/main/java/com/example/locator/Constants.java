@@ -5,6 +5,9 @@ import java.lang.annotation.RetentionPolicy;
 
 public class Constants {
 
+    public static String LOCATION_SERVICE_ENABLED = "location_service_enabled";
+    public static final String LOCATION_DIALOG_SHOWN = "location_dialog_shown";
+
     @Retention(RetentionPolicy.SOURCE)
     public @interface QuestType {
         int FEED = 0;
@@ -19,6 +22,4 @@ public class Constants {
         int FOUND = 1;
     }
 
-    public static String SHARED_PREFS = "shared_prefs";
-    public static String LOCATION_SERVICE_ENABLED = "location_service_enabled";
 }

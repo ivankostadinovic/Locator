@@ -16,10 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ActivitySettings"></activity>
+
         <service
             android:name=".LocatorService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity android:name=".PopUpFriendActivity" />
         <activity android:name=".ProfileActivity" />
@@ -46,7 +48,7 @@
             android:name=".ActivityForgotPassword"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".ActivityCreateAccount" />
-        <activity android:name=".ActivityLoginEmail" >
+        <activity android:name=".ActivityLoginEmail">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,8 +56,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="locator.com"
                     android:scheme="https" />
