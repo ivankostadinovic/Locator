@@ -30,10 +30,8 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_progress);
-
         quest = (Quest) getIntent().getSerializableExtra("quest");
         initializeComponents();
-
 
     }
 
@@ -95,6 +93,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         secondAnswer = findViewById(R.id.second_layout);
         thirdAnswer = findViewById(R.id.third_layout);
 
+
         firstAnswer.setOnClickListener(this);
         secondAnswer.setOnClickListener(this);
         thirdAnswer.setOnClickListener(this);
@@ -124,6 +123,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             outlineButtons.add(button);
         }
 
+        txtDate.setText(quest.getAddedOn());
         txtName.setText(quest.getName());
         txtDescription.setText(quest.getDescription());
         items.addAll(quest.getItems());
@@ -188,6 +188,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
         items.get(currentItemIndex).answeredQuestion = i;
         quest.getItems().get(currentItemIndex).answeredQuestion = i;
+        quest.setItemsFound(quest.getItemsFound() + 1);
 
         LocatorData.getInstance().updateQuestProgress(quest);
 
@@ -202,6 +203,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
         if (allAnswered) {
             Tools.showMsg(this, "Quest finished with" + correctAnswers + " / " + items.size());
+            LocatorData.getInstance().updateUserPoints(correctAnswers * 30);
             LocatorData.getInstance().finishQuest(quest);
         }
         firstAnswer.setClickable(false);

@@ -13,6 +13,11 @@ public class User implements Serializable {
     private double longitude;
     private double latitude;
 
+    private double longitude;
+    private int points;
+    private double latitude;
+
+
 
     public User()
     {
@@ -73,4 +78,12 @@ public class User implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
 }
