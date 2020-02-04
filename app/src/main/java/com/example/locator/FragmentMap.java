@@ -53,9 +53,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         nisLatLng = new LatLng(43.326233, 21.906442);
-        for (User user : LocatorData.getInstance().friends) {
-            friendsMap.put(user.getId(), user);
-        }
     }
 
     @Override
@@ -73,6 +70,11 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                 mMap.clear(); //clear old markersMap
                 mMap.setMyLocationEnabled(true);
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+                for (User user : LocatorData.getInstance().friends) {
+                    friendsMap.put(user.getId(), user);
+                    markersMap.put(user.getId(), mMap.addMarker(generateMarker(user)));
+                }
+                LocatorData.getInstance().observeFriendLocations(this);
 
                 fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(getActivity(), location -> {
@@ -107,7 +109,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         if (mMap == null) {
             return;
         }
-
         User friend = friendsMap.get(updatedFriend.getId());
         if (friend != null) {
             Marker marker = markersMap.get(String.valueOf(friend.getLatitude() + friend.getLongitude()));
@@ -124,6 +125,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         return new MarkerOptions()
             .position(latLng)
             .title(updatedFriend.getName())
-            .icon(BitmapDescriptorFactory.fromAsset(updatedFriend.getImage()));
+            .icon(BitmapDescriptorFactory.fromBitmap(Tools.StringToBitMap(image)));
     }
+
+    private String image = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCABkAGQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABAYACP/EACEQAAMAAgIDAQEBAQAAAAAAAAADBGFiAiEBMVEyUhEi/8QAFgEBAQEAAAAAAAAAAAAAAAAABwYJ/8QAHBEAAgMBAQEBAAAAAAAAAAAAAAQFITEBAiIR/9oADAMBAAIRAxEAPwDn9kWoRkOpVth1Csh1B6Kaw0hkndslGw6hWQ6lWyHUIyHUSYprA/kndslWRahWRalUyHUKyHUSoprA/kndJVkOoRkWpVth1Csh1EmKawP5J3bJRkOoVkWpVsh1CMh8/wAiTFNYH8k7tkqyLUK2HUqmQ6hWw6iVFNYH8k7tkt5h7/Jig5Q9/kxaeGvnhJ+nbOmWQ4CshwVTIcBWQ4MN4prDT6Sd0lWQ4CshwVTIdQrIcCVFNYH8k7pKshwEZDgq2Q4Csh1EmKbwP5J3bJRkOArYcFUyHAVkOolRTWB/JO6SrIcBWQ4KpkOArIdRJimsD+Sd0lGQ4CshwVbIdQrIcCVFNYH8k7pLcoe/Rig5Q9/kxZ+GvnhJ+nbOmWQ6hGQ6lWyLUKyL3/yYcRTWGn0k7pKMh1Csh1KtkWoRkWolRTWB/JO7ZKsh1Csh1KpkOoVkOBJimsD+Sd2yVZDqEZDqVbIdQrItRJimsD+Sd2yUZD4/kKyHUq2xahGQ6iVFNYH8k7pKsh1Csh1KpkWoVkOokxTWB/JO6S3mHv8AJig5Rd+jFn4a+eEn6dvTplkOArIcFUyHAVkODDmKaw0+kndslWQ4CshwVTIcBWQ4EmKawP5J3bJVkOArIcFUyHAVkOBJimsD+Sd2yUbDgKyHBVMhwFbDgSoprA/kndslWQ4CshwVTYcBWQ4EmKawP5J3bJVkOArIcFUyHARkOBKimsD+Sd2yX5Q9+jFByh79GLPw388JL07enTLIcBWQ4KpkPj+QrIdTDiKaw0/kndslGw4CshwVTIdQrIdRJimsD+Sd0lWQ4Csh1KpkOoVkOolRTWB/JO6SrIdQrIcFUyHUKyHUSoprA/kndslGQ4CshwVTIdQrIdRJimsD+Sd2yVZDqFZDgqmQ6hWQ6iTFNYH8k7tktyh8f76MUHKHv0YtPDXzwk/TtnTLIdQrIcFWyHARkODDeKaw0+kndJVkOArIcFUyHAVsOBKimsD+Sd0lWQ4CMhwVbIcBWQ4EmKawP5J3SUZDgKyHUqmQ4CshwJUU1gfyTukqyHAVkPvoqmw4CshwJMU1gfyTukqyHARsOCrZDgKyHAlRTeB/JO6S3mHv0YoOUPfoxZ+G/nhJ+nbOlGJ4fAjEr+GMYixXcNTZLvbCtTw+BWJ4fDGEmK72g/ku9sK1PD4FYnh8MYSYrvaD+S72wrE8PgRqeHwxhKiu9oP5LvbCsTw+BWp4fDGEmK72iAku9sK1XD4FYlfwxhKiu9oPpLvbDeU8P99GMYs/He/nCT9d7+9P/9k=";
 }
