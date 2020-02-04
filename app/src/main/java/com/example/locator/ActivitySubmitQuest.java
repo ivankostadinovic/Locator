@@ -1,10 +1,14 @@
 package com.example.locator;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toolbar;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -12,9 +16,8 @@ import java.util.List;
 
 public class ActivitySubmitQuest extends ActivityBase {
 
-    private List<QuestItem> items;
     private Button btnSubmit;
-    private EditText editName, editDesc;
+    private EditText editName, editDesc, editLongitude, editLatitude;
     private RadioButton radioIstorijski, radioZabavni, radioIstrazivacki;
     private DatabaseReference db;
     Quest quest;
@@ -32,6 +35,8 @@ public class ActivitySubmitQuest extends ActivityBase {
 
         editName = findViewById(R.id.quest_name);
         editDesc = findViewById(R.id.quest_description);
+        editLatitude = findViewById(R.id.latitude);
+        editLongitude = findViewById(R.id.longitude);
         btnSubmit = findViewById(R.id.btn_submit_quest);
         radioIstorijski = findViewById(R.id.radio_istorijski);
         radioZabavni = findViewById(R.id.radio_zabavni);
@@ -40,6 +45,16 @@ public class ActivitySubmitQuest extends ActivityBase {
         db = FirebaseDatabase.getInstance().getReference();
 
         btnSubmit.setOnClickListener(v -> addQuest());
+    }
+
+    public void getLocation(View view) {
+        if (Tools.locationPermissionGiven(this)) {
+            FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                editLongitude.setText(Double.toString(location.getLongitude()));
+                editLatitude.setText(Double.toString(location.getLatitude()));
+            });
+        }
 
     }
 
@@ -57,6 +72,8 @@ public class ActivitySubmitQuest extends ActivityBase {
         } else {
             quest.setType("Zabavni");
         }
+        quest.setLatitude(Double.parseDouble(editLatitude.getText().toString()));
+        quest.setLongitude(Double.parseDouble(editLongitude.getText().toString()));
         quest.setDescription(editDesc.getText().toString());
         quest.setName(editName.getText().toString());
         LocatorData.getInstance().addQuest(quest, this);

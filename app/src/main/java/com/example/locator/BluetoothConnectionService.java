@@ -6,7 +6,13 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,12 +40,20 @@ public class BluetoothConnectionService {
     private ConnectThread mConnectThread;
     private BluetoothDevice mmDevice;
     private UUID deviceUUID;
+    private Handler handler;
     ProgressDialog mProgressDialog;
 
     private ConnectedThread mConnectedThread;
 
     public BluetoothConnectionService(Context context) {
         mContext = context;
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                Tools.showMsg(mContext, (String) msg.obj);
+            }
+        };
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         start();
     }
@@ -160,7 +174,6 @@ public class BluetoothConnectionService {
                 Tools.log("run: ConnectThread: Could not connect to UUID: " + MY_UUID_INSECURE);
             }
 
-            //will talk about this in the 3rd video
             connected(mmSocket, mmDevice, bytesToWrite, true);
         }
 
@@ -198,14 +211,14 @@ public class BluetoothConnectionService {
      * Then ConnectThread starts and attempts to make a connection with the other devices AcceptThread.
      **/
 
-    public void startClient(BluetoothDevice device, UUID uuid) {
+    public void startClient(BluetoothDevice device, UUID uuid, byte[] bytes) {
         Tools.log("startClient: Started.");
 
         //initprogress dialog
         mProgressDialog = ProgressDialog.show(mContext, "Connecting Bluetooth"
             , "Please Wait...", true);
 
-        mConnectThread = new ConnectThread(device, uuid);
+        mConnectThread = new ConnectThread(device, uuid, bytes);
         mConnectThread.start();
     }
 
@@ -254,8 +267,9 @@ public class BluetoothConnectionService {
                 // Read from the InputStream
                 try {
                     bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
-                    Tools.showMsg(mContext, "user with id" + incomingMessage + "added");
+                    String userId = new String(buffer, 0, bytes);
+                    LocatorData.getInstance().addFriend(userId);
+                    handler.obtainMessage(1, "New friend added").sendToTarget();
                 } catch (IOException e) {
                     Tools.log("write: Error reading Input Stream. " + e.getMessage());
                     break;
@@ -269,8 +283,10 @@ public class BluetoothConnectionService {
             Tools.log("write: Writing to outputstream: " + text);
             try {
                 mmOutStream.write(bytes);
+                handler.obtainMessage(1, "Friend added").sendToTarget();
             } catch (IOException e) {
                 Tools.log("write: Error writing to output stream. " + e.getMessage());
+                handler.obtainMessage(1, "Friend not added").sendToTarget();
             }
         }
 
@@ -293,12 +309,7 @@ public class BluetoothConnectionService {
         mConnectedThread.start();
     }
 
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
-     */
+
     public void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;

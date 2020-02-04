@@ -52,16 +52,6 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_location_pin"
-            style="@style/IconOnlyButton"
-            app:cornerRadius="24dp"
-            app:icon="@drawable/ic_round_location_on_24px"
-            app:iconTint="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/item_answer_3_layout"
-            app:layout_constraintTop_toBottomOf="@id/item_answer_3_layout"
-            app:layout_constraintVertical_bias="0.5" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_hint_layout"
