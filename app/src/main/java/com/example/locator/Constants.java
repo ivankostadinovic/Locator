@@ -18,4 +18,7 @@ public class Constants {
         int ADDED = 0;
         int FOUND = 1;
     }
+
+    public static String SHARED_PREFS = "shared_prefs";
+    public static String LOCATION_SERVICE_ENABLED = "location_service_enabled";
 }

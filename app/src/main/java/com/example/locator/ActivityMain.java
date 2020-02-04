@@ -1,7 +1,9 @@
 package com.example.locator;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -33,6 +35,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
     private GoogleSignInClient mGoogleSignInClient;
+    private Intent serviceIntent;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
         = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -99,6 +103,18 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        if (getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE).getBoolean(Constants.LOCATION_SERVICE_ENABLED, true)) {
+            serviceIntent = new Intent(this, LocatorService.class);
+            startService(serviceIntent);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (serviceIntent != null) {
+            stopService(serviceIntent);
+        }
+        super.onDestroy();
     }
 
     @Override

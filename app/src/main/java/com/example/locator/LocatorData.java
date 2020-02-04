@@ -218,6 +218,11 @@ public class LocatorData {
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).removeValue();
     }
 
+    public void updateUserLocation(double longitude, double latitude) {
+        db.child("Users").child(getUser().getId()).child("location").child("longitude").setValue(longitude);
+        db.child("Users").child(getUser().getId()).child("location").child("latitude").setValue(latitude);
+    }
+
 
     public void addFriend(FriendModel friend) {
     }
@@ -250,6 +255,7 @@ public class LocatorData {
                 user = dataSnapshot.getValue(User.class);
                 Intent intent = new Intent(activity, ActivityMain.class);
                 activity.startActivity(intent);
+                activity.finish();
                 Tools.showMsg(activity, "Login successful.");
             }
 
