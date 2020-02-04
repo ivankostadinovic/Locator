@@ -1,14 +1,12 @@
 package com.example.locator;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -36,7 +33,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
-    private Intent serviceIntent;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -105,6 +101,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         if (!sharedPrefs.getServiceDialogShown()) {
             showServiceDialog();
             sharedPrefs.saveServiceDialogShown(true);
+        } else if (sharedPrefs.getServiceEnabled()) {
+            setUpServiceAndWorker();
         }
     }
 
@@ -125,8 +123,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     }
 
     private void setUpServiceAndWorker() {
-        serviceIntent = new Intent(this, LocatorService.class);
-        startService(serviceIntent);
+        startService(new Intent(this, LocatorService.class));
         Constraints constraints = new Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build();
@@ -140,12 +137,15 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
     }
 
+    private void stopServiceAndWorker() {
+        stopService(new Intent(this, LocatorService.class));
+        WorkManager.getInstance(this).cancelUniqueWork("locator");
+    }
+
     //servis se gasi u pozadini posle najvise par minuta tako da pri izlasku iz aplikacije moze da se iskljuci, za rad u pozadini sluzi LocatorWorker
     @Override
     protected void onDestroy() {
-        if (serviceIntent != null) {
-            stopService(serviceIntent);
-        }
+        stopService(new Intent(this, LocatorService.class));
         super.onDestroy();
     }
 
@@ -183,6 +183,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             case R.id.nav_logout: {
                 FirebaseAuth.getInstance().signOut();
                 sharedPrefs.clear();
+                stopServiceAndWorker();
                 Intent i = new Intent(this, ActivityLoginEmail.class);
                 startActivity(i);
                 break;
