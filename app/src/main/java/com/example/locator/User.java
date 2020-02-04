@@ -10,6 +10,11 @@ public class User implements Serializable {
     private String Password;
     private String Email;
 
+    private double longitude;
+    private int points;
+    private double latitude;
+
+
 
     public User()
     {
@@ -46,4 +51,29 @@ public class User implements Serializable {
     public String getEmail() {
         return Email;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
 }

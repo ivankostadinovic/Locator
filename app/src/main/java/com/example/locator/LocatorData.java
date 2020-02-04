@@ -15,13 +15,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +32,7 @@ public class LocatorData {
     private User user;
     private DatabaseReference db;
     private FirebaseAuth auth;
+    private UserActionListener listener;
 
 
     private LocatorData() {
@@ -48,7 +46,72 @@ public class LocatorData {
 
     }
 
+    public void setListener(UserActionListener listener) {
+        this.listener = listener;
+    }
+
+    public void userLocationListener() {
+        db.child("Users").child(getUser().getId()).child("latitude").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Double lat = dataSnapshot.getValue(Double.class);
+                user.setLatitude(lat);
+                listener.userLatitudeChagned(lat);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        db.child("Users").child(getUser().getId()).child("longitude").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Double lon = dataSnapshot.getValue(Double.class);
+                user.setLongitude(lon);
+                listener.userLongitudeChanged(lon);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void feedQuestListener(final FeedsListFragment feedsListFragment) {
+
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -61,9 +124,9 @@ public class LocatorData {
                 }
                 if (!exists) {
                     feedQuests.add(quest);
+                    listener.newFeedQuest(quest);
                     feedsListFragment.addQuest(quest);
                 }
-
             }
 
             @Override
@@ -225,8 +288,8 @@ public class LocatorData {
 
 
     public void addFriend(User friend) {
-        db.child("Friends").child(friend.getId()).setValue(friend);
-        db.child("Friends").child(getUser().getId()).setValue(getUser());
+        db.child("Friends").child(friend.getId()).child(user.getId()).setValue(getUser());
+        db.child("Friends").child(getUser().getId()).child(friend.getId()).setValue(friend);
     }
 
     public void addFriend(String friendId) {
@@ -247,6 +310,49 @@ public class LocatorData {
             }
         });
 
+    }
+
+
+    public void getUsers(LocatorWorker worker) {
+        db.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<User> users = new ArrayList<>();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    User user = childDataSnapshot.getValue(User.class);
+                    users.add(user);
+                }
+                worker.handleUsersResponse(users);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getQuests(LocatorWorker worker) {
+        db.child("Quests").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Quest> quests = new ArrayList<>();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    Quest quest = childDataSnapshot.getValue(Quest.class);
+                    quests.add(quest);
+                }
+                worker.handleQuestsResponse(quests);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void updateUserPoints(int points) {
+        db.child("Users").child(getUser().getId()).child("points").setValue(points);
     }
 
 

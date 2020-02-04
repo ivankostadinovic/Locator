@@ -12,7 +12,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ActivitySubmitQuest extends ActivityBase {
 
@@ -33,6 +37,7 @@ public class ActivitySubmitQuest extends ActivityBase {
     @Override
     public void initializeComponents() {
 
+        Toolbar toolbar =findViewById(R.id.toolbar);
         editName = findViewById(R.id.quest_name);
         editDesc = findViewById(R.id.quest_description);
         editLatitude = findViewById(R.id.latitude);
@@ -43,6 +48,7 @@ public class ActivitySubmitQuest extends ActivityBase {
         radioIstrazivacki = findViewById(R.id.radio_istrazivacki);
         quest = new Quest();
         db = FirebaseDatabase.getInstance().getReference();
+        toolbar.setNavigationOnClickListener(v -> ActivitySubmitQuest.super.onBackPressed());
 
         btnSubmit.setOnClickListener(v -> addQuest());
     }
@@ -55,9 +61,7 @@ public class ActivitySubmitQuest extends ActivityBase {
                 editLatitude.setText(Double.toString(location.getLatitude()));
             });
         }
-
     }
-
     private void addQuest() {
 
         if (!emptyCheck(new EditText[]{editName, editDesc, editName}))
@@ -76,6 +80,11 @@ public class ActivitySubmitQuest extends ActivityBase {
         quest.setLongitude(Double.parseDouble(editLongitude.getText().toString()));
         quest.setDescription(editDesc.getText().toString());
         quest.setName(editName.getText().toString());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date today = Calendar.getInstance().getTime();
+        String todayDate = dateFormat.format(today);
+        quest.setAddedOn(todayDate);
         LocatorData.getInstance().addQuest(quest, this);
         finish();
 
