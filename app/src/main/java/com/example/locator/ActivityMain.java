@@ -82,12 +82,9 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         initializeComponents();
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ActivityMain.this, ActivityAddQuest.class);
-                startActivity(i);
-            }
+        floatingActionButton.setOnClickListener(view -> {
+            Intent i = new Intent(ActivityMain.this, DiscoverFriendsActivity.class);
+            startActivity(i);
         });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
