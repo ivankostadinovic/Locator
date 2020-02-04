@@ -15,7 +15,7 @@ import com.google.android.gms.location.LocationServices;
 public class LocatorService extends Service {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-
+    private LocationRequest locationRequest;
 
     public LocatorService() {
     }
@@ -27,14 +27,14 @@ public class LocatorService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Tools.showMsg(this, "Service started");
-        LocationRequest locationRequest = LocationRequest.create();
+    public void onCreate() {
+        super.onCreate();
+        locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setSmallestDisplacement(5);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -45,7 +45,11 @@ public class LocatorService extends Service {
                 LocatorData.getInstance().updateUserLocation(locationResult.getLastLocation().getLongitude(), locationResult.getLastLocation().getLatitude());
             }
         };
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Tools.showMsg(this, "Service started");
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         return START_STICKY;
     }

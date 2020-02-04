@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
@@ -24,13 +22,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 public class ActivityMain extends ActivityBase implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
-    private GoogleSignInClient mGoogleSignInClient;
     private Intent serviceIntent;
 
 
@@ -144,7 +140,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             }
             case R.id.nav_logout: {
                 FirebaseAuth.getInstance().signOut();
-                mGoogleSignInClient.signOut();
                 Intent i = new Intent(ActivityMain.this, ActivityLoginEmail.class);
                 startActivity(i);
                 break;
