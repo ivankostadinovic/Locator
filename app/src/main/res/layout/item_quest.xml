@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <com.google.android.material.card.MaterialCardView
-
+        android:background="?selectableItemBackground"
         android:id="@+id/card1"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="150dp">
         <RelativeLayout
@@ -19,7 +19,6 @@
                 android:id="@+id/thumbnail"
                 android:layout_below="@id/title"
                 android:hapticFeedbackEnabled="false"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/brat"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="10dp"
@@ -29,24 +28,17 @@
                 style="@style/ListImageView"
                 android:id="@+id/thumbnail2"
                 android:layout_below="@id/title"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/brat"
                 android:layout_toEndOf="@id/thumbnail"
-                android:layout_marginStart="@dimen/margin_thumbnail"
-
-
-                />
+                android:layout_marginStart="@dimen/margin_thumbnail" />
 
             <ImageView
                 style="@style/ListImageView"
                 android:id="@+id/thumbnail3"
                 android:layout_below="@id/title"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/brat"
                 android:layout_toEndOf="@id/thumbnail2"
-                android:layout_marginStart="@dimen/margin_thumbnail"
-
-                />
+                android:layout_marginStart="@dimen/margin_thumbnail" />
 
 
 

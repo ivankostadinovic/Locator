@@ -33,7 +33,10 @@ public class ActivityLoginEmail extends ActivityBase implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_email);
-
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null)
+            LocatorData.getInstance().loadUser(user.getUid(), this);
         initializeComponents();
 
     }

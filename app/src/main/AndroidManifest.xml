@@ -46,38 +46,26 @@
             android:name=".ActivityForgotPassword"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".ActivityCreateAccount" />
-        <activity android:name=".ActivityLoginEmail" />
-        <activity android:name=".ActivitySubmitQuest" />
-        <activity android:name=".ActivityStart">
+        <activity android:name=".ActivityLoginEmail" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data
+                    android:host="locator.com"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivitySubmitQuest" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
     </application>
 
 </manifest>

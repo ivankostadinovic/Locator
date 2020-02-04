@@ -3,24 +3,20 @@ package com.example.locator;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -86,13 +82,11 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         initializeComponents();
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ActivityMain.this, ActivityAddQuest.class);
-                startActivity(i);
-            }
+        floatingActionButton.setOnClickListener(view -> {
+            Intent i = new Intent(ActivityMain.this, ActivityAddQuest.class);
+            startActivity(i);
         });
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -150,12 +144,8 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             }
             case R.id.nav_logout: {
                 FirebaseAuth.getInstance().signOut();
-                LoginManager.getInstance().logOut();
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .build();
-                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
                 mGoogleSignInClient.signOut();
-                Intent i = new Intent(ActivityMain.this, ActivityStart.class);
+                Intent i = new Intent(ActivityMain.this, ActivityLoginEmail.class);
                 startActivity(i);
                 break;
             }
