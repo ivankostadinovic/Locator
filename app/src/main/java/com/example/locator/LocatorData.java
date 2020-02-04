@@ -18,6 +18,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,42 +121,43 @@ public class LocatorData {
     }
 
     public void activeQuestListener(final FragmentActiveList fragmentActiveList) {
-        db.child("Quests").child("Active-quests").child(getUser().getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Quest quest = dataSnapshot.getValue(Quest.class);
-                activeQuests.add(quest);
-                fragmentActiveList.addQuest(quest);
-                Tools.log("heeloo");
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Quest quest = dataSnapshot.getValue(Quest.class);
-                for (int i = 0; i < activeQuests.size(); i++) {
-                    if (activeQuests.get(i).getId().equals(quest.getId())) {
-                        activeQuests.remove(i);
-                    }
+        if (getUser().getId() != null)
+            db.child("Quests").child("Active-quests").child(getUser().getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Quest quest = dataSnapshot.getValue(Quest.class);
+                    activeQuests.add(quest);
+                    fragmentActiveList.addQuest(quest);
+                    Tools.log("heeloo");
                 }
-                fragmentActiveList.removeQuest(quest);
 
-            }
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                }
 
-            }
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    Quest quest = dataSnapshot.getValue(Quest.class);
+                    for (int i = 0; i < activeQuests.size(); i++) {
+                        if (activeQuests.get(i).getId().equals(quest.getId())) {
+                            activeQuests.remove(i);
+                        }
+                    }
+                    fragmentActiveList.removeQuest(quest);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
-            }
-        });
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
     }
 
 
@@ -219,7 +224,29 @@ public class LocatorData {
     }
 
 
-    public void addFriend(FriendModel friend) {
+    public void addFriend(User friend) {
+        db.child("Friends").child(friend.getId()).setValue(friend);
+        db.child("Friends").child(getUser().getId()).setValue(getUser());
+    }
+
+    public void addFriend(String friendId) {
+        getFriend(friendId);
+    }
+
+    public void getFriend(String id) {
+        db.child("Users").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                addFriend(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -241,9 +268,9 @@ public class LocatorData {
         return user;
     }
 
+
     public void loadUser(final String Uid, final Activity activity) {
         db.child("Users").child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            String ok = Uid;
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

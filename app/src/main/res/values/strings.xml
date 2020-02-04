@@ -80,6 +80,8 @@
     <string name="discovered_friends">Discovered friends</string>
     <string name="slash_discovered_friends">-Discovered friends</string>
     <string name="slash_friends">-Friends</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Loongitude</string>
 
 
 </resources>

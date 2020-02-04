@@ -123,7 +123,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                             .setTitle("Add friend")
                             .setMessage("Do you wish to add " + friend.name + " to your friends list?")
                             .setPositiveButton("Ok", (dialog, which) -> {
-                                LocatorData.getInstance().addFriend(friend);
                                 dialog.dismiss();
                             })
                             .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())

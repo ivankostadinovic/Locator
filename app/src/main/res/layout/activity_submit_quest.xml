@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ActivitySubmitQuest">
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_24px"
+        app:title="@string/app_name" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -16,7 +24,7 @@
         app:boxCornerRadiusTopStart="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.05"
         style="@style/CustomAccentEditText"
@@ -50,9 +58,64 @@
         android:id="@+id/quest_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         />
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/longitude_layout"
+        android:hint="@string/longitude"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quest_description_layout"
+        style="@style/CustomAccentEditText"
+        android:layout_marginEnd="50dp"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/latitude_layout"
+        android:hint="@string/latitude"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/longitude_layout"
+        style="@style/CustomAccentEditText"
+        android:layout_marginEnd="50dp"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_location_pin"
+        style="@style/IconOnlyButton"
+        app:cornerRadius="24dp"
+        android:onClick="getLocation"
+        app:icon="@drawable/ic_round_location_on_24px"
+        app:iconTint="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/longitude_layout"
+        app:layout_constraintTop_toTopOf="@+id/longitude_layout"
+        app:layout_constraintVertical_bias="0.5" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -61,7 +124,7 @@
         android:checkedButton="@+id/radio_istrazivacki"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quest_description_layout"
+        app:layout_constraintTop_toBottomOf="@id/latitude_layout"
         android:layout_marginTop="50dp"
         android:orientation="vertical">
         <RadioButton

@@ -12,6 +12,24 @@ public class Quest implements Serializable {
     private int itemsFound;
     private String Id;
     private String Type;
+    private Double longitude;
+    private Double latitude;
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
 
     public String getType() {
         return Type;
@@ -37,14 +55,15 @@ public class Quest implements Serializable {
         return itemsFound;
     }
 
-    public Quest(){
+    public Quest() {
 
-        items=new ArrayList<QuestItem>();
+        items = new ArrayList<QuestItem>();
     }
-    public void addItem(QuestItem item)
-    {
+
+    public void addItem(QuestItem item) {
         items.add(item);
     }
+
     public void setItems(List<QuestItem> items) {
         this.items = items;
     }
