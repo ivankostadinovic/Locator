@@ -44,10 +44,12 @@ public class PopUpFeedQuest extends AppCompatActivity {
         txtDesc.setText(quest.getDescription());
 
         btnTake.setOnClickListener(view -> {
-            LocatorData.getInstance().takeQuest(quest, this);
+            //LocatorData.getInstance().takeQuest(quest, this);
+            LocatorData.getInstance().feedQuests.remove(quest);
             Intent intent = new Intent(this, ActivityQuestProgress.class);
             intent.putExtra("quest", quest);
             startActivity(intent);
+            finish();
         });
 
     }

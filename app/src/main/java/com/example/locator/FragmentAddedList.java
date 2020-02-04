@@ -20,7 +20,7 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
 
     private RecyclerView recyclerView;
     private QuestAdapter adapter;
-    private List<Quest> questList;
+    private boolean initialState = true;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -50,21 +50,30 @@ public class FragmentAddedList extends Fragment implements SwipeRefreshLayout.On
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        LocatorData.getInstance().loadAddedQuests(this);
+        if (initialState) {
+            LocatorData.getInstance().addedQuestListener(this);
+            initialState = false;
+        } else {
+            adapter = new QuestAdapter(LocatorData.getInstance().addedQuests, getActivity(), Constants.QuestType.ADDED);
+            recyclerView.setAdapter(adapter);
+        }
 
     }
 
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-
         swipeRefreshLayout.setRefreshing(false);
 
     }
 
-    public void loadAddedQuests(List<Quest> list) {
-        questList = list;
-        adapter = new QuestAdapter(questList, getActivity(), Constants.QuestType.ADDED);
-        recyclerView.setAdapter(adapter);
+
+    public void addQuest(Quest quest) {
+        if (adapter == null) {
+            adapter = new QuestAdapter(quest, getActivity(), Constants.QuestType.ADDED);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.addQuest(quest);
+        }
     }
 }

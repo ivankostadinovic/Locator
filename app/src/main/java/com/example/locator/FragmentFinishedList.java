@@ -20,7 +20,7 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
 
     private RecyclerView recyclerView;
     private QuestAdapter adapter;
-    private List<Quest> questList = new ArrayList<>();
+    private boolean initialState = true;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static FragmentQuests newInstance(User user) {
@@ -66,9 +66,14 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
             android.R.color.holo_orange_dark,
             android.R.color.holo_blue_dark);
 
-        questList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        LocatorData.getInstance().loadFinishedQuests(this);
+        if (initialState) {
+            LocatorData.getInstance().finishQuestListener(this);
+            initialState = false;
+        } else {
+            adapter = new QuestAdapter(LocatorData.getInstance().finishedQuests, getActivity(), Constants.QuestType.FINISHED);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -77,9 +82,13 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    public void loadFinishedQuests(List<Quest> list) {
-        questList = list;
-        adapter = new QuestAdapter(questList, getActivity(),Constants.QuestType.FINISHED);
-        recyclerView.setAdapter(adapter);
+
+    public void addQuest(Quest quest) {
+        if (adapter == null) {
+            adapter = new QuestAdapter(quest, getActivity(), Constants.QuestType.FINISHED);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.addQuest(quest);
+        }
     }
 }

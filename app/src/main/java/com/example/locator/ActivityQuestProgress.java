@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ActivityQuestProgress extends ActivityBase implements View.OnClickListener {
 
@@ -23,6 +24,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
     private List<ImageView> imageAnswers = new ArrayList<>();
     private int currentItemIndex = 0;
     private Quest quest;
+    private int correctAnswerIndex = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +50,28 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         QuestItem selectedItem = items.get(index);
         imageView.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(index).image));
         txtQuestion.setText(items.get(index).question);
-        answers.get(0).setText(selectedItem.answers.get(0));
-        answers.get(1).setText(selectedItem.answers.get(1));
-        answers.get(2).setText(selectedItem.answers.get(2));
+
         if (selectedItem.answered) {
+
+            answers.get(0).setText(selectedItem.answers.get(0));
+            answers.get(1).setText(selectedItem.answers.get(1));
+            answers.get(2).setText(selectedItem.answers.get(2));
             if (!selectedItem.correctAnswer) {
                 imageAnswers.get(selectedItem.answeredQuestion).setImageDrawable(getDrawable(R.drawable.ic_close_black_24dp));
                 imageAnswers.get(2).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
-                imageAnswers.get(2).setVisibility(View.VISIBLE);
+                imageAnswers.get(selectedItem.answeredQuestion).setVisibility(View.VISIBLE);
             } else {
-                imageAnswers.get(selectedItem.answeredQuestion).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+                imageAnswers.get(2).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
             }
-            imageAnswers.get(selectedItem.answeredQuestion).setVisibility(View.VISIBLE);
+            imageAnswers.get(2).setVisibility(View.VISIBLE);
             firstAnswer.setClickable(false);
             secondAnswer.setClickable(false);
             thirdAnswer.setClickable(false);
         } else {
+            correctAnswerIndex = new Random().nextInt(3);
+            answers.get(correctAnswerIndex).setText(selectedItem.answers.get(2));
+            answers.get((correctAnswerIndex + 2) % 3).setText(selectedItem.answers.get(1));
+            answers.get((correctAnswerIndex + 1) % 3).setText(selectedItem.answers.get(0));
             for (ImageView imageAnswer : imageAnswers) {
                 imageAnswer.setVisibility(View.INVISIBLE);
             }
@@ -159,14 +167,13 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
     private void checkAnswer(int i) {
 
-        if (i == 2) {
+        if (i == correctAnswerIndex) {
             Tools.showMsg(this, "Answer correct");
             items.get(currentItemIndex).answered = true;
             items.get(currentItemIndex).correctAnswer = true;
             quest.getItems().get(currentItemIndex).answered = true;
             quest.getItems().get(currentItemIndex).correctAnswer = true;
             imageAnswers.get(i).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
-
         } else {
             Tools.showMsg(this, "Answer incorrect");
             items.get(currentItemIndex).answered = true;
@@ -174,11 +181,10 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             quest.getItems().get(currentItemIndex).answered = true;
             quest.getItems().get(currentItemIndex).correctAnswer = false;
             imageAnswers.get(i).setImageDrawable(getDrawable(R.drawable.ic_close_black_24dp));
-            imageAnswers.get(2).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
-            imageAnswers.get(2).setVisibility(View.VISIBLE);
+            imageAnswers.get(correctAnswerIndex).setImageDrawable(getDrawable(R.drawable.ic_check_black_24dp));
+            imageAnswers.get(correctAnswerIndex).setVisibility(View.VISIBLE);
         }
         imageAnswers.get(i).setVisibility(View.VISIBLE);
-
 
         items.get(currentItemIndex).answeredQuestion = i;
         quest.getItems().get(currentItemIndex).answeredQuestion = i;
@@ -190,9 +196,8 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         for (QuestItem item : items) {
             if (!item.answered) {
                 allAnswered = false;
-            } else {
-                if (item.correctAnswer)
-                    correctAnswers++;
+            } else if (item.correctAnswer) {
+                correctAnswers++;
             }
         }
         if (allAnswered) {

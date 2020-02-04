@@ -1,5 +1,6 @@
 package com.example.locator;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +21,20 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
 
     private List<Quest> questList;
+    private Dialog dialog;
     private Context context;
     private int questType;
 
 
-    public QuestAdapter(List<Quest> questL, Context context, int type) {
-        questList = questL;
+    public QuestAdapter(Quest quest, Context context, int type) {
+        questList = new ArrayList<>();
+        questList.add(quest);
+        questType = type;
+        this.context = context;
+    }
+
+    public QuestAdapter(List<Quest> quest, Context context, int type) {
+        questList = quest;
         questType = type;
         this.context = context;
     }
@@ -69,6 +80,15 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         return questList.size();
     }
 
+    public void removeQuest(Quest quest) {
+        for (int i = 0; i < questList.size(); i++) {
+            if (questList.get(i).getId().equals(quest.getId())) {
+                questList.remove(i);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView txtName, txtStatus;
@@ -85,15 +105,33 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
         }
 
+        public void openTakeDialog(Quest quest) {
+            dialog = new LovelyStandardDialog(context)
+                .setCancelable(false)
+                .setTitle("Take quest")
+                .setMessage("Do you want to take the quest?")
+                .setPositiveButton("Take", v -> {
+                    LocatorData.getInstance().takeQuest(quest);
+                    LocatorData.getInstance().feedQuests.remove(quest);
+                    questList.remove(quest);
+                    notifyDataSetChanged();
+                    Intent intent = new Intent(context, ActivityQuestProgress.class);
+                    intent.putExtra("quest", quest);
+                    context.startActivity(intent);
+                })
+                .setNegativeButton("Cancel", v -> {
+                    dialog.dismiss();
+                }).show();
+
+        }
+
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             Quest q = questList.get(position);
             switch (questType) {
                 case Constants.QuestType.FEED:
-                    Intent i = new Intent(context, PopUpFeedQuest.class);
-                    i.putExtra("Quest", q);
-                    context.startActivity(i);
+                    openTakeDialog(q);
                     break;
                 case Constants.QuestType.FINISHED:
                 case Constants.QuestType.ACTIVE:

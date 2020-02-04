@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 
 public class FragmentQuests extends Fragment {
+
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<Quest> questList;
@@ -34,7 +36,6 @@ public class FragmentQuests extends Fragment {
     private User user;
 
     public FragmentQuests() {
-        // Required empty public constructor
     }
 
     public static FragmentQuests newInstance(User user) {
@@ -58,7 +59,6 @@ public class FragmentQuests extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewPager = view.findViewById(R.id.container_view_pager);
-
         tabLayout = view.findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
@@ -87,9 +87,9 @@ public class FragmentQuests extends Fragment {
         fragmentActiveList = new FragmentActiveList();
         fragmentFinishedList = new FragmentFinishedList();
         fragmentAddedList = new FragmentAddedList();
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(feedsListFragment, "Feed");
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager(), SectionsPageAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(fragmentActiveList, "Active");
+        adapter.addFragment(feedsListFragment, "Feed");
         adapter.addFragment(fragmentFinishedList, "Finished");
         adapter.addFragment(fragmentAddedList, "Added");
         viewPager.setAdapter(adapter);

@@ -33,7 +33,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
 
     private Button btnCamera, btnAttach, btnAddItem, btnAddQuest;
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
-    private EditText editName, editQeustion, editLocation, editHint;
+    private EditText editQeustion, editHint;
     private ImageView imageView;
     private List<QuestItem> items = new ArrayList<>();
     private List<EditText> answers = new ArrayList<>();
@@ -50,10 +50,9 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     }
 
     public void addItem() {
-        shownItem.name = editName.getText().toString();
         shownItem.hint = editHint.getText().toString();
         shownItem.question = editQeustion.getText().toString();
-        shownItem.location = editLocation.getText().toString();
+
         for (int i = 0; i < 3; i++) {
             shownItem.answers.add(answers.get(i).getText().toString());
         }
@@ -64,10 +63,10 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
         if (currentItemIndex > items.size() - 1) {
             return;
         }
-        shownItem.name = editName.getText().toString();
+
         shownItem.hint = editHint.getText().toString();
         shownItem.question = editQeustion.getText().toString();
-        shownItem.location = editLocation.getText().toString();
+
         for (int i = 0; i < 3; i++) {
             shownItem.answers.set(i, answers.get(i).getText().toString());
         }
@@ -76,7 +75,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
 
     public void itemToControls(QuestItem item) {
         shownItem = item;
-        editName.setText(item.name);
+
         editHint.setText(item.hint);
         editQeustion.setText(item.question);
         if (item.answers != null && !item.answers.isEmpty()) {
@@ -84,7 +83,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 answers.get(i).setText(item.answers.get(i));
             }
         }
-        editLocation.setText(item.location);
+
         imageView.setImageDrawable(getDrawable(R.drawable.ok2));
         if (item.image != null && !item.image.isEmpty()) {
             imageView.setImageBitmap(Tools.StringToBitMap(item.image));
@@ -129,8 +128,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     public void initializeComponents() {
         editQeustion = findViewById(R.id.item_question);
         editHint = findViewById(R.id.item_hint);
-        editLocation = findViewById(R.id.item_location);
-        editName = findViewById(R.id.item_name);
+
 
         btnCamera = findViewById(R.id.btn_camera);
         btnAttach = findViewById(R.id.btn_attach);
@@ -161,8 +159,6 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     public void clearTexts() {
         editQeustion.setText("");
         editHint.setText("");
-        editName.setText("");
-        editLocation.setText("");
         imageView.setImageDrawable(getDrawable(R.drawable.ok2));
         btnAttach.setEnabled(true);
         btnCamera.setEnabled(true);
@@ -238,7 +234,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                     btnAddItem.setText("Add item");
                     return;
                 }
-                if (!emptyCheck(new EditText[]{editName, editQeustion, editHint, editLocation, answers.get(0), answers.get(1), answers.get(2)})) {
+                if (!emptyCheck(new EditText[]{editQeustion, editHint, answers.get(0), answers.get(1), answers.get(2)})) {
                     return;
                 }
                 addItem();

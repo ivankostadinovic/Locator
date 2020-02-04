@@ -29,46 +29,9 @@
 
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/item_name_layout"
-            style="@style/CustomAccentEditText"
-            android:layout_marginEnd="50dp"
-            android:hint="@string/name"
-            app:boxCornerRadiusBottomEnd="5dp"
-            app:boxCornerRadiusBottomStart="5dp"
-            app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintVertical_bias="0.05">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/item_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/item_location_layout"
-            style="@style/CustomAccentEditText"
-            android:layout_marginEnd="50dp"
-            android:hint="@string/location"
-            app:boxCornerRadiusBottomEnd="5dp"
-            app:boxCornerRadiusBottomStart="5dp"
-            app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_name_layout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/item_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_question_layout"
@@ -81,7 +44,7 @@
             app:boxCornerRadiusTopStart="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_location_layout">
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_question"
@@ -95,10 +58,9 @@
             app:cornerRadius="24dp"
             app:icon="@drawable/ic_round_location_on_24px"
             app:iconTint="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/item_location_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/item_location_layout"
-            app:layout_constraintTop_toTopOf="@+id/item_location_layout"
+            app:layout_constraintStart_toEndOf="@id/item_answer_3_layout"
+            app:layout_constraintTop_toBottomOf="@id/item_answer_3_layout"
             app:layout_constraintVertical_bias="0.5" />
 
         <com.google.android.material.textfield.TextInputLayout

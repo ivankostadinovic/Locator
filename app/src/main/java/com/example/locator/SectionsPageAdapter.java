@@ -15,10 +15,10 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
 
     private List<String> tittleList=new ArrayList<>();
 
-    SectionsPageAdapter(FragmentManager fm)
-    {
-        super(fm);
+    public SectionsPageAdapter(@NonNull FragmentManager fm, int behavior) {
+        super(fm, behavior);
     }
+
 
     public void addFragment(Fragment fragment,String title)
     {
