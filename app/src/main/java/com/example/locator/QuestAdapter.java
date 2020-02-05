@@ -3,6 +3,7 @@ package com.example.locator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     private Dialog dialog;
     private FragmentActivity context;
     private int questType;
-
 
 
     public QuestAdapter(List<Quest> quest, FragmentActivity context, int type) {
@@ -52,9 +52,22 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         holder.txtName.setText(quest.getName());
         String status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
         holder.txtStatus.setText(status);
-        holder.img1.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(0).image));
-        holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(1).image));
-        holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
+        if (quest.getItems().get(0).image != null && !quest.getItems().get(0).image.isEmpty()) {
+            holder.img1.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(0).image));
+        } else {
+            holder.img1.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
+        }
+        if (quest.getItems().get(1).image != null && !quest.getItems().get(1).image.isEmpty()) {
+            holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
+        } else {
+            holder.img2.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
+        }
+        if (quest.getItems().get(1).image != null && !quest.getItems().get(2).image.isEmpty()) {
+            holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
+        } else {
+            holder.img3.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
+        }
+
     }
 
 

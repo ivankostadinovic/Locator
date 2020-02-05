@@ -30,18 +30,15 @@ public class ActivityCreateAccount extends ActivityBase {
         initializeComponents();
 
         btnCreateAccount = (Button) findViewById(R.id.btn_create_account);
-        btnCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User u = new User();
-                if (!validate())
-                    return;
-                u.setEmail(editEmail.getText().toString());
-                u.setPassword(editPass.getText().toString());
-                u.setName(editName.getText().toString());
+        btnCreateAccount.setOnClickListener(v -> {
+            User u = new User();
+            if (!validate())
+                return;
+            u.setEmail(editEmail.getText().toString());
+            u.setPassword(editPass.getText().toString());
+            u.setName(editName.getText().toString());
 
-                LocatorData.getInstance().registerUser(u,ActivityCreateAccount.this);
-            }
+            LocatorData.getInstance().registerUser(u,ActivityCreateAccount.this);
         });
 
     }

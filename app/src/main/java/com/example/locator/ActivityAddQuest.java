@@ -84,7 +84,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
             }
         }
 
-        imageView.setImageDrawable(getDrawable(R.drawable.ok2));
+        imageView.setImageDrawable(getDrawable(R.drawable.ic_place_holder));
         if (item.image != null && !item.image.isEmpty()) {
             imageView.setImageBitmap(Tools.StringToBitMap(item.image));
         }
@@ -162,7 +162,7 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
     public void clearTexts() {
         editQeustion.setText("");
         editHint.setText("");
-        imageView.setImageDrawable(getDrawable(R.drawable.ok2));
+        imageView.setImageDrawable(getDrawable(R.drawable.ic_place_holder));
         btnAttach.setEnabled(true);
         btnCamera.setEnabled(true);
         shownItem = new QuestItem();

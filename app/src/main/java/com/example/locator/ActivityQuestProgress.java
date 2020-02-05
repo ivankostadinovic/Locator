@@ -46,7 +46,11 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         pageButtons.get(currentItemIndex).setVisibility(View.VISIBLE);
         pageButtons.get(index).setVisibility(View.INVISIBLE);
         QuestItem selectedItem = items.get(index);
-        imageView.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(index).image));
+        if (quest.getItems().get(index).image != null && !quest.getItems().get(index).image.isEmpty())
+            imageView.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(index).image));
+        else
+            imageView.setImageDrawable(getDrawable(R.drawable.ic_place_holder));
+
         txtQuestion.setText(items.get(index).question);
 
         if (selectedItem.answered) {

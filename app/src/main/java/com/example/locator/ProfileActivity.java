@@ -21,7 +21,13 @@ public class ProfileActivity extends AppCompatActivity {
             user = LocatorData.getInstance().getUser();
         }
 
-        new Thread(() -> ((ImageView) findViewById(R.id.image)).setImageBitmap(Tools.StringToBitMap(user.getImage()))).start();
+        new Thread(() -> {
+            if (user.getImage() != null && !user.getImage().isEmpty())
+                ((ImageView) findViewById(R.id.image)).setImageBitmap(Tools.StringToBitMap(user.getImage()));
+            else
+                ((ImageView) findViewById(R.id.image)).setImageDrawable(getDrawable(R.drawable.ic_place_holder));
+
+        }).start();
         ((TextView) findViewById(R.id.name)).setText(user.getName());
         ((TextView) findViewById(R.id.email)).setText(user.getEmail());
         ((TextView) findViewById(R.id.points)).setText(String.valueOf(user.getPoints()));
