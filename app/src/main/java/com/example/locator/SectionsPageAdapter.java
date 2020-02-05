@@ -4,24 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionsPageAdapter extends FragmentPagerAdapter {
+public class SectionsPageAdapter extends FragmentStatePagerAdapter {
 
-    private List<Fragment> fragmentList=new ArrayList<>();
+    private List<Fragment> fragmentList = new ArrayList<>();
 
-    private List<String> tittleList=new ArrayList<>();
+    private List<String> tittleList = new ArrayList<>();
 
     public SectionsPageAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }
 
 
-    public void addFragment(Fragment fragment,String title)
-    {
+    public void addFragment(Fragment fragment, String title) {
         fragmentList.add(fragment);
         tittleList.add(title);
     }
@@ -35,7 +34,7 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-      return   fragmentList.get(position);
+        return fragmentList.get(position);
     }
 
     @Override

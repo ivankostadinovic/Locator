@@ -206,6 +206,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
         if (allAnswered) {
             Tools.showMsg(this, "Quest finished with " + correctAnswers + " / " + items.size());
+            setResult(RESULT_OK);
             LocatorData.getInstance().updateUserPoints(correctAnswers * 30);
             LocatorData.getInstance().finishQuest(quest);
         }
