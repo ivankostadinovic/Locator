@@ -15,7 +15,7 @@ public class Quest implements Serializable {
     private Double longitude;
     private Double latitude;
     private String addedOn;
-
+    private String createdBy;
     public Double getLongitude() {
         return longitude;
     }
@@ -95,5 +95,13 @@ public class Quest implements Serializable {
 
     public void setAddedOn(String addedOn) {
         this.addedOn = addedOn;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

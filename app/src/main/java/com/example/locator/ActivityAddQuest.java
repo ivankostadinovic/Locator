@@ -111,7 +111,10 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                         e.printStackTrace();
                     }
                 }
+            } else if (requestCode == 1111) {
+                finish();
             }
+
         }
     }
 
@@ -254,13 +257,15 @@ public class ActivityAddQuest extends ActivityBase implements View.OnClickListen
                 if (items.size() >= 3) {
                     Intent i = new Intent(this, ActivitySubmitQuest.class);
                     LocatorData.getInstance().itemsToAdd = items;
-                    startActivity(i);
+                    startActivityForResult(i, 1111);
+
 
                 } else {
                     Tools.showMsg(getApplicationContext(), "Atleast 3 items required");
                 }
                 break;
         }
+
 
     }
 }

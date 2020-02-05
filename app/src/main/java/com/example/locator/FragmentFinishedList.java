@@ -67,28 +67,35 @@ public class FragmentFinishedList extends Fragment implements SwipeRefreshLayout
             android.R.color.holo_blue_dark);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if (initialState) {
-            LocatorData.getInstance().finishQuestListener(this);
-            initialState = false;
-        } else {
+
+        if (adapter == null) {
             adapter = new QuestAdapter(LocatorData.getInstance().finishedQuests, getActivity(), Constants.QuestType.FINISHED);
             recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setData(LocatorData.getInstance().finishedQuests);
         }
+
     }
 
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setRefreshing(false);
+        if (adapter == null) {
+            adapter = new QuestAdapter(LocatorData.getInstance().finishedQuests, getActivity(), Constants.QuestType.FINISHED);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setData(LocatorData.getInstance().finishedQuests);
+        }
     }
 
 
-    public void addQuest(Quest quest) {
+    public void updateAdapter() {
         if (adapter == null) {
-            adapter = new QuestAdapter(quest, getActivity(), Constants.QuestType.FINISHED);
+            adapter = new QuestAdapter(LocatorData.getInstance().finishedQuests, getActivity(), Constants.QuestType.FINISHED);
             recyclerView.setAdapter(adapter);
         } else {
-            adapter.addQuest(quest);
+            adapter.setData(LocatorData.getInstance().finishedQuests);
         }
     }
 }

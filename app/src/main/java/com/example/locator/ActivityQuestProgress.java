@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class ActivityQuestProgress extends ActivityBase implements View.OnClickListener {
 
-    private TextView txtDate, txtName, txtDescription, txtQuestion;
+    private TextView txtDate, txtName, txtDescription, txtQuestion, questProgress;
     private LinearLayout firstAnswer, secondAnswer, thirdAnswer;
     private List<TextView> answers = new ArrayList<>();
     private List<Button> pageButtons = new ArrayList<>(), outlineButtons = new ArrayList<>();
@@ -88,6 +88,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         txtName = findViewById(R.id.quest_name);
         txtDescription = findViewById(R.id.quest_description);
         txtQuestion = findViewById(R.id.item_question);
+        questProgress = findViewById(R.id.quest_progress);
         imageView = findViewById(R.id.item_image);
         firstAnswer = findViewById(R.id.first_layout);
         secondAnswer = findViewById(R.id.second_layout);
@@ -123,6 +124,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             outlineButtons.add(button);
         }
 
+        questProgress.setText("Answered questions " + quest.getItemsFound() + "/" + quest.getItems().size());
         txtDate.setText(quest.getAddedOn());
         txtName.setText(quest.getName());
         txtDescription.setText(quest.getDescription());
@@ -186,6 +188,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
         imageAnswers.get(i).setVisibility(View.VISIBLE);
 
+        questProgress.setText("Answered questions " + quest.getItemsFound() + "/" + quest.getItems().size());
         items.get(currentItemIndex).answeredQuestion = i;
         quest.getItems().get(currentItemIndex).answeredQuestion = i;
         quest.setItemsFound(quest.getItemsFound() + 1);
@@ -202,7 +205,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             }
         }
         if (allAnswered) {
-            Tools.showMsg(this, "Quest finished with" + correctAnswers + " / " + items.size());
+            Tools.showMsg(this, "Quest finished with " + correctAnswers + " / " + items.size());
             LocatorData.getInstance().updateUserPoints(correctAnswers * 30);
             LocatorData.getInstance().finishQuest(quest);
         }

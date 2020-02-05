@@ -27,18 +27,17 @@ public class LocatorData {
     public List<Quest> feedQuests;
     public List<Quest> activeQuests;
     public List<Quest> finishedQuests;
-    public List<Quest> addedQuests;
     public List<QuestItem> itemsToAdd;
     public List<User> friends;
     private User user;
     private DatabaseReference db;
     private FirebaseAuth auth;
     private UserActionListener listener;
+    private FriendsListener friendsListener;
 
 
     private LocatorData() {
         feedQuests = new ArrayList<>();
-        addedQuests = new ArrayList<>();
         finishedQuests = new ArrayList<>();
         activeQuests = new ArrayList<>();
         friends = new ArrayList<>();
@@ -46,6 +45,10 @@ public class LocatorData {
         db = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
+    }
+
+    public void setFriendListener(FriendsListener listener) {
+        this.friendsListener = listener;
     }
 
     public void setListener(UserActionListener listener) {
@@ -112,7 +115,7 @@ public class LocatorData {
         });
     }
 
-    public void feedQuestListener(final FeedsListFragment feedsListFragment) {
+    public void feedQuestListener() {
 
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
@@ -124,44 +127,19 @@ public class LocatorData {
                         exists = true;
                     }
                 }
+                for (Quest finishedQuest : finishedQuests) {
+                    if (finishedQuest.getId().equals(quest.getId())) {
+                        exists = true;
+                    }
+                }
+                if (quest.getCreatedBy().equals(getUser().getId())) {
+                    exists = true;
+                }
                 if (!exists) {
                     feedQuests.add(quest);
                     if (listener != null)
                         listener.newFeedQuest(quest);
-                    feedsListFragment.addQuest(quest);
                 }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void addedQuestListener(final FragmentAddedList fragmentAddedList) {
-        db.child("Quests").child("Added-quests").child(user.getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Quest quest = dataSnapshot.getValue(Quest.class);
-                addedQuests.add(quest);
-                fragmentAddedList.addQuest(quest);
-                Tools.log("heeloo");
             }
 
             @Override
@@ -187,11 +165,14 @@ public class LocatorData {
     }
 
     public void loadFriends() {
-        db.child("Friends").child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = db.child("Friends").child(user.getId()).orderByChild("points");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    friends.add(childDataSnapshot.getValue(User.class));
+                    User friend = childDataSnapshot.getValue(User.class);
+                    friends.add(friend);
+                    friendsListener.friendsLoaded(friend);
                 }
             }
 
@@ -235,74 +216,40 @@ public class LocatorData {
         }
     }
 
-    public void activeQuestListener(final FragmentActiveList fragmentActiveList) {
+    public void activeQuestListener() {
         if (getUser().getId() != null)
-            db.child("Quests").child("Active-quests").child(getUser().getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
+            db.child("Quests").child("Active-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    Quest quest = dataSnapshot.getValue(Quest.class);
-                    activeQuests.add(quest);
-                    fragmentActiveList.addQuest(quest);
-                    Tools.log("heeloo");
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                    Quest quest = dataSnapshot.getValue(Quest.class);
-                    for (int i = 0; i < activeQuests.size(); i++) {
-                        if (activeQuests.get(i).getId().equals(quest.getId())) {
-                            activeQuests.remove(i);
-                        }
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Quest quest = child.getValue(Quest.class);
+                        activeQuests.add(quest);
                     }
-                    fragmentActiveList.removeQuest(quest);
-
+                    finishedQuestListener();
                 }
 
                 @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
     }
 
 
-    public void finishQuestListener(final FragmentFinishedList fragmentFinishedList) {
-        db.child("Quests").child("Finished-quests").child(getUser().getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
+    public void finishedQuestListener() {
+        db.child("Quests").child("Finished-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Quest quest = dataSnapshot.getValue(Quest.class);
-                finishedQuests.add(quest);
-                fragmentFinishedList.addQuest(quest);
-                Tools.log("heeloo");
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Quest quest = child.getValue(Quest.class);
+                    finishedQuests.add(quest);
+                }
+                feedQuestListener();
 
             }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -311,6 +258,11 @@ public class LocatorData {
 
     public void takeQuest(Quest quest) {
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+        for (int i = 0; i < feedQuests.size(); i++) {
+            if (quest.getId().equals(feedQuests.get(i).getId())) {
+                feedQuests.remove(i);
+            }
+        }
         // Tools.showMsg(activity, "Quest added to active");
     }
 
@@ -318,8 +270,8 @@ public class LocatorData {
 
         String key = db.child("Feed-quests").push().getKey();
         quest.setId(key);
+        quest.setCreatedBy(getUser().getId());
         db.child("Quests").child("Feed-quests").child(key).setValue(quest);
-        db.child("Quests").child("Added-quests").child(getUser().getId()).child(key).setValue(quest);
         Tools.showMsg(activity, "Quest added");
     }
 
@@ -333,9 +285,14 @@ public class LocatorData {
     }
 
     public void finishQuest(Quest quest) {
-
         db.child("Quests").child("Finished-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).removeValue();
+        for (int i = 0; i < activeQuests.size(); i++) {
+            if (quest.getId().equals(activeQuests.get(i).getId())) {
+                activeQuests.remove(i);
+            }
+        }
+        finishedQuests.add(quest);
     }
 
     public void updateUserLocation(double longitude, double latitude) {

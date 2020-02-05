@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
+
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -37,7 +39,7 @@ public class ActivitySubmitQuest extends ActivityBase {
     @Override
     public void initializeComponents() {
 
-        Toolbar toolbar =findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         editName = findViewById(R.id.quest_name);
         editDesc = findViewById(R.id.quest_description);
         editLatitude = findViewById(R.id.latitude);
@@ -62,6 +64,7 @@ public class ActivitySubmitQuest extends ActivityBase {
             });
         }
     }
+
     private void addQuest() {
 
         if (!emptyCheck(new EditText[]{editName, editDesc, editName}))
@@ -86,6 +89,7 @@ public class ActivitySubmitQuest extends ActivityBase {
         String todayDate = dateFormat.format(today);
         quest.setAddedOn(todayDate);
         LocatorData.getInstance().addQuest(quest, this);
+        setResult(RESULT_OK);
         finish();
 
     }

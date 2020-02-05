@@ -19,19 +19,12 @@ import java.util.List;
 
 public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> {
 
-
     private List<Quest> questList;
     private Dialog dialog;
     private Context context;
     private int questType;
 
 
-    public QuestAdapter(Quest quest, Context context, int type) {
-        questList = new ArrayList<>();
-        questList.add(quest);
-        questType = type;
-        this.context = context;
-    }
 
     public QuestAdapter(List<Quest> quest, Context context, int type) {
         questList = quest;
@@ -48,8 +41,8 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     }
 
-    public void addQuest(Quest quest) {
-        questList.add(quest);
+    public void setData(List<Quest> quests) {
+        questList = quests;
         notifyDataSetChanged();
     }
 
@@ -61,6 +54,9 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         holder.txtName.setText(quest.getName());
         String status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
         holder.txtStatus.setText(status);
+        holder.img1.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(0).image));
+        holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(1).image));
+        holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
 
     }
 

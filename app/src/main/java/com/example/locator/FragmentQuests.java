@@ -21,16 +21,11 @@ import java.util.List;
 
 public class FragmentQuests extends Fragment {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private List<Quest> questList;
-    private SectionsPageAdapter sectionsPageAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private FeedsListFragment feedsListFragment;
     private FragmentActiveList fragmentActiveList;
     private FragmentFinishedList fragmentFinishedList;
-    private FragmentAddedList fragmentAddedList;
 
 
     private User user;
@@ -86,15 +81,34 @@ public class FragmentQuests extends Fragment {
         feedsListFragment = new FeedsListFragment();
         fragmentActiveList = new FragmentActiveList();
         fragmentFinishedList = new FragmentFinishedList();
-        fragmentAddedList = new FragmentAddedList();
         SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager(), SectionsPageAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(fragmentActiveList, "Active");
         adapter.addFragment(feedsListFragment, "Feed");
         adapter.addFragment(fragmentFinishedList, "Finished");
-        adapter.addFragment(fragmentAddedList, "Added");
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0){
+                    fragmentActiveList.updateAdapter();
+                }else if(position == 1){
+                    feedsListFragment.updateAdapter();
+                }else{
+                    fragmentFinishedList.updateAdapter();
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
-
 
 }

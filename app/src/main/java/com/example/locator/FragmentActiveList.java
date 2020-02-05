@@ -51,13 +51,13 @@ public class FragmentActiveList extends Fragment implements SwipeRefreshLayout.O
             android.R.color.holo_blue_dark);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if (initialState) {
-            LocatorData.getInstance().activeQuestListener(this);
-            initialState = false;
-        }else {
+        if (adapter == null) {
             adapter = new QuestAdapter(LocatorData.getInstance().activeQuests, getActivity(), Constants.QuestType.ACTIVE);
             recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setData(LocatorData.getInstance().activeQuests);
         }
+
 
     }
 
@@ -66,21 +66,23 @@ public class FragmentActiveList extends Fragment implements SwipeRefreshLayout.O
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setRefreshing(false);
-    }
-
-
-    public void addQuest(Quest quest) {
         if (adapter == null) {
-            adapter = new QuestAdapter(quest, getActivity(), Constants.QuestType.ACTIVE);
+            adapter = new QuestAdapter(LocatorData.getInstance().activeQuests, getActivity(), Constants.QuestType.ACTIVE);
             recyclerView.setAdapter(adapter);
         } else {
-            adapter.addQuest(quest);
+            adapter.setData(LocatorData.getInstance().activeQuests);
+        }
+
+    }
+
+
+    public void updateAdapter() {
+        if (adapter == null) {
+            adapter = new QuestAdapter(LocatorData.getInstance().activeQuests, getActivity(), Constants.QuestType.ACTIVE);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setData(LocatorData.getInstance().activeQuests);
         }
     }
 
-    public void removeQuest(Quest quest) {
-        if (adapter != null) {
-            adapter.removeQuest(quest);
-        }
-    }
 }

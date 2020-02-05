@@ -1,13 +1,15 @@
 package com.example.locator;
 
 public class FriendItem implements FriendRvItem {
-    public FriendModel friend;
+    public User user;
+
     @Override
     public int getLayout() {
         return R.layout.item_friend;
     }
-    public FriendItem (FriendModel friend){
-        this.friend = friend;
+
+    public FriendItem(User user) {
+        this.user = user;
     }
 
     @Override

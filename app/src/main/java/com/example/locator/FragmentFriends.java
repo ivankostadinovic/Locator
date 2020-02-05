@@ -38,23 +38,12 @@ public class FragmentFriends extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
-        List<FriendModel> lista = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            FriendModel friend = new FriendModel();
-            friend.id = String.valueOf(i);
-            friend.name = "Pera" + i;
-            friend.location = "Belgrade, Serbia";
-            friend.type = i % 2 == 0 ? Constants.FriendType.ADDED : Constants.FriendType.FOUND;
-            lista.add(friend);
-        }
-        adapter.setData(lista);
-        FriendModel friend = new FriendModel();
-        friend.id = "7";
-        friend.name = "Djoka";
-        friend.location = "Nis, Serbia";
-        friend.type = Constants.FriendType.FOUND;
-        adapter.addDiscovered(friend);
-        adapter.moveDiscoveredToAdded("7");
+        LocatorData.getInstance().setFriendListener(new FriendsListener() {
+            @Override
+            public void friendsLoaded(User user) {
+                adapter.addData(user);
+            }
+        });
+        adapter.setData(new ArrayList<>());
     }
 }
