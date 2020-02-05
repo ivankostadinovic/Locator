@@ -170,6 +170,44 @@ public class LocatorData {
         });
     }
 
+    public void observeFriends() {
+        db.child("Friends").child(user.getId()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User friend = dataSnapshot.getValue(User.class);
+                boolean exists = false;
+                for (User friend1 : friends) {
+                    if (friend1.getId().equals(friend.getId())) {
+                        exists = true;
+                    }
+                }
+                if (!exists) {
+                    friendsListener.friendsLoaded(friend);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void loadFriends() {
         Query query = db.child("Friends").child(user.getId()).orderByChild("points");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
