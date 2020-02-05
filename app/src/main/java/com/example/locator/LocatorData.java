@@ -215,7 +215,7 @@ public class LocatorData {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User friend = childDataSnapshot.getValue(User.class);
-                    friends.add(0,friend);
+                    friends.add(0, friend);
                     friendsListener.friendsLoaded(friend);
                 }
             }
@@ -456,10 +456,13 @@ public class LocatorData {
 
 
     public void loadUser(final String Uid, final Activity activity) {
+        ((ActivityBase) activity).showProgress();
+
         db.child("Users").child(Uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ((ActivityBase) activity).hideProgress();
                 user = dataSnapshot.getValue(User.class);
                 Intent intent = new Intent(activity, ActivityMain.class);
                 activity.startActivity(intent);

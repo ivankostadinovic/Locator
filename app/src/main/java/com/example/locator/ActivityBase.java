@@ -33,7 +33,7 @@ public abstract class ActivityBase extends AppCompatActivity {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage("Ucitavanje");
+            progressDialog.setMessage("Logging in...");
 
         }
         progressDialog.show();

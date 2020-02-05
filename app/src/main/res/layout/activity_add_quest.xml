@@ -62,6 +62,7 @@
             app:layout_constraintTop_toBottomOf="@id/item_question_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:maxLines="1"
                 android:id="@+id/item_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
