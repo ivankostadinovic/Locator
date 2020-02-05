@@ -67,7 +67,7 @@ public class ActivitySubmitQuest extends ActivityBase {
 
     private void addQuest() {
 
-        if (!emptyCheck(new EditText[]{editName, editDesc, editName}))
+        if (!emptyCheck(new EditText[]{editName, editDesc, editName, editLongitude, editLatitude}))
             return;
         for (QuestItem item : LocatorData.getInstance().itemsToAdd) {
             quest.addItem(item);
