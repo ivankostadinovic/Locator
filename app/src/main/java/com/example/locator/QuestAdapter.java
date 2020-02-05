@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
@@ -21,12 +22,12 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     private List<Quest> questList;
     private Dialog dialog;
-    private Context context;
+    private FragmentActivity context;
     private int questType;
 
 
 
-    public QuestAdapter(List<Quest> quest, Context context, int type) {
+    public QuestAdapter(List<Quest> quest, FragmentActivity context, int type) {
         questList = quest;
         questType = type;
         this.context = context;
@@ -36,7 +37,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_quest, parent, false);
-
         return new ViewHolder(view);
 
     }
@@ -48,16 +48,13 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Quest quest = questList.get(position);
-
         holder.txtName.setText(quest.getName());
         String status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
         holder.txtStatus.setText(status);
         holder.img1.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(0).image));
         holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(1).image));
         holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
-
     }
 
 
@@ -125,7 +122,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
                 case Constants.QuestType.ACTIVE:
                     Intent intent = new Intent(context, ActivityQuestProgress.class);
                     intent.putExtra("quest", q);
-                    context.startActivity(intent);
+                    context.startActivityForResult(intent, 111);
                     break;
                 case Constants.QuestType.ADDED:
                     break;

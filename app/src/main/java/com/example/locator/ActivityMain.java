@@ -179,7 +179,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.bottom_nav_bar);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        fragmentQuests = FragmentQuests.newInstance(null);
+        fragmentQuests = new FragmentQuests();
         if (Tools.locationPermissionGiven(ActivityMain.this)) {
             fragmentMap = FragmentMap.newInstance(null);
         }
