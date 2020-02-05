@@ -104,6 +104,9 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
+            Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra("friend_id", list.get(position).user.getId());
+            context.startActivity(intent);
         }
     }
 }
