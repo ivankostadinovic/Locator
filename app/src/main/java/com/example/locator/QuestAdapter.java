@@ -52,7 +52,12 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Quest quest = questList.get(position);
         holder.txtName.setText(quest.getName());
-        String status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
+        String status;
+        if(questType == Constants.QuestType.ACTIVE) {
+            status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
+        } else {
+            status = quest.getItems().size() + " questions";
+        }
         holder.txtStatus.setText(status);
         if (quest.getItems().get(0).image != null && !quest.getItems().get(0).image.isEmpty()) {
             holder.img1.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(0).image));
