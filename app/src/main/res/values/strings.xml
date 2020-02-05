@@ -63,8 +63,8 @@
 
     <string name="quest_description">Quest description</string>
     <string name="quest_name">Quest name</string>
-    <string name="radio_istorijski">Istorijski</string>
-    <string name="radio_zabavni">Zabavni</string>
+    <string name="radio_istorijski">Historical</string>
+    <string name="radio_zabavni">Fun</string>
     <string name="submit_quest">Submit</string>
     <string name="log_out">Log out</string>
     <string name="question">Question</string>
@@ -86,6 +86,7 @@
     <string name="longitude">Loongitude</string>
     <string name="points_dots">Points:</string>
     <string name="email_dots">Email:</string>
+    <string name="Istrazivacki">Scientific</string>
 
 
 </resources>

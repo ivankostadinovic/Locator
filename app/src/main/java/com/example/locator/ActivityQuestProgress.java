@@ -101,6 +101,8 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> ActivityQuestProgress.super.onBackPressed());
+        items.addAll(quest.getItems());
+
 
         for (int i = 1; i < 4; i++) {
             TextView textView = findViewById(getResources().getIdentifier("item_answer_" + i, "id", getPackageName()));
@@ -116,7 +118,7 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
             outlineButtons.add(button);
             Button button1 = findViewById(getResources().getIdentifier("btn_page_" + i, "id", getPackageName()));
             button1.setOnClickListener(this);
-            if (items.size() > i) {
+            if (items.size() >= i) {
                 button1.setVisibility(View.VISIBLE);
                 button.setVisibility(View.VISIBLE);
             }
@@ -128,7 +130,6 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         txtDate.setText(quest.getAddedOn());
         txtName.setText(quest.getName());
         txtDescription.setText(quest.getDescription());
-        items.addAll(quest.getItems());
         setUpPages(0, true);
 
     }
@@ -188,10 +189,10 @@ public class ActivityQuestProgress extends ActivityBase implements View.OnClickL
         }
         imageAnswers.get(i).setVisibility(View.VISIBLE);
 
+        quest.setItemsFound(quest.getItemsFound() + 1);
         questProgress.setText("Answered questions " + quest.getItemsFound() + "/" + quest.getItems().size());
         items.get(currentItemIndex).answeredQuestion = i;
         quest.getItems().get(currentItemIndex).answeredQuestion = i;
-        quest.setItemsFound(quest.getItemsFound() + 1);
 
         LocatorData.getInstance().updateQuestProgress(quest);
 

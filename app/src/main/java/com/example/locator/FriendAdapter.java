@@ -54,7 +54,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
 
 
         holder.location.setText(cityName);
-        holder.points.setText(item.user.getPoints());
+        holder.points.setText(String.valueOf(item.user.getPoints()));
         new Thread(() -> holder.image.setImageBitmap(Tools.StringToBitMap(item.user.getImage()))).start();
     }
 
@@ -90,10 +90,10 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            points = itemView.findViewById(R.id.ok);
             name = itemView.findViewById(R.id.name);
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.image);
-            points = itemView.findViewById(R.id.points);
         }
 
         @Override

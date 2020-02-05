@@ -73,11 +73,11 @@ public class ActivitySubmitQuest extends ActivityBase {
             quest.addItem(item);
         }
         if (radioIstorijski.isSelected()) {
-            quest.setType("Istorijski");
+            quest.setType("Historical");
         } else if (radioIstrazivacki.isSelected()) {
-            quest.setType("Istrazivacki");
+            quest.setType("Scientific");
         } else {
-            quest.setType("Zabavni");
+            quest.setType("Fun");
         }
         quest.setLatitude(Double.parseDouble(editLatitude.getText().toString()));
         quest.setLongitude(Double.parseDouble(editLongitude.getText().toString()));
