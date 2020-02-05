@@ -181,7 +181,7 @@ public class LocatorData {
                         exists = true;
                     }
                 }
-                if (!exists) {
+                if (!exists && friendsListener != null) {
                     friendsListener.friendsLoaded(friend);
                 }
             }
