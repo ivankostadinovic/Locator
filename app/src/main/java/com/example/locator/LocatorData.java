@@ -251,7 +251,7 @@ public class LocatorData {
                     Quest quest = dataSnapshot.getValue(Quest.class);
                     activeQuests.add(quest);
                     fragmentActiveList.addQuest(quest);
-                    if(listener!=null) {
+                    if (listener != null) {
                         listener.addedQuestListener(quest);
                     }
                     Tools.log("heeloo");
@@ -424,6 +424,15 @@ public class LocatorData {
 
     public void updateUserPoints(int points) {
         db.child("Users").child(getUser().getId()).child("points").setValue(points);
+    }
+
+    public User getFriendLocal(String friend_id) {
+        for (User friend : friends) {
+            if (friend.getId().equals(friend_id)) {
+                return friend;
+            }
+        }
+        return null;
     }
 
 

@@ -12,7 +12,6 @@ public class User implements Serializable {
     private String image;
     private double longitude;
     private double latitude;
-
     private int points;
 
 

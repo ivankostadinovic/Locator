@@ -193,7 +193,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             if (quest == null) {
                 User friend = friendsMap.get(marker.getId());
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                intent.putExtra("user", friend);
+                intent.putExtra("friend_id", friend.getId());
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getActivity(), ActivityQuestProgress.class);

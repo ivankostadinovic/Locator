@@ -84,6 +84,8 @@
     <string name="location_service_enabled">Location service</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Loongitude</string>
+    <string name="points_dots">Points:</string>
+    <string name="email_dots">Email:</string>
 
 
 </resources>
