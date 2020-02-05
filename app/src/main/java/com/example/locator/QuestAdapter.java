@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.ArrayList;
@@ -78,14 +80,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         return questList.size();
     }
 
-    public void removeQuest(Quest quest) {
-        for (int i = 0; i < questList.size(); i++) {
-            if (questList.get(i).getId().equals(quest.getId())) {
-                questList.remove(i);
-            }
-        }
-        notifyDataSetChanged();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -103,21 +97,20 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
         }
 
-        public void openTakeDialog(Quest quest) {
-            dialog = new LovelyStandardDialog(context)
+        private void openTakeDialog(Quest quest) {
+            new MaterialAlertDialogBuilder(context)
                 .setCancelable(false)
                 .setTitle("Take quest")
                 .setMessage("Do you want to take the quest?")
-                .setPositiveButton("Take", v -> {
+                .setPositiveButton("Take", (dialog, which) -> {
                     LocatorData.getInstance().takeQuest(quest);
                     LocatorData.getInstance().feedQuests.remove(quest);
-                    questList.remove(quest);
-                    notifyDataSetChanged();
+                    dialog.dismiss();
                     Intent intent = new Intent(context, ActivityQuestProgress.class);
                     intent.putExtra("quest", quest);
                     context.startActivity(intent);
                 })
-                .setNegativeButton("Cancel", v -> {
+                .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
                 }).show();
 

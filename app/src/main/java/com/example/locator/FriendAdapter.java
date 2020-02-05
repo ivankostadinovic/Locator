@@ -74,7 +74,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     }
 
     public void setData(List<User> list) {
-
+        this.list.clear();
         for (User user : list) {
             this.list.add(new FriendItem(user));
         }

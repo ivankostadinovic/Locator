@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:gravity="center">
 
 
     <com.google.android.material.card.MaterialCardView
         android:background="?selectableItemBackground"
         android:id="@+id/card1"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="150dp"
+        app:cardCornerRadius="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -58,13 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
-                android:paddingBottom="@dimen/songs_count_padding_bottom"
                 android:paddingLeft="@dimen/List_Title_Padding"
                 android:paddingRight="@dimen/List_Title_Padding"
                 android:textSize="@dimen/List_quest_text"
                 android:text="Heres attentioon, soon as someone mentions me"/>
-
-
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

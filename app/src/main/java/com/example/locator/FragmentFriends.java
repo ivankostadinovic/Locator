@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentFriends extends Fragment {
     private FriendAdapter adapter;
@@ -45,5 +44,11 @@ public class FragmentFriends extends Fragment {
             }
         });
         adapter.setData(new ArrayList<>());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.setData(LocatorData.getInstance().friends);
     }
 }
