@@ -124,6 +124,7 @@ public class LocatorData {
 
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
+
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Quest quest = dataSnapshot.getValue(Quest.class);
                 boolean exists = false;
@@ -381,7 +382,10 @@ public class LocatorData {
     }
 
     public void updateUserPoints(int points) {
-        db.child("Users").child(getUser().getId()).child("points").setValue(points);
+        db.child("Users").child(getUser().getId()).child("points").setValue(user.getPoints() + points);
+        for (User friend : friends) {
+            db.child("Users").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);
+        }
     }
 
     public User getFriendLocal(String friend_id) {
