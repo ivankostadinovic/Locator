@@ -82,7 +82,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     }
 
     public void addData(User user) {
-        this.list.add(new FriendItem(user));
+        this.list.add(0, new FriendItem(user));
         notifyDataSetChanged();
     }
 

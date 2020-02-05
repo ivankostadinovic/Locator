@@ -209,13 +209,13 @@ public class LocatorData {
     }
 
     public void loadFriends() {
-        Query query = db.child("Friends").child(user.getId()).orderByChild("points");
+        Query query = db.child("Friends").child(user.getId()).orderByChild("points"); //orders asc, thats why add at 0
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User friend = childDataSnapshot.getValue(User.class);
-                    friends.add(friend);
+                    friends.add(0,friend);
                     friendsListener.friendsLoaded(friend);
                 }
             }

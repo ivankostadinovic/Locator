@@ -1,6 +1,7 @@
 package com.example.locator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -88,6 +89,10 @@ public class DiscoverFriendsActivity extends AppCompatActivity implements Adapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discover_friends);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> DiscoverFriendsActivity.super.onBackPressed());
+
 
         lvNewDevices = findViewById(R.id.list_view);
         mBTDevices = new ArrayList<>();
