@@ -15,7 +15,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -66,7 +65,9 @@ public class LocatorData {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Double lat = dataSnapshot.getValue(Double.class);
                 user.setLatitude(lat);
-                listener.userLatitudeChagned(lat);
+                if (listener != null) {
+                    listener.userLatitudeChagned(lat);
+                }
             }
 
             @Override
@@ -95,7 +96,10 @@ public class LocatorData {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Double lon = dataSnapshot.getValue(Double.class);
                 user.setLongitude(lon);
-                listener.userLongitudeChanged(lon);
+                if (listener != null) {
+
+                    listener.userLongitudeChanged(lon);
+                }
             }
 
             @Override
@@ -193,8 +197,12 @@ public class LocatorData {
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     if (fragmentMap != null) {
-                        User updatedFriend = dataSnapshot.getValue(User.class);
-                        fragmentMap.updateFriendInfo(updatedFriend);
+                        if ("longitude".equals(dataSnapshot.getKey())) {
+                            friend.setLongitude(dataSnapshot.getValue(Double.class));
+                        } else {
+                            friend.setLatitude(dataSnapshot.getValue(Double.class));
+                        }
+                        fragmentMap.updateAddFriend(friend);
                     }
                 }
 
@@ -370,6 +378,15 @@ public class LocatorData {
 
     public void updateUserPoints(int points) {
         db.child("Users").child(getUser().getId()).child("points").setValue(points);
+    }
+
+    public User getFriendLocal(String friend_id) {
+        for (User friend : friends) {
+            if (friend.getId().equals(friend_id)) {
+                return friend;
+            }
+        }
+        return null;
     }
 
 

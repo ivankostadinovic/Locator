@@ -245,7 +245,10 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                     } else {
                         if (fragmentMap == null) {
                             fragmentMap = FragmentMap.newInstance(null);
-                            getSupportFragmentManager().beginTransaction().add(R.id.fragment_containter, fragmentMap).commit();
+                            getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.fragment_containter, fragmentMap)
+                                .commit();
                         }
                         openFragment(fragmentMap);
                     }
