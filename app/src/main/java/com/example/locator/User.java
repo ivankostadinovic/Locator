@@ -1,5 +1,9 @@
 package com.example.locator;
 
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -15,11 +19,10 @@ public class User implements Serializable {
     private int points;
 
 
-
-    public User()
-    {
+    public User() {
 
     }
+
     public void setId(String id) {
         Id = id;
     }
@@ -75,6 +78,7 @@ public class User implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+
     public int getPoints() {
         return points;
     }
@@ -83,4 +87,8 @@ public class User implements Serializable {
         this.points = points;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof User && TextUtils.equals(((User) obj).getId(), (this.Id));
+    }
 }
