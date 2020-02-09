@@ -52,8 +52,6 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocatorData.getInstance().activeQuestListener();
-        LocatorData.getInstance().feedQuestListener();
-
         initializeComponents();
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);

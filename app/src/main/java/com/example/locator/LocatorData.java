@@ -118,14 +118,8 @@ public class LocatorData {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User friend = dataSnapshot.getValue(User.class);
-                boolean exists = false;
-                for (User friend1 : friends) {
-                    if (friend1.getId().equals(friend.getId())) {
-                        exists = true;
-                    }
-                }
-                if (!exists && friendsListener != null) {
-                    friendsListener.friendsLoaded(friend);
+                if (listener != null) {
+                    listener.friendLoadedListener(friend);
                 }
             }
 
@@ -160,7 +154,7 @@ public class LocatorData {
                     User friend = childDataSnapshot.getValue(User.class);
                     if (!friends.contains(friend)) {
                         friends.add(0, friend);
-                    friendsListener.friendsLoaded(friend);
+                        friendsListener.friendsLoaded(friend);
                     }
                 }
             }
@@ -313,6 +307,8 @@ public class LocatorData {
         }
         finishedQuests.add(quest);
         questsChangedListener.updateQuests();
+        if (listener != null)
+            listener.removeQuest(quest);
 
     }
 
@@ -392,7 +388,7 @@ public class LocatorData {
     public void updateUserPoints(int points) {
         db.child("Users").child(getUser().getId()).child("points").setValue(user.getPoints() + points);
         for (User friend : friends) {
-            db.child("Users").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);
+            db.child("Friends").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);
         }
     }
 
@@ -455,6 +451,7 @@ public class LocatorData {
                 db.child("Users").child(u.getUid()).setValue(user);
                 db.child("Users").child(u.getUid()).child("id").setValue(u.getUid());
                 Tools.showMsg(activity, "Registration complete.");
+                activity.finish();
             } else {
                 Tools.showMsg(activity, "User with email already exists.");
             }

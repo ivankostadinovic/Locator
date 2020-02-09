@@ -56,8 +56,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         holder.location.setText(cityName);
         holder.points.setText(String.valueOf(item.user.getPoints()));
         new Thread(() -> {
-            if (item.user.getImage() != null && !item.user.getImage().isEmpty())
-                holder.image.setImageBitmap(Tools.StringToBitMap(item.user.getImage()));
+            if (item.user.getProfilePicture() != null && !item.user.getProfilePicture().isEmpty())
+                holder.image.setImageBitmap(Tools.StringToBitMap(item.user.getProfilePicture()));
             else
                 holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }).start();

@@ -13,7 +13,7 @@ public class User implements Serializable {
     private String Name;
     private String Password;
     private String Email;
-    private String image;
+    private String profilePicture;
     private double longitude;
     private double latitude;
     private int points;
@@ -71,14 +71,6 @@ public class User implements Serializable {
         this.longitude = longitude;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public int getPoints() {
         return points;
     }
@@ -90,5 +82,13 @@ public class User implements Serializable {
     @Override
     public boolean equals(@Nullable Object obj) {
         return obj instanceof User && TextUtils.equals(((User) obj).getId(), (this.Id));
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
