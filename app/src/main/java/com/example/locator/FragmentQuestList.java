@@ -64,8 +64,8 @@ public class FragmentQuestList extends Fragment implements SwipeRefreshLayout.On
             case Constants.QuestType.ACTIVE:
                 adapter.setData(LocatorData.getInstance().activeQuests);
                 break;
-            case Constants.QuestType.FEED:
-                adapter.setData(LocatorData.getInstance().feedQuests);
+            case Constants.QuestType.ADDED:
+                adapter.setData(LocatorData.getInstance().addedQuests);
                 break;
             case Constants.QuestType.FINISHED:
                 adapter.setData(LocatorData.getInstance().finishedQuests);
@@ -78,8 +78,8 @@ public class FragmentQuestList extends Fragment implements SwipeRefreshLayout.On
             case Constants.QuestType.ACTIVE:
                 adapter = new QuestAdapter(LocatorData.getInstance().activeQuests, getActivity(), type);
                 break;
-            case Constants.QuestType.FEED:
-                adapter = new QuestAdapter(LocatorData.getInstance().feedQuests, getActivity(), type);
+            case Constants.QuestType.ADDED:
+                adapter = new QuestAdapter(LocatorData.getInstance().addedQuests, getActivity(), type);
                 break;
             case Constants.QuestType.FINISHED:
                 adapter = new QuestAdapter(LocatorData.getInstance().finishedQuests, getActivity(), type);

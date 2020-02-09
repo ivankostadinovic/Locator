@@ -27,6 +27,8 @@ public class LocatorData {
     public List<Quest> feedQuests;
     public List<Quest> activeQuests;
     public List<Quest> finishedQuests;
+    public List<Quest> addedQuests;
+
     public List<QuestItem> itemsToAdd;
     public List<User> friends;
     private User user;
@@ -34,12 +36,14 @@ public class LocatorData {
     private FirebaseAuth auth;
     private UserActionListener listener;
     private FriendsListener friendsListener;
+    private QuestsChangedListener questsChangedListener;
 
 
     private LocatorData() {
         feedQuests = new ArrayList<>();
         finishedQuests = new ArrayList<>();
         activeQuests = new ArrayList<>();
+        addedQuests = new ArrayList<>();
         friends = new ArrayList<>();
         user = new User();
         db = FirebaseDatabase.getInstance().getReference();
@@ -49,6 +53,10 @@ public class LocatorData {
 
     public void setFriendListener(FriendsListener listener) {
         this.friendsListener = listener;
+    }
+
+    public void setQuestsChangedListener(QuestsChangedListener listener) {
+        questsChangedListener = listener;
     }
 
     public void setListener(UserActionListener listener) {
@@ -121,7 +129,6 @@ public class LocatorData {
     }
 
     public void feedQuestListener() {
-
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
 
@@ -146,6 +153,7 @@ public class LocatorData {
                     if (listener != null)
                         listener.newFeedQuest(quest);
                 }
+                questsChangedListener.updateQuests();
             }
 
             @Override
@@ -283,6 +291,25 @@ public class LocatorData {
             });
     }
 
+    public void addedQuestListener() {
+        if (getUser().getId() != null)
+            db.child("Quests").child("Added-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Quest quest = child.getValue(Quest.class);
+                        addedQuests.add(quest);
+                        questsChangedListener.updateQuests();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    }
+
 
     public void finishedQuestListener() {
         db.child("Quests").child("Finished-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -292,8 +319,7 @@ public class LocatorData {
                     Quest quest = child.getValue(Quest.class);
                     finishedQuests.add(quest);
                 }
-                feedQuestListener();
-
+                addedQuestListener();
             }
 
             @Override
@@ -313,6 +339,8 @@ public class LocatorData {
             }
         }
         activeQuests.add(quest);
+        questsChangedListener.updateQuests();
+
         // Tools.showMsg(activity, "Quest added to active");
     }
 
@@ -322,6 +350,9 @@ public class LocatorData {
         quest.setId(key);
         quest.setCreatedBy(getUser().getId());
         db.child("Quests").child("Feed-quests").child(key).setValue(quest);
+        db.child("Quests").child("Added-quests").child(getUser().getId()).child(key).setValue(quest);
+        addedQuests.add(quest);
+        questsChangedListener.updateQuests();
         Tools.showMsg(activity, "Quest added");
     }
 
@@ -344,6 +375,8 @@ public class LocatorData {
             }
         }
         finishedQuests.add(quest);
+        questsChangedListener.updateQuests();
+
     }
 
     public void updateUserLocation(double longitude, double latitude) {
