@@ -223,8 +223,10 @@ public class LocatorData {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User friend = childDataSnapshot.getValue(User.class);
-                    friends.add(0, friend);
+                    if (!friends.contains(friend)) {
+                        friends.add(0, friend);
                     friendsListener.friendsLoaded(friend);
+                    }
                 }
             }
 

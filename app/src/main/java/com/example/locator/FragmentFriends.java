@@ -43,12 +43,6 @@ public class FragmentFriends extends Fragment {
                 adapter.addData(user);
             }
         });
-        adapter.setData(new ArrayList<>());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         adapter.setData(LocatorData.getInstance().friends);
     }
 }
