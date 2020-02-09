@@ -63,70 +63,6 @@ public class LocatorData {
         this.listener = listener;
     }
 
-    public void userLocationListener() {
-        db.child("Users").child(getUser().getId()).child("latitude").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Double lat = dataSnapshot.getValue(Double.class);
-                user.setLatitude(lat);
-                if (listener != null) {
-                    listener.userLatitudeChagned(lat);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db.child("Users").child(getUser().getId()).child("longitude").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Double lon = dataSnapshot.getValue(Double.class);
-                user.setLongitude(lon);
-                if (listener != null) {
-
-                    listener.userLongitudeChanged(lon);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     public void feedQuestListener() {
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
@@ -153,7 +89,6 @@ public class LocatorData {
                     if (listener != null)
                         listener.newFeedQuest(quest);
                 }
-                questsChangedListener.updateQuests();
             }
 
             @Override

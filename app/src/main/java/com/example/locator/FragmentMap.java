@@ -63,15 +63,6 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                 addFeedQuest(quest);
             }
 
-            @Override
-            public void userLatitudeChagned(double latitude) {
-
-            }
-
-            @Override
-            public void userLongitudeChanged(double longitude) {
-
-            }
 
             @Override
             public void addedQuestListener(Quest quest) {
