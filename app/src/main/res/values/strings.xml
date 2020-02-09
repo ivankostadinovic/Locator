@@ -87,6 +87,9 @@
     <string name="points_dots">Points:</string>
     <string name="email_dots">Email:</string>
     <string name="Istrazivacki">Scientific</string>
+    <string name="filter">Filter</string>
+    <string name="radius">Radius</string>
+    <string name="all">All</string>
 
 
 </resources>

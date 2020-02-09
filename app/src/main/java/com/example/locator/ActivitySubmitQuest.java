@@ -72,9 +72,9 @@ public class ActivitySubmitQuest extends ActivityBase {
         for (QuestItem item : LocatorData.getInstance().itemsToAdd) {
             quest.addItem(item);
         }
-        if (radioIstorijski.isSelected()) {
+        if (radioIstorijski.isChecked()) {
             quest.setType("Historical");
-        } else if (radioIstrazivacki.isSelected()) {
+        } else if (radioIstrazivacki.isChecked()) {
             quest.setType("Scientific");
         } else {
             quest.setType("Fun");

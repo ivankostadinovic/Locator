@@ -63,6 +63,38 @@ public class LocatorData {
         this.listener = listener;
     }
 
+    public void observeActiveQuests() {
+        db.child("Quests").child("Active-quests").child(user.getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
+            @Override
+
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Quest quest = dataSnapshot.getValue(Quest.class);
+                if (listener != null)
+                    listener.addedQuestListener(quest);
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void feedQuestListener() {
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
@@ -294,6 +326,9 @@ public class LocatorData {
             }
         }
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+        if (listener != null) {
+            listener.updateQuest(quest);
+        }
     }
 
     public void finishQuest(Quest quest) {
@@ -313,6 +348,8 @@ public class LocatorData {
     }
 
     public void updateUserLocation(double longitude, double latitude) {
+        user.setLatitude(latitude);
+        user.setLongitude(longitude);
         db.child("Users").child(getUser().getId()).child("longitude").setValue(longitude);
         db.child("Users").child(getUser().getId()).child("latitude").setValue(latitude);
         for (User friend : friends) {

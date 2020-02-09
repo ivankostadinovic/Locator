@@ -17,6 +17,14 @@ public class Constants {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    public @interface QuestTypes {
+        String HISTORICAL = "HISTORICAL";
+        String SCIENTIFIC = "SCIENTIFIC";
+        String FUN = "FUN";
+        String ALL = "ALL";
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
     public @interface FriendType {
         int ADDED = 0;
         int FOUND = 1;

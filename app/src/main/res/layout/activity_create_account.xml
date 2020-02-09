@@ -14,7 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/edit_email_create_layout"/>
+        app:layout_constraintBottom_toTopOf="@id/edit_email_create_layout"
+        android:src="@drawable/ic_place_holder"/>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_email_create_layout"
         android:hint="@string/hint_email"

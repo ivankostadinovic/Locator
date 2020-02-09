@@ -3,8 +3,10 @@ package com.example.locator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -22,10 +24,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickListener {
     private FusedLocationProviderClient fusedLocationClient;
@@ -39,6 +44,8 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
     private Map<String, Marker> friendsMarkerMap = new HashMap<>();
     private Map<String, Marker> feedQuestsMarkerMap = new HashMap<>();
     private Map<String, Marker> activeQuestsMarkerMap = new HashMap<>();
+    private double filterRadius = 0;
+    private String filterType = Constants.QuestTypes.ALL;
 
 
     public FragmentMap() {
@@ -75,6 +82,11 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             }
 
             @Override
+            public void updateQuest(Quest quest) {
+                addActiveQuest(quest);
+            }
+
+            @Override
             public void removeQuest(Quest quest) {
                 removeQuestFromMap(quest);
             }
@@ -103,6 +115,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             supportMapFragment.getMapAsync(mMap -> {
                 LocatorData.getInstance().feedQuestListener();
                 LocatorData.getInstance().observeFriends();
+                LocatorData.getInstance().observeActiveQuests();
                 this.mMap = mMap;
                 this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 this.mMap.clear();
@@ -131,7 +144,15 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                     });
             });
         }
+
         return view;
+    }
+
+    public void openFilterPop() {
+        Intent intent = new Intent(getActivity(), PopUpFilterQuest.class);
+        intent.putExtra("type", filterType);
+        intent.putExtra("radius", filterRadius);
+        startActivityForResult(intent, 1111);
     }
 
     public void updateAddFriend(User updatedFriend) {
@@ -150,7 +171,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
     }
 
     public void addFeedQuest(Quest quest) {
-        Marker marker = mMap.addMarker(generateMarker(quest));
+        Marker marker = mMap.addMarker(generateMarker(quest, false));
         marker.showInfoWindow();
         feedQuestMap.put(marker.getId(), quest);
         feedQuestsMarkerMap.put(quest.getId(), marker);
@@ -161,7 +182,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         if (marker != null) {
             marker.remove();
         }
-        marker = mMap.addMarker(generateMarker(quest));
+        marker = mMap.addMarker(generateMarker(quest, true));
         marker.showInfoWindow();
         activeQuestMap.put(marker.getId(), quest);
         activeQuestsMarkerMap.put(quest.getId(), marker);
@@ -175,9 +196,9 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             .icon(BitmapDescriptorFactory.fromBitmap(Tools.StringToBitMap(updatedFriend.getProfilePicture())));
     }
 
-    private MarkerOptions generateMarker(Quest quest) {
+    private MarkerOptions generateMarker(Quest quest, boolean isActive) {
         LatLng latLng = new LatLng(quest.getLatitude(), quest.getLongitude());
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.quest);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), isActive ? R.drawable.active : R.drawable.quest);
         return new MarkerOptions()
             .position(latLng)
             .title(quest.getName())
@@ -203,6 +224,51 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             openTakeQuestDialog(quest, marker);
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1111 && resultCode == RESULT_OK) {
+            filterType = data.getStringExtra("type");
+            filterRadius = data.getDoubleExtra("radius", 0);
+            Tools.showMsg(getActivity(), filterType + " " + filterRadius);
+            filterQuests();
+        }
+
+    }
+
+    private void filterQuests() {
+        mMap.clear();
+        activeQuestsMarkerMap.clear();
+        activeQuestMap.clear();
+        feedQuestsMarkerMap.clear();
+        feedQuestMap.clear();
+        friendsMap.clear();
+        friendsMarkerMap.clear();
+        Location current = new Location("");
+        current.setLongitude(LocatorData.getInstance().getUser().getLongitude());
+        current.setLatitude(LocatorData.getInstance().getUser().getLatitude());
+
+        for (User friend : LocatorData.getInstance().friends) {
+            updateAddFriend(friend);
+        }
+        for (Quest quest : LocatorData.getInstance().activeQuests) {
+            Location questLocation = new Location("");
+            questLocation.setLongitude(quest.getLongitude());
+            questLocation.setLatitude(quest.getLatitude());
+            if(questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+                addActiveQuest(quest);
+            }
+        }
+
+        for (Quest quest : LocatorData.getInstance().feedQuests) {
+            Location questLocation = new Location("");
+            questLocation.setLongitude(quest.getLongitude());
+            questLocation.setLatitude(quest.getLatitude());
+            if(questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+                addFeedQuest(quest);
+            }
+        }
     }
 
     private void openTakeQuestDialog(Quest quest, Marker marker) {
