@@ -48,7 +48,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
             cityName = addresses.get(0).getAddressLine(0);
             stateName = addresses.get(0).getAddressLine(1);
             countryName = addresses.get(0).getAddressLine(2);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -83,6 +83,15 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     public void addData(User user) {
         this.list.add(0, new FriendItem(user));
         notifyDataSetChanged();
+    }
+
+    public void updateData(User friend) {
+        for (FriendItem friendItem : list) {
+            if (friendItem.user.getId().equals(friend.getId())) {
+                friendItem = new FriendItem(friend);
+            }
+            notifyDataSetChanged();
+        }
     }
 
 

@@ -153,6 +153,15 @@ public class LocatorData {
                 if (listener != null) {
                     listener.friendLoadedListener(friend);
                 }
+                boolean exists = false;
+                for (User friend1 : friends) {
+                    if (friend1.getId().equals(friend.getId())) {
+                        exists = true;
+                    }
+                }
+                if (!exists) {
+                    friends.add(friend);
+                }
             }
 
             @Override
@@ -214,6 +223,10 @@ public class LocatorData {
                             friend.setLatitude(dataSnapshot.getValue(Double.class));
                         }
                         fragmentMap.updateAddFriend(friend);
+                        if ("points".equals(dataSnapshot.getKey()) && friendsListener != null) {
+                            friend.setPoints(dataSnapshot.getValue((Integer.class)));
+                            friendsListener.updateFriend(friend);
+                        }
                     }
                 }
 
@@ -362,6 +375,10 @@ public class LocatorData {
     public void addFriend(User friend) {
         db.child("Friends").child(friend.getId()).child(user.getId()).setValue(getUser());
         db.child("Friends").child(getUser().getId()).child(friend.getId()).setValue(friend);
+        friends.add(friend);
+        if (friendsListener != null) {
+            friendsListener.friendsLoaded(friend);
+        }
     }
 
     public void addFriend(String friendId) {
@@ -423,6 +440,7 @@ public class LocatorData {
     }
 
     public void updateUserPoints(int points) {
+        user.setPoints(user.getPoints() + points);
         db.child("Users").child(getUser().getId()).child("points").setValue(user.getPoints() + points);
         for (User friend : friends) {
             db.child("Friends").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);

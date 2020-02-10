@@ -65,11 +65,11 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
             holder.img1.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }
         if (quest.getItems().get(1).image != null && !quest.getItems().get(1).image.isEmpty()) {
-            holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
+            holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(1).image));
         } else {
             holder.img2.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }
-        if (quest.getItems().get(1).image != null && !quest.getItems().get(2).image.isEmpty()) {
+        if (quest.getItems().get(2).image != null && !quest.getItems().get(2).image.isEmpty()) {
             holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
         } else {
             holder.img3.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));

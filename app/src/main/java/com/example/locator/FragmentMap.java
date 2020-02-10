@@ -83,7 +83,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
 
             @Override
             public void updateQuest(Quest quest) {
-                addActiveQuest(quest);
+                updateActiveQuest(quest);
             }
 
             @Override
@@ -99,6 +99,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         Marker marker = activeQuestsMarkerMap.get(quest.getId());
         if (marker != null) {
             activeQuestMap.remove(marker.getId());
+            activeQuestsMarkerMap.remove(quest.getId());
             marker.remove();
         }
     }
@@ -170,6 +171,11 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         friendsMarkerMap.put(updatedFriend.getId(), marker);
     }
 
+    public void updateActiveQuest(Quest quest) {
+        Marker marker = activeQuestsMarkerMap.get(quest.getId());
+        activeQuestMap.put(marker.getId(), quest);
+    }
+
     public void addFeedQuest(Quest quest) {
         Marker marker = mMap.addMarker(generateMarker(quest, false));
         marker.showInfoWindow();
@@ -221,7 +227,19 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                 startActivity(intent);
             }
         } else {
-            openTakeQuestDialog(quest, marker);
+            Location ql = new Location("");
+            ql.setLatitude(quest.getLatitude());
+            ql.setLongitude(quest.getLongitude());
+
+            Location ul = new Location("");
+            ul.setLatitude(LocatorData.getInstance().getUser().getLatitude());
+            ul.setLongitude(LocatorData.getInstance().getUser().getLongitude());
+
+            if (ql.distanceTo(ul) > 50) {
+                Tools.showMsg(getActivity(), "too far away from quest");
+            } else {
+                openTakeQuestDialog(quest, marker);
+            }
         }
         return false;
     }
@@ -256,7 +274,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             Location questLocation = new Location("");
             questLocation.setLongitude(quest.getLongitude());
             questLocation.setLatitude(quest.getLatitude());
-            if(questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+            if (questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
                 addActiveQuest(quest);
             }
         }
@@ -265,7 +283,7 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             Location questLocation = new Location("");
             questLocation.setLongitude(quest.getLongitude());
             questLocation.setLatitude(quest.getLatitude());
-            if(questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+            if (questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
                 addFeedQuest(quest);
             }
         }
@@ -278,9 +296,9 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             .setMessage("Do you want to take the quest?")
             .setPositiveButton("Take", (dialog, which) -> {
                 LocatorData.getInstance().takeQuest(quest);
-                LocatorData.getInstance().feedQuests.remove(quest);
                 feedQuestMap.remove(marker.getId());
                 feedQuestsMarkerMap.remove(quest.getId());
+                marker.remove();
                 activeQuestMap.put(marker.getId(), quest);
                 activeQuestsMarkerMap.put(quest.getId(), marker);
                 dialog.dismiss();

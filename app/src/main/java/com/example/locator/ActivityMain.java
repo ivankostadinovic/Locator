@@ -103,17 +103,17 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         if (Tools.locationPermissionGiven(this)) {
             sharedPrefs.putServiceEnabled(true);
             startService(new Intent(this, LocatorService.class));
-            Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-            PeriodicWorkRequest saveRequest =
-                new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
-                    .setConstraints(constraints)
-                    .build();
-
-            WorkManager.getInstance(this)
-                .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+//            Constraints constraints = new Constraints.Builder()
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .build();
+//
+//            PeriodicWorkRequest saveRequest =
+//                new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+//                    .setConstraints(constraints)
+//                    .build();
+//
+//            WorkManager.getInstance(this)
+//                .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_SERVICE);
         }
