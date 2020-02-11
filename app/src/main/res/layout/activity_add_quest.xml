@@ -48,25 +48,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/item_hint_layout"
-            style="@style/CustomAccentEditText"
-            android:layout_marginEnd="50dp"
-            android:hint="@string/hint"
-            app:boxCornerRadiusBottomEnd="5dp"
-            app:boxCornerRadiusBottomStart="5dp"
-            app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_question_layout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:maxLines="1"
-                android:id="@+id/item_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_answer_1_layout"
@@ -79,7 +60,7 @@
             app:boxCornerRadiusTopStart="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_hint_layout">
+            app:layout_constraintTop_toBottomOf="@id/item_question_layout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_answer_1"

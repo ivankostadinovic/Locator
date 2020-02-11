@@ -78,7 +78,7 @@ public class LocatorWorker extends Worker {
 
     private void generateNotification(String title, String text) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "general")
-            .setSmallIcon(R.drawable.ic_baseline_arrow_back_24px)
+            .setSmallIcon(R.drawable.app_icon)
             .setColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
             .setContentTitle(title)
             .setContentText(text)
