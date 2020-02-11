@@ -53,7 +53,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         Quest quest = questList.get(position);
         holder.txtName.setText(quest.getName());
         String status;
-        if(questType == Constants.QuestType.ACTIVE) {
+        if (questType == Constants.QuestType.ACTIVE) {
             status = quest.getItemsFound() + "/" + quest.getItems().size() + " question answered";
         } else {
             status = quest.getItems().size() + " questions";
@@ -65,15 +65,16 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
             holder.img1.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }
         if (quest.getItems().get(1).image != null && !quest.getItems().get(1).image.isEmpty()) {
-            holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
+            holder.img2.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(1).image));
         } else {
             holder.img2.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }
-        if (quest.getItems().get(1).image != null && !quest.getItems().get(2).image.isEmpty()) {
+        if (quest.getItems().get(2).image != null && !quest.getItems().get(2).image.isEmpty()) {
             holder.img3.setImageBitmap(Tools.StringToBitMap(quest.getItems().get(2).image));
         } else {
             holder.img3.setImageDrawable(context.getDrawable(R.drawable.ic_place_holder));
         }
+        holder.type.setText(quest.getType());
 
     }
 
@@ -88,7 +89,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView txtName, txtStatus;
+        public TextView txtName, txtStatus, type;
         public ImageView img1, img2, img3;
 
         public ViewHolder(View itemView) {
@@ -96,6 +97,8 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
             txtName = itemView.findViewById(R.id.title);
             txtStatus = itemView.findViewById(R.id.count);
+            type = itemView.findViewById(R.id.type);
+
             img1 = itemView.findViewById(R.id.thumbnail);
             img2 = itemView.findViewById(R.id.thumbnail2);
             img3 = itemView.findViewById(R.id.thumbnail3);

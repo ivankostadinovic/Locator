@@ -4,15 +4,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -24,8 +21,11 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +33,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
     private FragmentQuests fragmentQuests;
     private FragmentMap fragmentMap;
     private FragmentFriends fragmentFriends;
+    FloatingActionButton floatingActionButton;
     private final int REQUEST_CODE_SERVICE = 555;
 
     private void openFragment(Fragment fragment) {
@@ -54,10 +55,12 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         LocatorData.getInstance().activeQuestListener();
         initializeComponents();
 
-        FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
+        floatingActionButton = findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(view -> {
             if (fragmentFriends.isVisible()) {
                 startActivity(new Intent(this, DiscoverFriendsActivity.class));
+            } else if (fragmentMap.isVisible()) {
+                fragmentMap.openFilterPop();
             } else {
                 Intent i = new Intent(ActivityMain.this, ActivityAddQuest.class);
                 startActivity(i);
@@ -100,17 +103,17 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
         if (Tools.locationPermissionGiven(this)) {
             sharedPrefs.putServiceEnabled(true);
             startService(new Intent(this, LocatorService.class));
-            Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-            PeriodicWorkRequest saveRequest =
-                new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
-                    .setConstraints(constraints)
-                    .build();
-
-            WorkManager.getInstance(this)
-                .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+//            Constraints constraints = new Constraints.Builder()
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .build();
+//
+//            PeriodicWorkRequest saveRequest =
+//                new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+//                    .setConstraints(constraints)
+//                    .build();
+//
+//            WorkManager.getInstance(this)
+//                .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
         } else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_SERVICE);
         }
@@ -238,9 +241,11 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
             switch (item.getItemId()) {
                 case R.id.navigation_quests:
                     openFragment(fragmentQuests);
+                    floatingActionButton.setImageDrawable(getDrawable(R.drawable.ic_baseline_add_24px));
                     return true;
                 case R.id.navigation_friends:
                     openFragment(fragmentFriends);
+                    floatingActionButton.setImageDrawable(getDrawable(R.drawable.ic_baseline_add_24px));
                     return true;
                 case R.id.navigation_map:
                     if (!Tools.locationPermissionGiven(ActivityMain.this)) {
@@ -254,6 +259,7 @@ public class ActivityMain extends ActivityBase implements NavigationView.OnNavig
                                 .add(R.id.fragment_containter, fragmentMap)
                                 .commit();
                         }
+                        floatingActionButton.setImageDrawable(getDrawable(R.drawable.ic_baseline_sort_24px));
                         openFragment(fragmentMap);
                     }
                     return true;

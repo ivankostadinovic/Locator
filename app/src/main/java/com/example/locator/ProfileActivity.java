@@ -22,8 +22,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         new Thread(() -> {
-            if (user.getImage() != null && !user.getImage().isEmpty())
-                ((ImageView) findViewById(R.id.image)).setImageBitmap(Tools.StringToBitMap(user.getImage()));
+            if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty())
+                ((ImageView) findViewById(R.id.image)).setImageBitmap(Tools.StringToBitMap(user.getProfilePicture()));
             else
                 ((ImageView) findViewById(R.id.image)).setImageDrawable(getDrawable(R.drawable.ic_place_holder));
 

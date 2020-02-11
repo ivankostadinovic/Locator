@@ -52,7 +52,7 @@ public class DiscoverFriendsActivity extends AppCompatActivity implements Adapte
                     mBluetoothConnection = new BluetoothConnectionService(DiscoverFriendsActivity.this);
 
                 }
-                if (device.getAddress().isEmpty() || device.getName().isEmpty())
+                if (device.getName() == null || device.getAddress() == null || device.getAddress().isEmpty() || device.getName().isEmpty())
                     return;
                 mBTDevices.add(device);
                 Tools.log("onReceive: " + device.getName() + ": " + device.getAddress());

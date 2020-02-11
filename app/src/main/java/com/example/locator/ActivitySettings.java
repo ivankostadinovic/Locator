@@ -46,17 +46,17 @@ public class ActivitySettings extends ActivityBase {
 
     private void startServiceAndWorker() {
         startService(new Intent(this, LocatorService.class));
-        Constraints constraints = new Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build();
-
-        PeriodicWorkRequest saveRequest =
-            new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
-
-        WorkManager.getInstance(this)
-            .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
+//        Constraints constraints = new Constraints.Builder()
+////            .setRequiredNetworkType(NetworkType.CONNECTED)
+////            .build();
+////
+////        PeriodicWorkRequest saveRequest =
+////            new PeriodicWorkRequest.Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+////                .setConstraints(constraints)
+////                .build();
+////
+////        WorkManager.getInstance(this)
+////            .enqueueUniquePeriodicWork("locator", ExistingPeriodicWorkPolicy.REPLACE, saveRequest);
     }
 
     private void stopServiceAndWorker() {

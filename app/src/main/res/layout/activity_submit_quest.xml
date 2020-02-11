@@ -78,6 +78,8 @@
             android:id="@+id/longitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
             android:inputType="numberDecimal"
             />
     </com.google.android.material.textfield.TextInputLayout>
@@ -101,7 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-
+            android:clickable="false"
+            android:focusable="false"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,13 +137,13 @@
             android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_istorijski"/>
         <RadioButton
-            android:id="@+id/radio_zabavni"
+            android:id="@+id/radio_istrazivacki"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/Istrazivacki"/>
         <RadioButton
-            android:id="@+id/radio_istrazivacki"
+            android:id="@+id/radio_zabavni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"

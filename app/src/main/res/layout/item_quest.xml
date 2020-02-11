@@ -44,6 +44,16 @@
                 android:src="@drawable/ic_place_holder"
                 android:layout_toEndOf="@id/thumbnail2"
                 android:layout_marginStart="@dimen/margin_thumbnail" />
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_toEndOf="@id/thumbnail3"
+                android:layout_marginTop="50dp"
+                android:layout_marginStart="100dp"
+                android:textSize="@dimen/List_quest_title"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/title"

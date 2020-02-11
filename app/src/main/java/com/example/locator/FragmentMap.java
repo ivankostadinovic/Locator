@@ -3,8 +3,10 @@ package com.example.locator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -22,10 +24,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickListener {
     private FusedLocationProviderClient fusedLocationClient;
@@ -39,6 +44,8 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
     private Map<String, Marker> friendsMarkerMap = new HashMap<>();
     private Map<String, Marker> feedQuestsMarkerMap = new HashMap<>();
     private Map<String, Marker> activeQuestsMarkerMap = new HashMap<>();
+    private double filterRadius = 0;
+    private String filterType = Constants.QuestTypes.ALL;
 
 
     public FragmentMap() {
@@ -63,21 +70,38 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                 addFeedQuest(quest);
             }
 
-            @Override
-            public void userLatitudeChagned(double latitude) {
-
-            }
-
-            @Override
-            public void userLongitudeChanged(double longitude) {
-
-            }
 
             @Override
             public void addedQuestListener(Quest quest) {
                 addActiveQuest(quest);
             }
+
+            @Override
+            public void friendLoadedListener(User friend) {
+                updateAddFriend(friend);
+            }
+
+            @Override
+            public void updateQuest(Quest quest) {
+                updateActiveQuest(quest);
+            }
+
+            @Override
+            public void removeQuest(Quest quest) {
+                removeQuestFromMap(quest);
+            }
+
+
         });
+    }
+
+    private void removeQuestFromMap(Quest quest) {
+        Marker marker = activeQuestsMarkerMap.get(quest.getId());
+        if (marker != null) {
+            activeQuestMap.remove(marker.getId());
+            activeQuestsMarkerMap.remove(quest.getId());
+            marker.remove();
+        }
     }
 
     @Override
@@ -90,29 +114,15 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (supportMapFragment != null) {
             supportMapFragment.getMapAsync(mMap -> {
+                LocatorData.getInstance().feedQuestListener();
+                LocatorData.getInstance().observeFriends();
+                LocatorData.getInstance().observeActiveQuests();
                 this.mMap = mMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                mMap.clear();
-                mMap.setMyLocationEnabled(true);
-                mMap.setOnMarkerClickListener(this);
+                this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                this.mMap.clear();
+                this.mMap.setMyLocationEnabled(true);
+                this.mMap.setOnMarkerClickListener(this);
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-                for (User user : LocatorData.getInstance().friends) {
-                    Marker marker = mMap.addMarker(generateMarker(user));
-                    friendsMap.put(marker.getId(), user);
-                    friendsMarkerMap.put(user.getId(), marker);
-                }
-
-                for (Quest quest : LocatorData.getInstance().activeQuests) {
-                    Marker marker = mMap.addMarker(generateMarker(quest));
-                    activeQuestMap.put(marker.getId(), quest);
-                    friendsMarkerMap.put(quest.getId(), marker);
-                }
-
-                for (Quest quest : LocatorData.getInstance().feedQuests) {
-                    Marker marker = mMap.addMarker(generateMarker(quest));
-                    feedQuestMap.put(marker.getId(), quest);
-                    friendsMarkerMap.put(quest.getId(), marker);
-                }
                 LocatorData.getInstance().observeFriendLocations(this);
 
                 fusedLocationClient.getLastLocation()
@@ -123,34 +133,52 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                                 .zoom(15)
                                 .bearing(0)
                                 .build();
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+                            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
                         } else {
                             googlePlex = CameraPosition.builder()
                                 .target(nisLatLng)
                                 .zoom(15)
                                 .bearing(0)
                                 .build();
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+                            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
                         }
                     });
             });
         }
+
         return view;
     }
 
+    public void openFilterPop() {
+        Intent intent = new Intent(getActivity(), PopUpFilterQuest.class);
+        intent.putExtra("type", filterType);
+        intent.putExtra("radius", filterRadius);
+        startActivityForResult(intent, 1111);
+    }
+
     public void updateAddFriend(User updatedFriend) {
+        if (updatedFriend.getProfilePicture() == null) {
+            return;
+        }
         Marker marker = friendsMarkerMap.get(updatedFriend.getId());
         if (marker != null) {
             friendsMap.remove(marker.getId());
             marker.remove();
         }
         marker = mMap.addMarker(generateMarker(updatedFriend));
+        marker.showInfoWindow();
         friendsMap.put(marker.getId(), updatedFriend);
         friendsMarkerMap.put(updatedFriend.getId(), marker);
     }
 
+    public void updateActiveQuest(Quest quest) {
+        Marker marker = activeQuestsMarkerMap.get(quest.getId());
+        activeQuestMap.put(marker.getId(), quest);
+    }
+
     public void addFeedQuest(Quest quest) {
-        Marker marker = mMap.addMarker(generateMarker(quest));
+        Marker marker = mMap.addMarker(generateMarker(quest, false));
+        marker.showInfoWindow();
         feedQuestMap.put(marker.getId(), quest);
         feedQuestsMarkerMap.put(quest.getId(), marker);
     }
@@ -160,7 +188,8 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         if (marker != null) {
             marker.remove();
         }
-        marker = mMap.addMarker(generateMarker(quest));
+        marker = mMap.addMarker(generateMarker(quest, true));
+        marker.showInfoWindow();
         activeQuestMap.put(marker.getId(), quest);
         activeQuestsMarkerMap.put(quest.getId(), marker);
     }
@@ -170,20 +199,17 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
         return new MarkerOptions()
             .position(latLng)
             .title(updatedFriend.getName())
-            .icon(BitmapDescriptorFactory.fromBitmap(Tools.StringToBitMap(image)));
+            .icon(BitmapDescriptorFactory.fromBitmap(Tools.StringToBitMap(updatedFriend.getProfilePicture())));
     }
 
-    private MarkerOptions generateMarker(Quest quest) {
+    private MarkerOptions generateMarker(Quest quest, boolean isActive) {
         LatLng latLng = new LatLng(quest.getLatitude(), quest.getLongitude());
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.quest);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), isActive ? R.drawable.active : R.drawable.quest);
         return new MarkerOptions()
             .position(latLng)
             .title(quest.getName())
             .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
     }
-
-
-    private String image = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCABkAGQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABAYACP/EACEQAAMAAgIDAQEBAQAAAAAAAAADBGFiAiEBMVEyUhEi/8QAFgEBAQEAAAAAAAAAAAAAAAAABwYJ/8QAHBEAAgMBAQEBAAAAAAAAAAAAAAQFITEBAiIR/9oADAMBAAIRAxEAPwDn9kWoRkOpVth1Csh1B6Kaw0hkndslGw6hWQ6lWyHUIyHUSYprA/kndslWRahWRalUyHUKyHUSoprA/kndJVkOoRkWpVth1Csh1EmKawP5J3bJRkOoVkWpVsh1CMh8/wAiTFNYH8k7tkqyLUK2HUqmQ6hWw6iVFNYH8k7tkt5h7/Jig5Q9/kxaeGvnhJ+nbOmWQ4CshwVTIcBWQ4MN4prDT6Sd0lWQ4CshwVTIdQrIcCVFNYH8k7pKshwEZDgq2Q4Csh1EmKbwP5J3bJRkOArYcFUyHAVkOolRTWB/JO6SrIcBWQ4KpkOArIdRJimsD+Sd0lGQ4CshwVbIdQrIcCVFNYH8k7pLcoe/Rig5Q9/kxZ+GvnhJ+nbOmWQ6hGQ6lWyLUKyL3/yYcRTWGn0k7pKMh1Csh1KtkWoRkWolRTWB/JO7ZKsh1Csh1KpkOoVkOBJimsD+Sd2yVZDqEZDqVbIdQrItRJimsD+Sd2yUZD4/kKyHUq2xahGQ6iVFNYH8k7pKsh1Csh1KpkWoVkOokxTWB/JO6S3mHv8AJig5Rd+jFn4a+eEn6dvTplkOArIcFUyHAVkODDmKaw0+kndslWQ4CshwVTIcBWQ4EmKawP5J3bJVkOArIcFUyHAVkOBJimsD+Sd2yUbDgKyHBVMhwFbDgSoprA/kndslWQ4CshwVTYcBWQ4EmKawP5J3bJVkOArIcFUyHARkOBKimsD+Sd2yX5Q9+jFByh79GLPw388JL07enTLIcBWQ4KpkPj+QrIdTDiKaw0/kndslGw4CshwVTIdQrIdRJimsD+Sd0lWQ4Csh1KpkOoVkOolRTWB/JO6SrIdQrIcFUyHUKyHUSoprA/kndslGQ4CshwVTIdQrIdRJimsD+Sd2yVZDqFZDgqmQ6hWQ6iTFNYH8k7tktyh8f76MUHKHv0YtPDXzwk/TtnTLIdQrIcFWyHARkODDeKaw0+kndJVkOArIcFUyHAVsOBKimsD+Sd0lWQ4CMhwVbIcBWQ4EmKawP5J3SUZDgKyHUqmQ4CshwJUU1gfyTukqyHAVkPvoqmw4CshwJMU1gfyTukqyHARsOCrZDgKyHAlRTeB/JO6S3mHv0YoOUPfoxZ+G/nhJ+nbOlGJ4fAjEr+GMYixXcNTZLvbCtTw+BWJ4fDGEmK72g/ku9sK1PD4FYnh8MYSYrvaD+S72wrE8PgRqeHwxhKiu9oP5LvbCsTw+BWp4fDGEmK72iAku9sK1XD4FYlfwxhKiu9oPpLvbDeU8P99GMYs/He/nCT9d7+9P/9k=";
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -201,9 +227,66 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
                 startActivity(intent);
             }
         } else {
-            openTakeQuestDialog(quest, marker);
+            Location ql = new Location("");
+            ql.setLatitude(quest.getLatitude());
+            ql.setLongitude(quest.getLongitude());
+
+            Location ul = new Location("");
+            ul.setLatitude(LocatorData.getInstance().getUser().getLatitude());
+            ul.setLongitude(LocatorData.getInstance().getUser().getLongitude());
+
+            if (ql.distanceTo(ul) > 50) {
+                Tools.showMsg(getActivity(), "too far away from quest");
+            } else {
+                openTakeQuestDialog(quest, marker);
+            }
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1111 && resultCode == RESULT_OK) {
+            filterType = data.getStringExtra("type");
+            filterRadius = data.getDoubleExtra("radius", 0);
+            Tools.showMsg(getActivity(), filterType + " " + filterRadius);
+            filterQuests();
+        }
+
+    }
+
+    private void filterQuests() {
+        mMap.clear();
+        activeQuestsMarkerMap.clear();
+        activeQuestMap.clear();
+        feedQuestsMarkerMap.clear();
+        feedQuestMap.clear();
+        friendsMap.clear();
+        friendsMarkerMap.clear();
+        Location current = new Location("");
+        current.setLongitude(LocatorData.getInstance().getUser().getLongitude());
+        current.setLatitude(LocatorData.getInstance().getUser().getLatitude());
+
+        for (User friend : LocatorData.getInstance().friends) {
+            updateAddFriend(friend);
+        }
+        for (Quest quest : LocatorData.getInstance().activeQuests) {
+            Location questLocation = new Location("");
+            questLocation.setLongitude(quest.getLongitude());
+            questLocation.setLatitude(quest.getLatitude());
+            if (questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+                addActiveQuest(quest);
+            }
+        }
+
+        for (Quest quest : LocatorData.getInstance().feedQuests) {
+            Location questLocation = new Location("");
+            questLocation.setLongitude(quest.getLongitude());
+            questLocation.setLatitude(quest.getLatitude());
+            if (questLocation.distanceTo(current) < filterRadius && (filterType.equals(Constants.QuestTypes.ALL) || quest.getType().equalsIgnoreCase(filterType))) {
+                addFeedQuest(quest);
+            }
+        }
     }
 
     private void openTakeQuestDialog(Quest quest, Marker marker) {
@@ -213,9 +296,9 @@ public class FragmentMap extends Fragment implements GoogleMap.OnMarkerClickList
             .setMessage("Do you want to take the quest?")
             .setPositiveButton("Take", (dialog, which) -> {
                 LocatorData.getInstance().takeQuest(quest);
-                LocatorData.getInstance().feedQuests.remove(quest);
                 feedQuestMap.remove(marker.getId());
                 feedQuestsMarkerMap.remove(quest.getId());
+                marker.remove();
                 activeQuestMap.put(marker.getId(), quest);
                 activeQuestsMarkerMap.put(quest.getId(), marker);
                 dialog.dismiss();

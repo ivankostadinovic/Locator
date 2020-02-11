@@ -27,6 +27,8 @@ public class LocatorData {
     public List<Quest> feedQuests;
     public List<Quest> activeQuests;
     public List<Quest> finishedQuests;
+    public List<Quest> addedQuests;
+
     public List<QuestItem> itemsToAdd;
     public List<User> friends;
     private User user;
@@ -34,12 +36,14 @@ public class LocatorData {
     private FirebaseAuth auth;
     private UserActionListener listener;
     private FriendsListener friendsListener;
+    private QuestsChangedListener questsChangedListener;
 
 
     private LocatorData() {
         feedQuests = new ArrayList<>();
         finishedQuests = new ArrayList<>();
         activeQuests = new ArrayList<>();
+        addedQuests = new ArrayList<>();
         friends = new ArrayList<>();
         user = new User();
         db = FirebaseDatabase.getInstance().getReference();
@@ -51,24 +55,28 @@ public class LocatorData {
         this.friendsListener = listener;
     }
 
+    public void setQuestsChangedListener(QuestsChangedListener listener) {
+        questsChangedListener = listener;
+    }
+
     public void setListener(UserActionListener listener) {
         this.listener = listener;
     }
 
-    public void userLocationListener() {
-        db.child("Users").child(getUser().getId()).child("latitude").addChildEventListener(new ChildEventListener() {
+    public void observeActiveQuests() {
+        db.child("Quests").child("Active-quests").child(user.getId()).addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
+
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Quest quest = dataSnapshot.getValue(Quest.class);
+                if (listener != null)
+                    listener.addedQuestListener(quest);
 
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Double lat = dataSnapshot.getValue(Double.class);
-                user.setLatitude(lat);
-                if (listener != null) {
-                    listener.userLatitudeChagned(lat);
-                }
+
             }
 
             @Override
@@ -82,46 +90,13 @@ public class LocatorData {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db.child("Users").child(getUser().getId()).child("longitude").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Double lon = dataSnapshot.getValue(Double.class);
-                user.setLongitude(lon);
-                if (listener != null) {
-
-                    listener.userLongitudeChanged(lon);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
 
     public void feedQuestListener() {
-
         db.child("Quests").child("Feed-quests").addChildEventListener(new ChildEventListener() {// za ucitvaanje feed questova
             @Override
 
@@ -175,14 +150,17 @@ public class LocatorData {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User friend = dataSnapshot.getValue(User.class);
+                if (listener != null) {
+                    listener.friendLoadedListener(friend);
+                }
                 boolean exists = false;
                 for (User friend1 : friends) {
                     if (friend1.getId().equals(friend.getId())) {
                         exists = true;
                     }
                 }
-                if (!exists && friendsListener != null) {
-                    friendsListener.friendsLoaded(friend);
+                if (!exists) {
+                    friends.add(friend);
                 }
             }
 
@@ -215,8 +193,10 @@ public class LocatorData {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     User friend = childDataSnapshot.getValue(User.class);
-                    friends.add(0, friend);
-                    friendsListener.friendsLoaded(friend);
+                    if (!friends.contains(friend)) {
+                        friends.add(0, friend);
+                        friendsListener.friendsLoaded(friend);
+                    }
                 }
             }
 
@@ -243,6 +223,10 @@ public class LocatorData {
                             friend.setLatitude(dataSnapshot.getValue(Double.class));
                         }
                         fragmentMap.updateAddFriend(friend);
+                        if ("points".equals(dataSnapshot.getKey()) && friendsListener != null) {
+                            friend.setPoints(dataSnapshot.getValue((Integer.class)));
+                            friendsListener.updateFriend(friend);
+                        }
                     }
                 }
 
@@ -283,6 +267,25 @@ public class LocatorData {
             });
     }
 
+    public void addedQuestListener() {
+        if (getUser().getId() != null)
+            db.child("Quests").child("Added-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Quest quest = child.getValue(Quest.class);
+                        addedQuests.add(quest);
+                        questsChangedListener.updateQuests();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    }
+
 
     public void finishedQuestListener() {
         db.child("Quests").child("Finished-quests").child(getUser().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -292,8 +295,7 @@ public class LocatorData {
                     Quest quest = child.getValue(Quest.class);
                     finishedQuests.add(quest);
                 }
-                feedQuestListener();
-
+                addedQuestListener();
             }
 
             @Override
@@ -313,6 +315,8 @@ public class LocatorData {
             }
         }
         activeQuests.add(quest);
+        questsChangedListener.updateQuests();
+
         // Tools.showMsg(activity, "Quest added to active");
     }
 
@@ -322,6 +326,9 @@ public class LocatorData {
         quest.setId(key);
         quest.setCreatedBy(getUser().getId());
         db.child("Quests").child("Feed-quests").child(key).setValue(quest);
+        db.child("Quests").child("Added-quests").child(getUser().getId()).child(key).setValue(quest);
+        addedQuests.add(quest);
+        questsChangedListener.updateQuests();
         Tools.showMsg(activity, "Quest added");
     }
 
@@ -332,6 +339,9 @@ public class LocatorData {
             }
         }
         db.child("Quests").child("Active-quests").child(getUser().getId()).child(quest.getId()).setValue(quest);
+        if (listener != null) {
+            listener.updateQuest(quest);
+        }
     }
 
     public void finishQuest(Quest quest) {
@@ -344,9 +354,15 @@ public class LocatorData {
             }
         }
         finishedQuests.add(quest);
+        questsChangedListener.updateQuests();
+        if (listener != null)
+            listener.removeQuest(quest);
+
     }
 
     public void updateUserLocation(double longitude, double latitude) {
+        user.setLatitude(latitude);
+        user.setLongitude(longitude);
         db.child("Users").child(getUser().getId()).child("longitude").setValue(longitude);
         db.child("Users").child(getUser().getId()).child("latitude").setValue(latitude);
         for (User friend : friends) {
@@ -359,6 +375,10 @@ public class LocatorData {
     public void addFriend(User friend) {
         db.child("Friends").child(friend.getId()).child(user.getId()).setValue(getUser());
         db.child("Friends").child(getUser().getId()).child(friend.getId()).setValue(friend);
+        friends.add(friend);
+        if (friendsListener != null) {
+            friendsListener.friendsLoaded(friend);
+        }
     }
 
     public void addFriend(String friendId) {
@@ -420,9 +440,10 @@ public class LocatorData {
     }
 
     public void updateUserPoints(int points) {
+        user.setPoints(user.getPoints() + points);
         db.child("Users").child(getUser().getId()).child("points").setValue(user.getPoints() + points);
         for (User friend : friends) {
-            db.child("Users").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);
+            db.child("Friends").child(friend.getId()).child(user.getId()).child("points").setValue(user.getPoints() + points);
         }
     }
 
@@ -485,6 +506,7 @@ public class LocatorData {
                 db.child("Users").child(u.getUid()).setValue(user);
                 db.child("Users").child(u.getUid()).child("id").setValue(u.getUid());
                 Tools.showMsg(activity, "Registration complete.");
+                activity.finish();
             } else {
                 Tools.showMsg(activity, "User with email already exists.");
             }

@@ -1,60 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PopUpFeedQuest"
-    >
+    tools:context=".PopUpFilterQuest"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="15dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/pop_quest_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="@string/reset_password"
+        android:layout_marginTop="5dp"
+        android:text="@string/filter"
         android:textColor="@color/white"
-        android:textSize="18sp"/>
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/pop_quest_description"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="10dp"
-    android:text="@string/reset_password"
-    android:textColor="@color/white"
-    android:textSize="18sp"/>
+        android:textSize="18sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/radius_layout"
+        android:hint="@string/radius"
+        style="@style/CustomAccentEditText">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/radio_istrazivacki"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/radio_istorijski"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:text="@string/radio_istorijski"/>
+        <RadioButton
+            android:id="@+id/radio_istrazivacki"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:text="@string/Istrazivacki"/>
+        <RadioButton
+            android:id="@+id/radio_zabavni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:text="@string/radio_zabavni"/>
+
+        <RadioButton
+            android:id="@+id/radio_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:text="@string/all"/>
+    </RadioGroup>
 
 
     <com.google.android.material.button.MaterialButton
-        style="@style/CustomAccentButton"
         android:id="@+id/btn_take"
-        android:text="Take"
+        style="@style/CustomAccentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pop_quest_description"
-        app:layout_constraintHorizontal_bias="1"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:text="Confirm" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/CustomTextButton"
         android:id="@+id/btn_Cancel"
-        android:text="@string/btnCancel"
+        style="@style/CustomTextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_take"
-        app:layout_constraintTop_toBottomOf="@id/pop_quest_description"
-        app:layout_constraintHorizontal_bias="1"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:text="@string/btnCancel" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

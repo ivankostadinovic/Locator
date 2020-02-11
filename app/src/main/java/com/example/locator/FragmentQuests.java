@@ -18,7 +18,7 @@ public class FragmentQuests extends Fragment {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private FragmentQuestList feedsListFragment;
+    private FragmentQuestList addedQuestFragment;
     private FragmentQuestList fragmentActiveList;
     private FragmentQuestList fragmentFinishedList;
 
@@ -29,7 +29,7 @@ public class FragmentQuests extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        feedsListFragment = new FragmentQuestList(Constants.QuestType.FEED);
+        addedQuestFragment = new FragmentQuestList(Constants.QuestType.ADDED);
         fragmentActiveList = new FragmentQuestList(Constants.QuestType.ACTIVE);
         fragmentFinishedList = new FragmentQuestList(Constants.QuestType.FINISHED);
     }
@@ -42,12 +42,21 @@ public class FragmentQuests extends Fragment {
         tabLayout = view.findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+        LocatorData.getInstance().setQuestsChangedListener(() -> {
+            switch (tabLayout.getSelectedTabPosition()){
+                case 0:
+                    fragmentActiveList.updateAdapter();
+                case 1:
+                    addedQuestFragment.updateAdapter();
+                case 2:
+                    fragmentFinishedList.updateAdapter();
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_fragment_quests, container, false);
     }
 
@@ -55,7 +64,7 @@ public class FragmentQuests extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager(), SectionsPageAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(fragmentActiveList, "Active");
-        adapter.addFragment(feedsListFragment, "Feed");
+        adapter.addFragment(addedQuestFragment, "Added");
         adapter.addFragment(fragmentFinishedList, "Finished");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
@@ -70,7 +79,7 @@ public class FragmentQuests extends Fragment {
                 if (position == 0) {
                     fragmentActiveList.updateAdapter();
                 } else if (position == 1) {
-                    feedsListFragment.updateAdapter();
+                    addedQuestFragment.updateAdapter();
                 } else {
                     fragmentFinishedList.updateAdapter();
                 }

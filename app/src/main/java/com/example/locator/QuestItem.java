@@ -11,12 +11,10 @@ public class QuestItem implements Serializable {
 
     public String id;
     public String name;
-    public String hint;
     public String location;
     public String image;
     public String question;
     public List<String> answers;
-    public Bitmap capturedImage;
     public boolean correctAnswer;
     public boolean answered;
     public int answeredQuestion;

@@ -7,6 +7,15 @@
     tools:context=".ActivityCreateAccount">
 
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/edit_email_create_layout"
+        android:src="@drawable/ic_place_holder"/>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_email_create_layout"
         android:hint="@string/hint_email"
@@ -97,11 +106,23 @@
         android:text="@string/btn_create_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_name_create_layout"
+        app:layout_constraintTop_toBottomOf="@id/btn_camera"
         android:layout_marginTop="10dp"
         app:icon="@drawable/ic_baseline_add_24px"
         app:iconTint="@color/white"
         app:iconGravity="textStart"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_camera"
+        style="@style/IconOnlyButton"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:cornerRadius="24dp"
+        app:icon="@drawable/ic_round_photo_camera_24px"
+        app:iconTint="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/edit_name_create_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 

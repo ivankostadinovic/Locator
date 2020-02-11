@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 
 public class FragmentFriends extends Fragment {
     private FriendAdapter adapter;
@@ -42,13 +41,18 @@ public class FragmentFriends extends Fragment {
             public void friendsLoaded(User user) {
                 adapter.addData(user);
             }
+
+            @Override
+            public void updateFriend(User user) {
+                adapter.updateData(user);
+            }
         });
-        adapter.setData(new ArrayList<>());
+        adapter.setData(LocatorData.getInstance().friends);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter.setData(LocatorData.getInstance().friends);
+        LocatorData.getInstance().loadFriends();
     }
 }
